@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_home"
+        android:icon="@drawable/ic_home_selector"
+        android:title="홈" />
+<!--    <item-->
+<!--        android:id="@+id/menu_family_tree"-->
+<!--        android:icon="@drawable/ic_tree"-->
+<!--        android:title="가계도" />-->
+    <item
+        android:id="@+id/menu_family_history"
+        android:icon="@drawable/ic_history_selector"
+        android:title="가족역사" />
+    <item
+        android:id="@+id/menu_family_anniversary"
+        android:icon="@drawable/ic_anniversary_selector"
+        android:title="기념일" />
+    <item
+        android:id="@+id/menu_family_culture"
+        android:icon="@drawable/ic_culture_selector"
+        android:title="가족문화" />
+    <item
+        android:id="@+id/menu_family_diary"
+        android:icon="@drawable/ic_diary_selector"
+        android:title="가족일기" />
+<!--    <item-->
+<!--        android:id="@+id/menu_setting"-->
+<!--        android:icon="@drawable/ic_setting"-->
+<!--        android:title="설정" />-->
+
+</menu>

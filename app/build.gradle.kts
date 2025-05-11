@@ -5,12 +5,14 @@ plugins {
 
 android {
     namespace = "com.example.wooriga"
-    compileSdk = 34
+    compileSdk = 35
+    viewBinding.isEnabled = true
+
 
     defaultConfig {
         applicationId = "com.example.wooriga"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -32,6 +34,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+    buildFeatures {
+        viewBinding = true
     }
 }
 
