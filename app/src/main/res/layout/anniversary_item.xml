@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/layout/anniversary_item.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:padding="12dp"
+    android:background="@drawable/rounded_background"
+    android:layout_marginBottom="8dp">
+
+    <ImageView
+        android:id="@+id/anniversaryListType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/ic_star"
+        app:tint="@color/peach" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginStart="8dp"
+        android:layout_gravity="center">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="기념일 제목"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:id="@+id/anniversaryListTitle" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="기념일 장소"
+                android:textColor="@color/Charcoal"
+                android:id="@+id/anniversaryListLocation" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="  |   "
+                android:textColor="@color/Charcoal" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="기념일 날짜"
+                android:textColor="@color/Charcoal"
+                android:id="@+id/anniversaryListDate" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
