@@ -9,6 +9,7 @@
     <color name="navIconActiveColor">#4B3A2A</color>
 
     <color name="skyBlue">#A6C1CC</color>
+    <color name="green">#5A8736</color>
 
     <color name="peach">#EDAE8D</color>
     <color name="mint">#88A79F</color>
@@ -17,5 +18,7 @@
     <color name="primary_color">#A6C1CC</color>
     <color name="primary_dark_color">#4B3A2A</color>
     <color name="accent_color">#A6C1CC</color>
+
+    <color name="transparent">#00000000</color>
 
 </resources>

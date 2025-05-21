@@ -1,15 +1,92 @@
-<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FamilyHistoryFragment">
+    android:background="@color/backgroundColor">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
+
+    <!-- 중앙 세로선 -->
+    <View
+        android:id="@+id/timelineLine"
+        android:layout_width="6dp"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment"
-        android:background="#F2B6B6"/>
+        android:layout_gravity="center_horizontal"
+        android:background="@color/green"
+        android:layout_marginBottom="20dp"/>
 
+    <!-- Scrollable 내용 -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <!-- 상단 Text, Spinner 등 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:background="@color/backgroundColor">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:orientation="horizontal"
+                    android:gravity="end"
+                    android:paddingHorizontal="10dp">
+
+                    <Spinner
+                        android:id="@+id/selectFamilyHistory"
+                        android:layout_width="100dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="center"
+                        android:textAlignment="center"
+                        android:background="@drawable/rounded_background"
+                        android:elevation="4dp"
+                        android:spinnerMode="dropdown" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/historyTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textColor="#000000"
+                    android:text="송이님의 가족사들을\n관리해보세요!"
+                    android:paddingHorizontal="20dp" />
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="16dp">
+
+
+                <!-- RecyclerView -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/timelineRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:nestedScrollingEnabled="false"
+                    android:padding="8dp" />
+
+            </FrameLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- 고정된 FAB -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addFamilyHistoryButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:contentDescription="가족사 추가 버튼"
+        android:src="@drawable/ic_add" />
 </FrameLayout>
