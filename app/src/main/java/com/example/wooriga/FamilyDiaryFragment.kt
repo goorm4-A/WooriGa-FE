@@ -11,6 +11,10 @@ import com.example.wooriga.databinding.FragmentFamilyDiaryBinding
 import com.example.wooriga.ui.familydiary.FamilyDiaryViewModel
 import com.example.wooriga.ui.familydiary.DiaryAdapter
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.example.wooriga.databinding.BottomSheetAddDiaryBinding
+import android.widget.ArrayAdapter
+
 
 class FamilyDiaryFragment : Fragment() {
 
@@ -54,8 +58,9 @@ class FamilyDiaryFragment : Fragment() {
 
     private fun setupListeners() {
         binding.addFamilyHistoryButton.setOnClickListener {
-            // 예: 다이어리 작성 화면으로 이동
-            // findNavController().navigate(R.id.action_familyDiaryFragment_to_addDiaryFragment)
+            binding.addFamilyHistoryButton.setOnClickListener {
+                showAddDiaryBottomSheet()
+            }
         }
     }
 
@@ -63,5 +68,42 @@ class FamilyDiaryFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    private fun showAddDiaryBottomSheet() {
+        val dialog = BottomSheetDialog(requireContext())
+        val bottomSheetBinding = BottomSheetAddDiaryBinding.inflate(LayoutInflater.from(requireContext()))
+        dialog.setContentView(bottomSheetBinding.root)
+
+        // 태그 Spinner 설정
+        val tagAdapter = ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.tag_list,
+            android.R.layout.simple_spinner_item
+        )
+        tagAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        bottomSheetBinding.spinnerTag.adapter = tagAdapter
+
+// 참여자 Spinner 설정
+        val memberAdapter = ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.member_list,
+            android.R.layout.simple_spinner_item
+        )
+        memberAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        bottomSheetBinding.spinnerMember.adapter = memberAdapter
+
+        // 버튼 클릭 리스너 예시
+        bottomSheetBinding.cancelButton.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        bottomSheetBinding.submitButton.setOnClickListener {
+            // TODO: 일기 등록 처리
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
 
 }
