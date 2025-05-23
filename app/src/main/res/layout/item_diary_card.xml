@@ -7,20 +7,20 @@
     android:elevation="4dp">
 
     <!-- 핀 이미지 (상단에 겹쳐 보이도록) -->
-    <ImageView
-        android:id="@+id/image_pin"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="-8dp"
-        android:src="@drawable/ic_pin_green" />
+<!--    <ImageView-->
+<!--        android:id="@+id/image_pin"-->
+<!--        android:layout_width="24dp"-->
+<!--        android:layout_height="24dp"-->
+<!--        android:layout_centerHorizontal="true"-->
+<!--        android:layout_marginTop="-8dp"-->
+<!--        android:src="@drawable/ic_pin" />-->
 
-    <!-- 사진 영역 (회색 배경 처리) -->
+    <!-- 사진 영역 -->
     <ImageView
         android:id="@+id/image_diary"
         android:layout_width="160dp"
         android:layout_height="160dp"
-        android:layout_below="@id/image_pin"
+        android:layout_marginTop="15dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:background="#DDDDDD"
@@ -38,6 +38,7 @@
         android:paddingVertical="0dp">
 
         <ImageView
+            android:id="@+id/image_user"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_gravity="center_vertical"
@@ -48,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="0dp"
-            android:background="@drawable/bg_label_bubble"
+            android:background="@drawable/bg_bubble"
             android:gravity="center"
             android:text="롯데월드 갔다온 날^^"
             android:textColor="#000000"
