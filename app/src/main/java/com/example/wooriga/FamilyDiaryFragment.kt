@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.example.wooriga.databinding.BottomSheetAddDiaryBinding
 import android.widget.ArrayAdapter
+import android.widget.Toast
+import com.example.wooriga.model.Diary
 
 
 class FamilyDiaryFragment : Fragment() {
@@ -83,7 +85,7 @@ class FamilyDiaryFragment : Fragment() {
         tagAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         bottomSheetBinding.spinnerTag.adapter = tagAdapter
 
-// 참여자 Spinner 설정
+        // 참여자 Spinner 설정
         val memberAdapter = ArrayAdapter.createFromResource(
             requireContext(),
             R.array.member_list,
@@ -92,15 +94,39 @@ class FamilyDiaryFragment : Fragment() {
         memberAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         bottomSheetBinding.spinnerMember.adapter = memberAdapter
 
-        // 버튼 클릭 리스너 예시
+        // 취소 버튼 클릭 리스너
         bottomSheetBinding.cancelButton.setOnClickListener {
             dialog.dismiss()
         }
 
+        // 추가 버튼 클릭 리스너
         bottomSheetBinding.submitButton.setOnClickListener {
-            // TODO: 일기 등록 처리
+            val title = bottomSheetBinding.titleInput.text.toString()
+            val location = bottomSheetBinding.locationInput.text.toString()
+            val content = bottomSheetBinding.memoInput.text.toString()
+            val date = bottomSheetBinding.dateText.text.toString()
+            val tag = bottomSheetBinding.spinnerTag.selectedItem.toString() // TODO: selectedTags 다중 선택된 태그
+            val member = bottomSheetBinding.spinnerMember.selectedItem.toString() // TODO: selectedTags 다중 선택된 태그
+
+            if (title.isBlank() || content.isBlank()) {
+                Toast.makeText(requireContext(), "제목과 내용을 입력해주세요.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val diary = Diary(
+                date = date,
+                imageUri = null, // TODO: 이미지 URI 처리 시 적용
+                title = title,
+                tag = tag,
+                member = member,
+                location = location,
+                content = content
+            )
+
+            viewModel.addDiary(diary)
             dialog.dismiss()
         }
+
 
         dialog.show()
     }

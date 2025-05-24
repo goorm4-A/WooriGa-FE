@@ -24,21 +24,30 @@ class DiaryAdapter : ListAdapter<Diary, DiaryAdapter.DiaryViewHolder>(DIARY_COMP
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(diary: Diary) {
-            binding.textLabel.text = diary.preview
+            binding.textTitle.text = diary.title
 
             // Glide로 이미지 로드
             Glide.with(binding.imageDiary.context)
-                .load(diary.imageUrl)
+                .load(diary.imageUri)
                 .centerCrop()
                 .placeholder(android.R.color.darker_gray)
                 .into(binding.imageDiary)
+
+            // 이미지: 이미지 URI가 null이 아니면 표시
+//            if (diary.imageUri != null) {
+//                binding.imageDiary.setImageURI(Uri.parse(diary.imageUri))
+//            } else {
+//                binding.imageDiary.setImageResource(R.drawable.placeholder_image) // 기본 이미지
+//            }
+
+            // TODO: 사용자 이미지 로드
         }
     }
 
     companion object {
         private val DIARY_COMPARATOR = object : DiffUtil.ItemCallback<Diary>() {
             override fun areItemsTheSame(oldItem: Diary, newItem: Diary): Boolean {
-                return oldItem.id == newItem.id
+                return oldItem === newItem
             }
 
             override fun areContentsTheSame(oldItem: Diary, newItem: Diary): Boolean {
