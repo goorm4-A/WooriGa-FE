@@ -5,11 +5,70 @@
     android:layout_height="match_parent"
     tools:context=".HomeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_home_bg"
+        android:scaleType="centerCrop"
+        android:gravity="center"
+        android:adjustViewBounds="true" />
+
+    <include
+        layout="@layout/toolbar_home"
+        android:id="@+id/custom_toolbar" />
+
+    <include
+        layout="@layout/item_home_userprofile"
+        android:id="@+id/item_home_userprofile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"/>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment"
-        android:background="#D3B6F2"/>
+        android:orientation="vertical"
+        android:layout_marginTop="155dp">
+
+        <include
+            layout="@layout/item_home_family"
+            android:id="@+id/item_home_family" />
+
+
+        <include
+            layout="@layout/item_home_news"
+            android:id="@+id/item_home_news" />
+
+
+
+
+
+
+    </LinearLayout>
+
+
+
+
+
+
+
+
+<!--    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <include
+            layout="@layout/item_home_family"
+            android:id="@+id/item_home_family" />
+
+        <include
+            layout="@layout/item_home_news"
+            android:id="@+id/item_home_news" />
+
+    </LinearLayout>-->
+
+
+
 
 </FrameLayout>
