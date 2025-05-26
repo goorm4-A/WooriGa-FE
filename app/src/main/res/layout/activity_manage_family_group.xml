@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ManageFamilyGroupActivity"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <include
+        android:id="@+id/custom_toolbar"
+        layout="@layout/toolbar_home_group" />
+
+    <Button
+        android:id="@+id/create_family_group_button"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:layout_marginBottom="20dp"
+        android:padding="5dp"
+        android:text="+ 그룹 만들기"
+        android:textSize="20sp" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="80dp"
+        android:fillViewport="true">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/family_group_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp" />
+
+    </ScrollView>
+
+
+</FrameLayout>
