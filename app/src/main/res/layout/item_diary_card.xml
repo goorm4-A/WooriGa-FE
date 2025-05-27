@@ -17,7 +17,7 @@
 
     <!-- 사진 영역 -->
     <ImageView
-        android:id="@+id/image_diary"
+        android:id="@+id/imageDiary"
         android:layout_width="160dp"
         android:layout_height="160dp"
         android:layout_marginTop="15dp"
@@ -31,21 +31,21 @@
         android:id="@+id/label_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/image_diary"
+        android:layout_below="@id/imageDiary"
         android:layout_centerHorizontal="true"
         android:orientation="horizontal"
         android:paddingHorizontal="6dp"
         android:paddingVertical="0dp">
 
         <ImageView
-            android:id="@+id/image_user"
+            android:id="@+id/imageUser"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_gravity="center_vertical"
             android:src="@drawable/ic_user_circle" />
 
         <TextView
-            android:id="@+id/text_label"
+            android:id="@+id/textTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="0dp"
