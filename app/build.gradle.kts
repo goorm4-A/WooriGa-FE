@@ -54,6 +54,7 @@ dependencies {
     implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.fragment:fragment-ktx:1.8.7")
     implementation("com.github.bumptech.glide:glide:4.16.0")
-    implementation("com.google.android.flexbox:flexbox:3.0.0")
+    implementation(libs.flexbox)
+
 
 }
