@@ -102,22 +102,22 @@
                 android:scaleType="centerCrop" />
 
             <!-- 태그 -->
-            <com.google.android.flexbox.FlexboxLayout
-                android:id="@+id/containerTag"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                app:justifyContent="flex_start"
-                app:flexWrap="wrap" />
+<!--            <com.google.android.flexbox.FlexboxLayout-->
+<!--                android:id="@+id/containerTag"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="12dp"-->
+<!--                app:justifyContent="flex_start"-->
+<!--                app:flexWrap="wrap" />-->
 
             <!-- 멘션 -->
-            <com.google.android.flexbox.FlexboxLayout
-                android:id="@+id/containerMention"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                app:justifyContent="flex_start"
-                app:flexWrap="wrap" />
+<!--            <com.google.android.flexbox.FlexboxLayout-->
+<!--                android:id="@+id/containerMention"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                app:justifyContent="flex_start"-->
+<!--                app:flexWrap="wrap" />-->
 
             <!-- 댓글 목록 (리스트로 출력) -->
             <LinearLayout
