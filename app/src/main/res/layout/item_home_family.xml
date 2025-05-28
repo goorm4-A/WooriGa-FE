@@ -24,6 +24,7 @@
         android:layout_gravity="end"
         android:background="@null"
         android:src="@drawable/ic_arrow_forward"
+        android:contentDescription="가족 그룹 관리 버튼"
         app:tint="@color/black" />
 
     <ImageView

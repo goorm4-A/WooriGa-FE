@@ -95,10 +95,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="12dp"
-        android:justifyContent="flex_start"
-        android:flexWrap="wrap"/>
+        app:justifyContent="flex_start"
+        app:flexWrap="wrap"/>
 
-    <!-- 멘션 -->
     <com.google.android.flexbox.FlexboxLayout
         android:id="@+id/containerMention"
         android:layout_width="match_parent"
@@ -106,8 +105,9 @@
         app:layout_constraintTop_toBottomOf="@id/containerTag"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="8dp"
-        android:justifyContent="flex_start"
-        android:flexWrap="wrap"/>
+        app:justifyContent="flex_start"
+        app:flexWrap="wrap"/>
+
 
     <!-- 댓글 목록 RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
