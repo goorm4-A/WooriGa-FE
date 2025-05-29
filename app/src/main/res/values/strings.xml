@@ -17,5 +17,6 @@
         <item>김송이</item>
         <item>김눈송</item>
     </string-array>
+    <string name="title_activity_maps">MapsActivity</string>
 
 </resources>

@@ -23,7 +23,7 @@
             tools:context=".FamilyAnniversaryFragment"
             android:padding="5dp" >
 
-            <LinearLayout
+<!--            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:orientation="horizontal"
@@ -40,7 +40,7 @@
                     android:elevation="4dp"
                     android:spinnerMode="dropdown" />
 
-            </LinearLayout>
+            </LinearLayout>-->
 
 
             <LinearLayout

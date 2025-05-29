@@ -1,6 +1,7 @@
 package com.example.wooriga
 
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Spannable
@@ -9,23 +10,15 @@ import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.wooriga.databinding.FragmentFamilyAnniversaryBinding
 import com.example.wooriga.databinding.FragmentFamilyHistoryBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import java.text.SimpleDateFormat
 import java.util.*
 
 data class TimelineEvent(
@@ -62,12 +55,19 @@ class FamilyHistoryFragment : Fragment() {
             showHistoryBottomSheetDialog()
         }
 
+        // 상단바 지도 아이콘 클릭 -> 지도 액티비티로 이동
+        val mapButton = binding.toolbarHistory.iconMap
+        mapButton.setOnClickListener() {
+            val intent = Intent(requireContext(), HistoryMapActivity::class.java)
+            startActivity(intent)
+        }
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+/*
         // 가족 선택
         val spinner: Spinner = binding.selectFamilyHistory
         val items = listOf("가족 선택", "A 가족", "B 가족", "C 가족")
@@ -91,7 +91,7 @@ class FamilyHistoryFragment : Fragment() {
             override fun onNothingSelected(parent: AdapterView<*>) {
                 // 아무 것도 선택되지 않았을 때
             }
-        }
+        }*/
 
         // 가족사 화면 타이틀
         val name = "송이"

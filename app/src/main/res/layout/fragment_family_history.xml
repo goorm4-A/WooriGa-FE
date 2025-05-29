@@ -3,6 +3,11 @@
     android:layout_height="match_parent"
     android:background="@color/backgroundColor">
 
+    <!-- 상단 툴바 -->
+    <include
+        android:id="@+id/toolbar_history"
+        layout="@layout/toolbar_history" />
+
 
     <!-- 중앙 세로선 -->
     <View
@@ -11,12 +16,24 @@
         android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
         android:background="@color/green"
-        android:layout_marginBottom="20dp"/>
+        android:layout_marginTop="75dp"
+        android:layout_marginBottom="40dp"/>
+
+    <!-- 고정된 FAB -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addFamilyHistoryButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:contentDescription="가족사 추가 버튼"
+        android:src="@drawable/ic_add" />
 
     <!-- Scrollable 내용 -->
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="70dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,7 +48,7 @@
                 android:padding="16dp"
                 android:background="@color/backgroundColor">
 
-                <LinearLayout
+<!--                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:orientation="horizontal"
@@ -47,7 +64,7 @@
                         android:background="@drawable/rounded_background"
                         android:elevation="4dp"
                         android:spinnerMode="dropdown" />
-                </LinearLayout>
+                </LinearLayout>-->
 
                 <TextView
                     android:id="@+id/historyTitle"
@@ -80,13 +97,4 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- 고정된 FAB -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/addFamilyHistoryButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:contentDescription="가족사 추가 버튼"
-        android:src="@drawable/ic_add" />
 </FrameLayout>
