@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.wooriga.databinding.ItemDiaryCardBinding
-import com.example.wooriga.model.Diary
+import com.example.wooriga.Diary
 
 class DiaryAdapter : ListAdapter<Diary, DiaryAdapter.DiaryViewHolder>(DIARY_COMPARATOR) {
 

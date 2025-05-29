@@ -11,7 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.wooriga.databinding.BottomSheetAddDiaryBinding
 import com.example.wooriga.databinding.FragmentFamilyDiaryBinding
-import com.example.wooriga.model.Diary
+import com.example.wooriga.Diary
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 
