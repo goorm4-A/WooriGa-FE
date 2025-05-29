@@ -1,4 +1,4 @@
-package com.example.wooriga.ui.familydiary
+package com.example.wooriga
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

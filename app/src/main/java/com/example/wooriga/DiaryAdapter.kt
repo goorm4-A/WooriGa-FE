@@ -1,5 +1,4 @@
-package com.example.wooriga.ui.familydiary
-
+package com.example.wooriga
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil

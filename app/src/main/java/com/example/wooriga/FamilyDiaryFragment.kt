@@ -1,21 +1,18 @@
 package com.example.wooriga
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.wooriga.databinding.FragmentFamilyDiaryBinding
-import com.example.wooriga.ui.familydiary.FamilyDiaryViewModel
-import com.example.wooriga.ui.familydiary.DiaryAdapter
-import androidx.recyclerview.widget.GridLayoutManager
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.example.wooriga.databinding.BottomSheetAddDiaryBinding
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
+import com.example.wooriga.databinding.BottomSheetAddDiaryBinding
+import com.example.wooriga.databinding.FragmentFamilyDiaryBinding
 import com.example.wooriga.model.Diary
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 
 class FamilyDiaryFragment : Fragment() {
