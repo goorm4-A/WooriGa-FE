@@ -5,55 +5,131 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.wooriga.databinding.FragmentFamilyDiaryBinding
+import com.example.wooriga.ui.familydiary.FamilyDiaryViewModel
+import com.example.wooriga.ui.familydiary.DiaryAdapter
+import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.example.wooriga.databinding.BottomSheetAddDiaryBinding
+import android.widget.ArrayAdapter
+import android.widget.Toast
+import com.example.wooriga.model.Diary
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [FamilyDiaryFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class FamilyDiaryFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private var _binding: FragmentFamilyDiaryBinding? = null
+    private val binding get() = _binding!!
+
+    private val viewModel: FamilyDiaryViewModel by viewModels()
+    private lateinit var diaryAdapter: DiaryAdapter
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_family_diary, container, false)
+    ): View {
+        _binding = FragmentFamilyDiaryBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment FamilyDiaryFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            FamilyDiaryFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setupRecyclerView()
+        observeViewModel()
+        setupListeners()
     }
+
+    private fun setupRecyclerView() {
+        diaryAdapter = DiaryAdapter()
+        binding.recyclerDiary.apply {
+            layoutManager = GridLayoutManager(requireContext(), 2) // 열 수: 2
+            adapter = diaryAdapter
+            setHasFixedSize(true)
+        }
+    }
+
+    private fun observeViewModel() {
+        viewModel.diaryList.observe(viewLifecycleOwner) { diaries ->
+            diaryAdapter.submitList(diaries)
+        }
+    }
+
+    private fun setupListeners() {
+        binding.addFamilyHistoryButton.setOnClickListener {
+            binding.addFamilyHistoryButton.setOnClickListener {
+                showAddDiaryBottomSheet()
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    private fun showAddDiaryBottomSheet() {
+        val dialog = BottomSheetDialog(requireContext())
+        val bottomSheetBinding = BottomSheetAddDiaryBinding.inflate(LayoutInflater.from(requireContext()))
+        dialog.setContentView(bottomSheetBinding.root)
+
+        // 태그 Spinner 설정
+        val tagAdapter = ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.tag_list,
+            android.R.layout.simple_spinner_item
+        )
+        tagAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        bottomSheetBinding.spinnerTag.adapter = tagAdapter
+
+        // 참여자 Spinner 설정
+        val memberAdapter = ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.member_list,
+            android.R.layout.simple_spinner_item
+        )
+        memberAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        bottomSheetBinding.spinnerMember.adapter = memberAdapter
+
+        // 취소 버튼 클릭 리스너
+        bottomSheetBinding.cancelButton.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        // 추가 버튼 클릭 리스너
+        bottomSheetBinding.submitButton.setOnClickListener {
+            val title = bottomSheetBinding.titleInput.text.toString()
+            val location = bottomSheetBinding.locationInput.text.toString()
+            val content = bottomSheetBinding.memoInput.text.toString()
+            val date = bottomSheetBinding.dateText.text.toString()
+            val tag = bottomSheetBinding.spinnerTag.selectedItem.toString() // TODO: selectedTags 다중 선택된 태그
+            val member = bottomSheetBinding.spinnerMember.selectedItem.toString() // TODO: selectedTags 다중 선택된 태그
+
+            if (title.isBlank() || content.isBlank()) {
+                Toast.makeText(requireContext(), "제목과 내용을 입력해주세요.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val diary = Diary(
+                date = date,
+                imageUri = null, // TODO: 이미지 URI 처리 시 적용
+                title = title,
+                tag = tag,
+                member = member,
+                location = location,
+                content = content
+            )
+
+            viewModel.addDiary(diary)
+            dialog.dismiss()
+        }
+
+
+        dialog.show()
+    }
+
+
 }

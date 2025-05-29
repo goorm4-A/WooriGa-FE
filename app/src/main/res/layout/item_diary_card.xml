@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:background="#FFFFFF"
+    android:elevation="4dp">
+
+    <!-- 핀 이미지 (상단에 겹쳐 보이도록) -->
+<!--    <ImageView-->
+<!--        android:id="@+id/image_pin"-->
+<!--        android:layout_width="24dp"-->
+<!--        android:layout_height="24dp"-->
+<!--        android:layout_centerHorizontal="true"-->
+<!--        android:layout_marginTop="-8dp"-->
+<!--        android:src="@drawable/ic_pin" />-->
+
+    <!-- 사진 영역 -->
+    <ImageView
+        android:id="@+id/imageDiary"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="#DDDDDD"
+        android:scaleType="centerCrop" />
+
+    <!-- 아이콘 + 텍스트 말풍선 -->
+    <LinearLayout
+        android:id="@+id/label_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imageDiary"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal"
+        android:paddingHorizontal="6dp"
+        android:paddingVertical="0dp">
+
+        <ImageView
+            android:id="@+id/imageUser"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_user_circle" />
+
+        <TextView
+            android:id="@+id/textTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:background="@drawable/bg_bubble"
+            android:gravity="center"
+            android:text="롯데월드 갔다온 날^^"
+            android:textColor="#000000"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+</RelativeLayout>

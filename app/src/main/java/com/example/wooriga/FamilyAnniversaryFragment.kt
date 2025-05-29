@@ -1,5 +1,6 @@
 package com.example.wooriga
 
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Spannable
@@ -19,15 +20,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.wooriga.databinding.FragmentFamilyAnniversaryBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
-
-// data 클래스 정의
-data class Anniversary(
-    val date: String,
-    var title: String,
-    var tag: String,
-    var location: String,
-    var memo: String
-)
+import com.example.wooriga.model.Anniversary
 
 class FamilyAnniversaryFragment : Fragment() {
 
@@ -36,9 +29,8 @@ class FamilyAnniversaryFragment : Fragment() {
 
 
     private lateinit var adapter: AnniversaryAdapter
-
+    private val repository = AnniversaryRepository
     private val allAnnivList = mutableListOf<Anniversary>()
-    private var filteredAnnivList = mutableListOf<Anniversary>()
 
     private var selectedDate: String = ""
 
@@ -48,9 +40,11 @@ class FamilyAnniversaryFragment : Fragment() {
     ): View {
         _binding = FragmentFamilyAnniversaryBinding.inflate(inflater, container, false)
 
+        repository.loadSampleData()
+        allAnnivList.addAll(repository.getAll())
 
         // RecyclerView 설정
-        adapter = AnniversaryAdapter(mutableListOf(), ::onAnnivItemClicked)
+        adapter = AnniversaryAdapter(allAnnivList, ::onAnnivItemClicked)
         binding.annivListRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.annivListRecyclerView.adapter = adapter
 
@@ -59,6 +53,13 @@ class FamilyAnniversaryFragment : Fragment() {
             // 날짜 저장 (month는 0부터 시작하므로 +1 해줌)
             selectedDate = "%04d-%02d-%02d".format(year, month + 1, dayOfMonth)
             showBottomSheetDialog(selectedDate, null)  // null이면 새 일정
+        }
+
+        // 검색
+        binding.customToolbar.iconSearch.setOnClickListener {
+            // detail 액티비티로 이동
+            val intent = Intent(requireContext(), AnniversaryDetailActivity::class.java)
+            startActivity(intent)
         }
 
         return binding.root
@@ -70,9 +71,10 @@ class FamilyAnniversaryFragment : Fragment() {
         // 가족 선택
         val spinner: Spinner = binding.selectFamilyAnniv
         val items = listOf("가족 선택", "A 가족", "B 가족", "C 가족")
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, items)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinner.adapter = adapter
+        val adapterSpinner =
+            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, items)
+        adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner.adapter = adapterSpinner
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
@@ -104,17 +106,12 @@ class FamilyAnniversaryFragment : Fragment() {
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
         binding.annivTitle.text = spannable
-
-        // 태그 별 필터링
-        binding.annivTypeEvent.setOnClickListener { filterByTag("경조사") }
-        binding.annivTypeBirth.setOnClickListener { filterByTag("생일") }
-        binding.annivTypeAppoint.setOnClickListener { filterByTag("약속") }
-        binding.annivTypeEtc.setOnClickListener { filterByTag("기타") }
-
-        // 초기엔 전체 리스트 보여주기 (필터 해제 상태)
-        filterByTag("")
-
     }
+
+        private fun onAnnivItemClicked(anniv: Anniversary) {
+            showAnniversaryDetailDialog(anniv)
+        }
+
 
     // 기념일 등록 다이얼로그
     private fun showBottomSheetDialog(date: String, annivToEdit: Anniversary?) {
@@ -163,13 +160,16 @@ class FamilyAnniversaryFragment : Fragment() {
                 annivToEdit.tag = inputTag
                 annivToEdit.location = inputLocation
                 annivToEdit.memo = inputMemo
+
+                // repository.updateAnniversary(annivToEdit)
             } else {
                 // 새로 추가
                 val newAnniv = Anniversary(date, inputTitle, inputTag, inputLocation, inputMemo)
+                repository.addAnniversary(newAnniv)
                 allAnnivList.add(newAnniv)
             }
 
-            filterByTag("")  // 전체 필터 해제 및 리스트 갱신
+            adapter.updateList(allAnnivList) // 추가 및 수정 후 반드시 갱신 호출
             dialog.dismiss()
         }
 
@@ -218,20 +218,6 @@ class FamilyAnniversaryFragment : Fragment() {
         }
 
         dialog.show()
-    }
-
-    // 필터링
-    private fun filterByTag(tag: String) {
-        filteredAnnivList = if (tag.isEmpty()) {
-            allAnnivList.toMutableList()
-        } else {
-            allAnnivList.filter { it.tag == tag }.toMutableList()
-        }
-        adapter.updateList(filteredAnnivList)
-    }
-
-    private fun onAnnivItemClicked(anniv: Anniversary) {
-        showAnniversaryDetailDialog(anniv)  // 상세보기
     }
 
 
