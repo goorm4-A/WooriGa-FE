@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
@@ -68,7 +67,22 @@ class FamilyAnniversaryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+        // 기념일 화면 타이틀
+        val name = "송이"
+        val message = "${name}님의 기념일들을\n관리해보세요!"
+
+        val spannable = SpannableString(message)
+        spannable.setSpan(
+            StyleSpan(Typeface.BOLD),
+            0, name.length,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        binding.annivTitle.text = spannable
+
+
         // 가족 선택
+        /*
         val spinner: Spinner = binding.selectFamilyAnniv
         val items = listOf("가족 선택", "A 가족", "B 가족", "C 가족")
         val adapterSpinner =
@@ -93,19 +107,8 @@ class FamilyAnniversaryFragment : Fragment() {
                 // 아무 것도 선택되지 않았을 때
             }
         }
+        */
 
-
-        // 기념일 화면 타이틀
-        val name = "송이"
-        val message = "${name}님의 기념일들을\n관리해보세요!"
-
-        val spannable = SpannableString(message)
-        spannable.setSpan(
-            StyleSpan(Typeface.BOLD),
-            0, name.length,
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        binding.annivTitle.text = spannable
     }
 
         private fun onAnnivItemClicked(anniv: Anniversary) {
