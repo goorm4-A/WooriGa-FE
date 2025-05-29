@@ -33,7 +33,7 @@ class FamilyMottoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 툴바 안에 있는 버튼을 찾기
+        // 툴바
         val toolbar = view.findViewById<View>(R.id.custom_toolbar)
         val title = toolbar.findViewById<TextView>(R.id.tv_toolbar_title)
         val btnBack = toolbar.findViewById<ImageButton>(R.id.btn_back)
@@ -46,7 +46,5 @@ class FamilyMottoFragment : Fragment() {
         }
 
     }
-
-
 
 }

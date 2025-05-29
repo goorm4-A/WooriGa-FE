@@ -56,6 +56,28 @@ class FamilyCultureFragment : Fragment() {
                 .addToBackStack(null)
                 .commit()
         }
+
+        val buttonMood = view.findViewById<ImageButton>(R.id.button_mood)
+        buttonMood.setOnClickListener {
+            // 하단 네비게이션 숨기기
+            requireActivity().findViewById<View>(R.id.bottomNavigation).visibility = View.GONE
+            // 분위기 프래그먼트로 이동
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, FamilyMoodFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
+        val buttonRule = view.findViewById<ImageButton>(R.id.button_rule)
+        buttonRule.setOnClickListener {
+            // 하단 네비게이션 숨기기
+            requireActivity().findViewById<View>(R.id.bottomNavigation).visibility = View.GONE
+            // 규칙 프래그먼트로 이동
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, FamilyRuleFragment())
+                .addToBackStack(null)
+                .commit()
+        }
     }
 
 }
