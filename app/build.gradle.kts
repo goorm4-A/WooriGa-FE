@@ -57,6 +57,8 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.8.7")
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation(libs.flexbox)
+    implementation("androidx.navigation:navigation-fragment-ktx:2.9.0")
+    implementation("androidx.navigation:navigation-ui-ktx:2.9.0")
 
 
 }
