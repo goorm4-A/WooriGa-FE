@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WooriGa"
         tools:targetApi="31">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
+
+
         <activity
             android:name=".ConsentActivity"
             android:exported="false" />
@@ -24,13 +30,11 @@
         <activity
             android:name=".LogInActivity"
             android:exported="false" />
-        <!--
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="YOUR_API_KEY" />
-        -->
         <activity
-            android:name=".HistoryMapActivity"
+            android:name=".LocationPickerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".HistoryMapsActivity"
             android:exported="false" />
         <activity
             android:name=".AnniversaryDetailActivity"
