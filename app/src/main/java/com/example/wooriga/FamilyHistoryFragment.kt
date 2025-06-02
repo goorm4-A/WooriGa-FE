@@ -3,6 +3,7 @@ package com.example.wooriga
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Typeface
+import android.os.Build
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
@@ -14,15 +15,19 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.wooriga.databinding.FragmentFamilyHistoryBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 data class TimelineEvent(
-    val date: String,
+    val dateString: String,        // "2025.06.02" - 표시용
+    val dateObject: LocalDate,     // 정렬 - 연산용
     val title: String,
     val location: String
 )
@@ -37,6 +42,7 @@ class FamilyHistoryFragment : Fragment() {
     private val binding get() = _binding!!
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -109,11 +115,13 @@ class FamilyHistoryFragment : Fragment() {
     // 타임라인 항목 추가 함수
     private fun addTimelineEvent(event: TimelineEvent) {
         events.add(event)
-        adapter.notifyItemInserted(events.size - 1)
+        sortEventsByDate()
+        adapter.notifyDataSetChanged()
         timelineRecyclerView.scrollToPosition(events.size - 1)
     }
 
     // 가족사 등록 다이얼로그
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun showHistoryBottomSheetDialog() {
         val dialog = BottomSheetDialog(requireContext(), R.style.CustomBottomSheetDialogTheme) // 스타일 적용
         val view = layoutInflater.inflate(R.layout.bottom_sheet_add_history, null)
@@ -126,14 +134,17 @@ class FamilyHistoryFragment : Fragment() {
         val cancelButton = view.findViewById<Button>(R.id.cancelButton)
         val addButton = view.findViewById<Button>(R.id.submitButton)
 
+        var selectedLocalDate: LocalDate? = null  // 선택된 날짜 저장용
+
         // 날짜 선택
         dateInput.setOnClickListener {
             val calendar = Calendar.getInstance()
             val datePickerDialog = DatePickerDialog(
                 requireContext(),
                 { _, year, month, dayOfMonth ->
-                    val selectedDate = String.format("%04d.%02d.%02d", year, month + 1, dayOfMonth)
-                    dateOutput.text = selectedDate
+                    selectedLocalDate = LocalDate.of(year, month + 1, dayOfMonth)
+                    val formattedDate = selectedLocalDate!!.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+                    dateOutput.text = formattedDate
                 },
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
@@ -148,10 +159,15 @@ class FamilyHistoryFragment : Fragment() {
         addButton.setOnClickListener {
             val title = titleInput.text.toString()
             val location = locationInput.text.toString()
-            val date = dateOutput.text.toString()
+            val dateString = dateOutput.text.toString()
 
-            if (title.isNotBlank() && location.isNotBlank()) {
-                val event = TimelineEvent(date = date, title = title, location = location)
+            if (title.isNotBlank() && location.isNotBlank() && selectedLocalDate != null) {
+                val event = TimelineEvent(
+                    dateString = dateString,
+                    dateObject = selectedLocalDate!!,
+                    title = title,
+                    location = location
+                )
                 addTimelineEvent(event)
                 dialog.dismiss()
             } else {
@@ -182,6 +198,10 @@ class FamilyHistoryFragment : Fragment() {
 
     
     // 날짜 별로 정렬
+    private fun sortEventsByDate() {
+        events.sortWith(compareBy { it.dateObject })
+        adapter.notifyDataSetChanged()
+    }
 
 
 
