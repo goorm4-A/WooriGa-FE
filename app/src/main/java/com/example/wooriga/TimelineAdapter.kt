@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 
 class TimelineAdapter(private val events: MutableList<TimelineEvent>) :
@@ -40,7 +39,7 @@ class TimelineAdapter(private val events: MutableList<TimelineEvent>) :
 
             holder.titleTextRight.text = event.title
             holder.locationTextRight.text = event.location
-            holder.dateTextRight.text = event.date
+            holder.dateTextRight.text = event.dateString
         } else {
             // 왼쪽 배치
             holder.rightCard.visibility = View.GONE
@@ -48,7 +47,7 @@ class TimelineAdapter(private val events: MutableList<TimelineEvent>) :
 
             holder.titleTextLeft.text = event.title
             holder.locationTextLeft.text = event.location
-            holder.dateTextLeft.text = event.date
+            holder.dateTextLeft.text = event.dateString
         }
     }
 
