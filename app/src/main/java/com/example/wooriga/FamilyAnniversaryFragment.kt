@@ -80,35 +80,6 @@ class FamilyAnniversaryFragment : Fragment() {
         )
         binding.annivTitle.text = spannable
 
-
-        // 가족 선택
-        /*
-        val spinner: Spinner = binding.selectFamilyAnniv
-        val items = listOf("가족 선택", "A 가족", "B 가족", "C 가족")
-        val adapterSpinner =
-            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, items)
-        adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinner.adapter = adapterSpinner
-
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View,
-                position: Int,
-                id: Long
-            ) {
-                val selected = items[position]
-                if (position != 0) {
-                    Toast.makeText(requireContext(), "선택한 항목: $selected", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                // 아무 것도 선택되지 않았을 때
-            }
-        }
-        */
-
     }
 
         private fun onAnnivItemClicked(anniv: Anniversary) {

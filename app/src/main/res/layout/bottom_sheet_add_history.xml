@@ -17,7 +17,7 @@
     <TextView
         android:id="@+id/dateInput"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:text="날짜 선택"
         android:clickable="true"
         android:textSize="22sp"
@@ -26,14 +26,15 @@
     <TextView
         android:id="@+id/dateOutput"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:hint="선택된 날짜"
-        android:layout_marginBottom="20dp"/>
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/edit_text_box"/>
 
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:text="제목"
         android:textSize="22sp"
         android:textStyle="bold"
@@ -42,20 +43,28 @@
         android:id="@+id/titleInput"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_marginBottom="20dp"/>
+        android:layout_marginBottom="20dp"
+        android:hint="제목을 입력하세요"
+        android:background="@drawable/edit_text_box"/>
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="위치"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="10dp"/>
-    <EditText
         android:id="@+id/locationInput"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_marginBottom="20dp"/>
+        android:layout_marginBottom="10dp"
+        android:clickable="true"
+        android:text="위치 선택"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/locationOutput"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginBottom="20dp"
+        android:hint="선택된 위치"
+        android:background="@drawable/edit_text_box"/>
+
 
 
 
