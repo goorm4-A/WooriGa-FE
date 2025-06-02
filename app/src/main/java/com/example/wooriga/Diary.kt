@@ -1,4 +1,4 @@
-package com.example.wooriga.model
+package com.example.wooriga
 
 data class Diary(
     val date: String,

@@ -1,13 +1,15 @@
 package com.example.wooriga
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.TextView
+import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.example.wooriga.databinding.FragmentDiaryDetailBinding
 import com.example.wooriga.databinding.ItemCommentBinding
-import com.bumptech.glide.Glide
 
 // data 클래스 정의
 data class Comment(
@@ -53,8 +55,17 @@ class DiaryDetailFragment : Fragment() {
             }
         }
 
+        // 툴바
+        val toolbar = view.findViewById<View>(R.id.custom_toolbar)
+        val title = toolbar.findViewById<TextView>(R.id.tv_toolbar_title)
+        val btnBack = toolbar.findViewById<ImageButton>(R.id.btn_back)
 
-        // 툴바 뒤로가기 버튼 클릭 리스너
+        title.text = "추억"
+
+        btnBack.setOnClickListener {
+            requireActivity().findViewById<View>(R.id.bottomNavigation).visibility = View.VISIBLE
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
 
     }
 
