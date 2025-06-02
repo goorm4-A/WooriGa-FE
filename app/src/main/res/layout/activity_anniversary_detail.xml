@@ -11,8 +11,8 @@
 
     <!-- 툴바 -->
     <include
-        layout="@layout/toolbar_anniversary_detail"
-        android:id="@+id/toolbar_anniversary_detail" />
+        android:id="@+id/annivDetailToolbar"
+        layout="@layout/toolbar_anniversary_detail" />
 
 
     <LinearLayout

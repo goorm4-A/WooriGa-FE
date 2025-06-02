@@ -36,6 +36,11 @@ class ManageFamilyGroupActivity : AppCompatActivity() {
         groupList.add(FamilyGroup(R.drawable.ic_family, "가족 그룹 A", 4))
         adapter.notifyDataSetChanged()
 
+        // 뒤로가기 버튼 클릭 -> 이전 화면으로 이동
+        binding.manageFamilyGroupToolbar.backButton.setOnClickListener {
+            finish()
+        }
+
         // "+ 그룹 만들기" 버튼 클릭 시 다이얼로그 or 페이지 이동
         binding.createFamilyGroupButton.setOnClickListener {
             showFamilyGroupBottomSheetDialog()
