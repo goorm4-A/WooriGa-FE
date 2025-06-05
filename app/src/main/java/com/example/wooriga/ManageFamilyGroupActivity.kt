@@ -45,6 +45,9 @@ class ManageFamilyGroupActivity : AppCompatActivity() {
         binding.createFamilyGroupButton.setOnClickListener {
             showFamilyGroupBottomSheetDialog()
         }
+
+        // 그룹 아이템 클릭 -> 가족 트리 페이지로 이동
+
     }
 
     private fun showFamilyGroupBottomSheetDialog() {
