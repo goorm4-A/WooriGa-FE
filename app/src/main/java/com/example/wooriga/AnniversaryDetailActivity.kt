@@ -24,7 +24,7 @@ class AnniversaryDetailActivity : AppCompatActivity() {
         initFilterButtons()
 
         // 뒤로가기 (이전 화면으로 이동)
-        binding.toolbarAnniversaryDetail.buttonBack.setOnClickListener {
+        binding.annivDetailToolbar.buttonBack.setOnClickListener {
             finish()
         }
 

@@ -56,7 +56,7 @@ class HistoryMapsActivity : AppCompatActivity(), OnMapReadyCallback {
         setContentView(binding.root)
 
         // 상단바의 < 뒤로가기 버튼 클릭 시 이전 액티비티로 이동
-        binding.backButton.setOnClickListener {
+        binding.historyMapToolbar.backButton.setOnClickListener {
             finish()
         }
 
