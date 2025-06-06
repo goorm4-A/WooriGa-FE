@@ -4,10 +4,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.example.wooriga.model.History
 
-class TimelineAdapter(private val events: MutableList<TimelineEvent>) :
+class TimelineAdapter(private val events: MutableList<History>) :
     RecyclerView.Adapter<TimelineAdapter.TimelineViewHolder>() {
 
     inner class TimelineViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -39,16 +39,16 @@ class TimelineAdapter(private val events: MutableList<TimelineEvent>) :
             holder.rightCard.visibility = View.VISIBLE
 
             holder.titleTextRight.text = event.title
-            holder.locationTextRight.text = event.location
-            holder.dateTextRight.text = event.date
+            holder.locationTextRight.text = event.locationName
+            holder.dateTextRight.text = event.dateString
         } else {
             // 왼쪽 배치
             holder.rightCard.visibility = View.GONE
             holder.leftCard.visibility = View.VISIBLE
 
             holder.titleTextLeft.text = event.title
-            holder.locationTextLeft.text = event.location
-            holder.dateTextLeft.text = event.date
+            holder.locationTextLeft.text = event.locationName
+            holder.dateTextLeft.text = event.dateString
         }
     }
 

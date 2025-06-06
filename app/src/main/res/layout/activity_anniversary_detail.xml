@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".AnniversaryDetailActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="10dp">
+
+    <!-- 툴바 -->
+    <include
+        android:id="@+id/annivDetailToolbar"
+        layout="@layout/toolbar_anniversary_detail" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingHorizontal="30dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
+
+    <!-- 검색 -->
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/annivSearchView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/rounded_background"
+        android:elevation="4dp"
+        app:iconifiedByDefault="false"
+        app:queryHint="결혼식" />
+
+    <!-- 태그 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="15dp"
+        android:padding="10dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/annivTypeEvent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/tag_anniversary"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:layout_marginRight="10dp"
+            android:elevation="4dp"
+            android:text="# 경조사"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/annivTypeBirth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/tag_anniversary"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:layout_marginRight="10dp"
+            android:elevation="6dp"
+            android:text="# 생일"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/annivTypeAppoint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/tag_anniversary"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:layout_marginRight="10dp"
+            android:elevation="6dp"
+            android:text="# 약속"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/annivTypeEtc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/tag_anniversary"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:layout_marginRight="10dp"
+            android:elevation="6dp"
+            android:text="# 기타"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/annivTypeAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/tag_anniversary"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:layout_marginRight="10dp"
+            android:elevation="6dp"
+            android:text="# 전체"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
+    </LinearLayout>
+
+    <!-- 기념일 목록 -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/annivListRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingTop="20dp"/>
+
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

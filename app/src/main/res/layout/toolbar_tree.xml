@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/home_group_toolbar"
+    android:id="@+id/tree_toolbar"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="@color/transparent"
@@ -23,7 +23,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="가족 그룹 관리"
+            android:text="가계도"
             android:textSize="20sp"
             android:textColor="@color/black"
             android:layout_gravity="center"
@@ -40,6 +40,5 @@
             android:padding="8dp"/>
 
     </FrameLayout>
-
 
 </androidx.appcompat.widget.Toolbar>
