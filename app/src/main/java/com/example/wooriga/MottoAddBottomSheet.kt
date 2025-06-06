@@ -8,7 +8,7 @@ import android.widget.Toast
 import com.example.wooriga.databinding.BottomSheetAddMottoBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class AddMottoBottomSheet(
+class MottoAddBottomSheet(
     private val onSubmit: (familyName: String, motto: String) -> Unit
 ) : BottomSheetDialogFragment() {
 

@@ -1,6 +1,7 @@
 package com.example.wooriga
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.wooriga.databinding.FragmentFamilyMottoBinding
 
 class FamilyMottoFragment : Fragment() {
@@ -50,11 +52,15 @@ class FamilyMottoFragment : Fragment() {
         }
 
         // RecyclerView 세팅
-        mottoAdapter = MottoAdapter()
+        mottoAdapter = MottoAdapter { clickedMotto ->
+            MottoDetailBottomSheet(clickedMotto).show(parentFragmentManager, "MottoDetailBottomSheet")
+        }
+        binding.recyclerFamilyMotto.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerFamilyMotto.adapter = mottoAdapter
 
         // LiveData 관찰
         viewModel.mottos.observe(viewLifecycleOwner) {
+            Log.d("CHECK", "갱신된 가훈 수: ${it.size}")
             mottoAdapter.submitList(it)
         }
 
@@ -63,7 +69,7 @@ class FamilyMottoFragment : Fragment() {
 
         // 추가 버튼 클릭
         binding.addFamilyMotto.setOnClickListener {
-            AddMottoBottomSheet { familyName, motto ->
+            MottoAddBottomSheet { familyName, motto ->
                 viewModel.addMotto(userId = 1L, familyName = familyName, motto = motto)
             }.show(parentFragmentManager, "AddMottoBottomSheet")
         }
