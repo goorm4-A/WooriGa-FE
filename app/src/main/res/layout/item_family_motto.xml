@@ -19,7 +19,6 @@
 
         <!-- 하트 아이콘 -->
         <ImageView
-            android:id="@+id/ivHeart"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_heart" />
@@ -33,7 +32,7 @@
             android:layout_marginStart="12dp">
 
             <TextView
-                android:id="@+id/tvMotto"
+                android:id="@+id/text_motto"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="가훈"
@@ -42,7 +41,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvDate"
+                android:id="@+id/text_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="날짜"
