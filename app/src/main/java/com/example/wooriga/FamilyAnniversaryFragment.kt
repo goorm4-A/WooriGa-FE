@@ -11,12 +11,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Spinner
-import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.wooriga.databinding.BottomSheetAddAnniversaryBinding
+import com.example.wooriga.databinding.BottomSheetDetailAnniversaryBinding
 import com.example.wooriga.databinding.FragmentFamilyAnniversaryBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.example.wooriga.model.Anniversary
@@ -89,16 +87,17 @@ class FamilyAnniversaryFragment : Fragment() {
 
     // 기념일 등록 다이얼로그
     private fun showBottomSheetDialog(date: String, annivToEdit: Anniversary?) {
-        val dialog = BottomSheetDialog(requireContext(), R.style.CustomBottomSheetDialogTheme) // 스타일 적용
-        val view = layoutInflater.inflate(R.layout.bottom_sheet_add_anniversary, null)
+        val dialog = BottomSheetDialog(requireContext())
+        val bottomSheetBinding = BottomSheetAddAnniversaryBinding.inflate(LayoutInflater.from(requireContext()))
+        dialog.setContentView(bottomSheetBinding.root)
 
-        val titleInput = view.findViewById<EditText>(R.id.titleInput)
-        val spinner = view.findViewById<Spinner>(R.id.tagInput)
-        val locationInput = view.findViewById<EditText>(R.id.locationInput)
-        val memoInput = view.findViewById<EditText>(R.id.memoInput)
-        val submitButton = view.findViewById<Button>(R.id.submitButton)
-        val cancelButton = view.findViewById<Button>(R.id.cancelButton)
-        val dateView = view.findViewById<TextView>(R.id.dateText)
+        val titleInput = bottomSheetBinding.titleInput
+        val spinner = bottomSheetBinding.tagInput
+        val locationInput = bottomSheetBinding.locationInput
+        val memoInput = bottomSheetBinding.memoInput
+        val submitButton = bottomSheetBinding.submitButton
+        val cancelButton = bottomSheetBinding.cancelButton
+        val dateView = bottomSheetBinding.dateText
 
         dateView.text = date
 
@@ -149,49 +148,38 @@ class FamilyAnniversaryFragment : Fragment() {
 
         cancelButton.setOnClickListener { dialog.dismiss() }
 
-        dialog.setContentView(view)
-        view.post {
-            val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-            bottomSheet?.layoutParams?.height = ViewGroup.LayoutParams.MATCH_PARENT
-        }
-
         dialog.show()
+        dialog.setCanceledOnTouchOutside(true) // 바깥 터치 시 닫히도록 설정
     }
 
 
     // 상세보기 다이얼로그
     private fun showAnniversaryDetailDialog(anniv: Anniversary) {
-        val dialog = BottomSheetDialog(requireContext(), R.style.CustomBottomSheetDialogTheme)
-        val view = layoutInflater.inflate(R.layout.bottom_sheet_detail_anniversary, null)
+        val dialog = BottomSheetDialog(requireContext())
+        val bottomSheetBinding = BottomSheetDetailAnniversaryBinding.inflate(LayoutInflater.from(requireContext()))
+        dialog.setContentView(bottomSheetBinding.root)
 
-        view.findViewById<TextView>(R.id.dateOutput).text = anniv.date
-        view.findViewById<TextView>(R.id.titleOutput).text = anniv.title
-        view.findViewById<TextView>(R.id.tagOutput).text = anniv.tag
-        view.findViewById<TextView>(R.id.locationOutput).text = anniv.location
-        view.findViewById<TextView>(R.id.memoOutput).text = anniv.memo
+        bottomSheetBinding.dateOutput.text = anniv.date
+        bottomSheetBinding.titleOutput.text = anniv.title
+        bottomSheetBinding.tagOutput.text = anniv.tag
+        bottomSheetBinding.locationOutput.text = anniv.location
+        bottomSheetBinding.memoOutput.text = anniv.memo
 
         // 닫기 버튼
-        val closeButton = view.findViewById<Button>(R.id.closeButton)
+        val closeButton =bottomSheetBinding.closeButton
         closeButton.setOnClickListener {
             dialog.dismiss()
         }
         
         // 수정 버튼
-        val editButton = view.findViewById<Button>(R.id.editButton)
+        val editButton = bottomSheetBinding.editButton
         editButton.setOnClickListener {
             dialog.dismiss()  // 상세보기 다이얼로그 닫기
             showBottomSheetDialog(anniv.date, anniv) // 수정 화면으로 이동
         }
 
-
-        dialog.setContentView(view)
-        view.post {
-            val bottomSheet =
-                dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-            bottomSheet?.layoutParams?.height = ViewGroup.LayoutParams.MATCH_PARENT
-        }
-
         dialog.show()
+        dialog.setCanceledOnTouchOutside(true) // 바깥 터치 시 닫히도록 설정
     }
 
 

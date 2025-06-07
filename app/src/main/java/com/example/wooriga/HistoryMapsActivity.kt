@@ -103,7 +103,7 @@ class HistoryMapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
     private fun showHistoryBottomSheet(history: History) {
-        val bottomSheetDialog = BottomSheetDialog(this, R.style.CustomBottomSheetDialogTheme)
+        val dialog = BottomSheetDialog(this)
         val bottomSheetBinding = BottomSheetHistoryMapBinding.inflate(LayoutInflater.from(this))
 
         bottomSheetBinding.textViewTitle.text = history.title
@@ -111,8 +111,8 @@ class HistoryMapsActivity : AppCompatActivity(), OnMapReadyCallback {
         bottomSheetBinding.textViewLocation.text = history.locationName
         bottomSheetBinding.textViewFamily.text = history.family
 
-        bottomSheetDialog.setContentView(bottomSheetBinding.root)
-        bottomSheetDialog.show()
+        dialog.setContentView(bottomSheetBinding.root)
+        dialog.show()
     }
 }
 

@@ -1,16 +1,11 @@
 package com.example.wooriga
 
 import android.os.Bundle
-import android.view.View
-import android.view.ViewGroup
-import android.widget.EditText
+import android.view.LayoutInflater
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.wooriga.databinding.ActivityFamilyTreeBinding
+import com.example.wooriga.databinding.BottomSheetAddFamilyBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class FamilyTreeActivity : AppCompatActivity() {
@@ -35,17 +30,17 @@ class FamilyTreeActivity : AppCompatActivity() {
     }
 
     private fun showAddFamilyMemberDialog() {
-        val dialog = BottomSheetDialog(this, R.style.CustomBottomSheetDialogTheme) // 스타일 적용
-        val view = layoutInflater.inflate(R.layout.bottom_sheet_add_family, null)
+        val dialog = BottomSheetDialog(this)
+        val bottomSheetBinding = BottomSheetAddFamilyBinding.inflate(LayoutInflater.from(this))
 
         // 사진
-        val spinner = view.findViewById<android.widget.Spinner>(R.id.spinnerTagF)
-        val name = view.findViewById<EditText>(R.id.nameInputF)
-        val relation = view.findViewById<EditText>(R.id.relationInputF)
-        val birth = view.findViewById<EditText>(R.id.birthInputF)
+        // val spinner = bottomSheetBinding.spinnerTagF
+        val name = bottomSheetBinding.nameInputF
+        val relation = bottomSheetBinding.relationInputF
+        val birth = bottomSheetBinding.birthInputF
 
-        val cancelButton = view.findViewById<android.widget.Button>(R.id.cancelButtonF)
-        val submitButton = view.findViewById<android.widget.Button>(R.id.submitButtonF)
+        val cancelButton = bottomSheetBinding.cancelButtonF
+        val submitButton = bottomSheetBinding.submitButtonF
 
         cancelButton.setOnClickListener {
             dialog.dismiss()
@@ -58,12 +53,7 @@ class FamilyTreeActivity : AppCompatActivity() {
 
         }
 
-        dialog.setContentView(view)
-        view.post {
-            val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-            bottomSheet?.layoutParams?.height = ViewGroup.LayoutParams.MATCH_PARENT
-        }
-
+        dialog.setContentView(bottomSheetBinding.root)
         dialog.show()
 
         dialog.setCanceledOnTouchOutside(true) // 바깥 터치 시 닫히도록 설정
