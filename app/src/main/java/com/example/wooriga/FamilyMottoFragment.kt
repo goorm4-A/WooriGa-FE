@@ -67,7 +67,7 @@ class FamilyMottoFragment : Fragment() {
         // 데이터 불러오기 (임시 id로 예시)
         viewModel.loadMottos(familyId = 1L, userId = 1L)
 
-        // 추가 버튼 클릭
+        // 추가 플로팅 버튼 클릭
         binding.addFamilyMotto.setOnClickListener {
             MottoAddBottomSheet { familyName, motto ->
                 viewModel.addMotto(userId = 1L, familyName = familyName, motto = motto)

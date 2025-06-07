@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.example.wooriga.databinding.BottomSheetDetailMottoBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
@@ -36,8 +35,9 @@ class MottoDetailBottomSheet(
         }
 
         binding.btnEdit.setOnClickListener {
-            Toast.makeText(requireContext(), "수정 기능은 추후 구현", Toast.LENGTH_SHORT).show()
+            dismiss()  // 기존 바텀시트 닫기 먼저
         }
+
     }
 
     override fun onDestroyView() {

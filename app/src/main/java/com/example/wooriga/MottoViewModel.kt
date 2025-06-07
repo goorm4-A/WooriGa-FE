@@ -56,6 +56,17 @@ class MottoViewModel : ViewModel() {
 //        }
     }
 
+    fun editMotto(mottoId: Long, newFamily: String, newTitle: String) {
+        val currentList = mottos.value.orEmpty()
+        val updatedList = currentList.map {
+            if (it.id == mottoId) it.copy(title = newTitle, familyName = newFamily) else it
+        }
+        mottos.value = updatedList
+
+        // api 사용
+    }
+
+
     // 오늘 날짜 불러오는 함수
     private fun getToday(): String {
         val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
