@@ -10,6 +10,12 @@
         android:id="@+id/familyTreeToolbar"
         layout="@layout/toolbar_tree" />
 
+    <com.example.wooriga.FamilyTreeView
+        android:id="@+id/familyTreeView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="56dp"/>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addFamilyMemberButton"
         android:layout_width="wrap_content"
