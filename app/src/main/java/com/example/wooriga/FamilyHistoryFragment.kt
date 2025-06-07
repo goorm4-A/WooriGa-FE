@@ -11,8 +11,6 @@ import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -21,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.wooriga.databinding.BottomSheetAddHistoryBinding
 import com.example.wooriga.databinding.FragmentFamilyHistoryBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.time.LocalDate
@@ -101,18 +100,18 @@ class FamilyHistoryFragment : Fragment() {
     // 가족사 등록 다이얼로그
     @RequiresApi(Build.VERSION_CODES.O)
     private fun showHistoryBottomSheetDialog() {
-        val dialog = BottomSheetDialog(requireContext(), R.style.CustomBottomSheetDialogTheme) // 스타일 적용
-        val view = layoutInflater.inflate(R.layout.bottom_sheet_add_history, null)
+        val dialog = BottomSheetDialog(requireContext())
+        val bottomSheetBinding = BottomSheetAddHistoryBinding.inflate(LayoutInflater.from(requireContext()))
         dialogView = view // 위치 선택 후 주소 반영 위해 저장
 
-        val dateInput = view.findViewById<TextView>(R.id.dateInput)
-        val dateOutput = view.findViewById<TextView>(R.id.dateOutput)
-        val titleInput = view.findViewById<EditText>(R.id.titleInput)
-        val locationInput = view.findViewById<TextView>(R.id.locationInput)
-        /*val locationOutput = view.findViewById<TextView>(R.id.locationOutput)*/
+        val dateInput = bottomSheetBinding.dateInput
+        val dateOutput = bottomSheetBinding.dateOutput
+        val titleInput = bottomSheetBinding.titleInput
+        val locationInput = bottomSheetBinding.locationInput
+        /*val locationOutput = bottomSheetBinding.locationOutput*/
 
-        val cancelButton = view.findViewById<Button>(R.id.cancelButton)
-        val addButton = view.findViewById<Button>(R.id.submitButton)
+        val cancelButton = bottomSheetBinding.cancelButton
+        val addButton = bottomSheetBinding.submitButton
 
         var selectedLocalDate: LocalDate? = null  // 선택된 날짜 저장용
 
@@ -170,13 +169,9 @@ class FamilyHistoryFragment : Fragment() {
             dialog.dismiss()
         }
 
-        dialog.setContentView(view)
-        view.post {
-            val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-            bottomSheet?.layoutParams?.height = ViewGroup.LayoutParams.MATCH_PARENT
-        }
-
+        dialog.setContentView(bottomSheetBinding.root)
         dialog.show()
+        dialog.setCanceledOnTouchOutside(true) // 바깥 터치 시 닫히도록 설정
 
 
     }
