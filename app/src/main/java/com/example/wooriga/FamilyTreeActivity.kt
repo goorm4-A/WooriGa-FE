@@ -2,7 +2,7 @@ package com.example.wooriga
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.widget.TextView
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.wooriga.databinding.ActivityFamilyTreeBinding
@@ -13,7 +13,7 @@ class FamilyTreeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityFamilyTreeBinding
     private lateinit var familyTreeView: FamilyTreeView
-    private val familyMembers = mutableListOf<FamilyMember>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,6 +21,9 @@ class FamilyTreeActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         familyTreeView = binding.familyTreeView
+        val container = binding.familyMemberContainer
+        familyTreeView.setContainer(container) // FrameLayout 등
+        familyTreeView.initializeTree(this)
 
         // "+" 버튼 클릭 -> 가족 추가 다이얼로그
         binding.addFamilyMemberButton.setOnClickListener {
@@ -39,32 +42,38 @@ class FamilyTreeActivity : AppCompatActivity() {
         val bottomSheetBinding = BottomSheetAddFamilyBinding.inflate(LayoutInflater.from(this))
 
         // 사진
-        // val spinner = bottomSheetBinding.spinnerTagF
         val name = bottomSheetBinding.nameInputF
-        val relation = bottomSheetBinding.relationInputF
+        val spinner = bottomSheetBinding.relationSpinner
         val birth = bottomSheetBinding.birthInputF
 
         val cancelButton = bottomSheetBinding.cancelButtonF
         val submitButton = bottomSheetBinding.submitButtonF
+
+        // 스피너 설정 (가족 관계)
+        val relationOptions = resources.getStringArray(R.array.relation_array)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, relationOptions)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner.adapter = adapter
 
         cancelButton.setOnClickListener {
             dialog.dismiss()
         }
 
         submitButton.setOnClickListener {
-            // 여기에 가족 추가 로직 구현 (가계도)
             val name = name.text.toString()
-            val relation = relation.text.toString()
+            val relation = spinner.selectedItem.toString()
             val birth = birth.text.toString()
 
-            val member = FamilyMember(name, relation, birth)
-            familyMembers.add(member)
 
-            drawFamilyTree()
+            if (name.isBlank() || birth.isBlank()) {
+                Toast.makeText(this, "이름과 생년월일을 입력해주세요.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
-            dialog.dismiss() // 다이얼로그 닫기
-            Toast.makeText(this, "가족이 추가되었습니다. $name, $relation, $birth", Toast.LENGTH_SHORT).show()
-
+            // 여기에 가족 추가 로직 구현 (가계도 시각화)
+            val member = FamilyMember(name, relation, birth, isUserAdded = true)
+            familyTreeView.addMember(this, member)
+            dialog.dismiss()
         }
 
         dialog.setContentView(bottomSheetBinding.root)
@@ -72,38 +81,5 @@ class FamilyTreeActivity : AppCompatActivity() {
 
         dialog.setCanceledOnTouchOutside(true) // 바깥 터치 시 닫히도록 설정
     }
-
-    private fun drawFamilyTree() {
-        familyTreeView.clearAll()
-
-        val genMap = mutableMapOf<Int, MutableList<FamilyMember>>()
-        for (member in familyMembers) {
-            val gen = getGenerationLevel(member.relation)
-            genMap.getOrPut(gen) { mutableListOf() }.add(member)
-        }
-
-        genMap.toSortedMap().forEach { (gen, members) ->
-            for (m in members) {
-                val view = TextView(this).apply {
-                    text = "${m.name}\n(${m.relation})"
-                    setBackgroundResource(R.drawable.member_box_background)
-                    textSize = 14f
-                    setPadding(24, 24, 24, 24)
-                }
-                familyTreeView.addMemberView(view, gen)
-            }
-        }
-    }
-
-    private fun getGenerationLevel(relation: String): Int {
-        return when (relation) {
-            "할아버지", "할머니" -> 0
-            "아버지", "어머니", "삼촌", "이모" -> 1
-            "나", "형", "오빠", "누나", "언니", "동생" -> 2
-            "아들", "딸" -> 4
-            else -> 5
-        }
-    }
-
 
 }

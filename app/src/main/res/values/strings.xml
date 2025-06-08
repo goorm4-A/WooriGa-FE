@@ -20,4 +20,23 @@
     <string name="title_activity_maps">MapsActivity</string>
     <string name="title_activity_history_maps">HistoryMapsActivity</string>
 
+    <string-array name="relation_array">
+        <item>외할머니</item>
+        <item>외할아버지</item>
+        <item>이모</item>
+        <item>외삼촌</item>
+        <item>어머니</item>
+        <item>친할머니</item>
+        <item>친할아버지</item>
+        <item>고모</item>
+        <item>작은아빠</item>
+        <item>아버지</item>
+        <item>오빠</item>
+        <item>언니</item>
+        <item>나</item>
+        <item>여동생</item>
+        <item>남동생</item>
+    </string-array>
+
+
 </resources>
