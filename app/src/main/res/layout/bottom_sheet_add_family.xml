@@ -52,14 +52,14 @@
             android:layout_height="wrap_content"
             android:text="가족 선택"/>
 
-        <!-- 태그 -->
+        <!-- 태그
         <Spinner
-            android:id="@+id/spinnerTagF"
+            android:id="@+id/FamilySpinner"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="@drawable/edit_text_box"
             android:layout_marginBottom="10dp"
-            />
+            /> -->
 
         <EditText
             android:id="@+id/nameInputF"
@@ -70,8 +70,8 @@
             android:inputType="textPersonName"
             android:layout_marginBottom="10dp"/>
 
-        <EditText
-            android:id="@+id/relationInputF"
+        <Spinner
+            android:id="@+id/relationSpinner"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="@drawable/edit_text_box"

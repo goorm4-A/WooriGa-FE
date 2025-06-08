@@ -89,7 +89,6 @@ class FamilyAnniversaryFragment : Fragment() {
     private fun showBottomSheetDialog(date: String, annivToEdit: Anniversary?) {
         val dialog = BottomSheetDialog(requireContext())
         val bottomSheetBinding = BottomSheetAddAnniversaryBinding.inflate(LayoutInflater.from(requireContext()))
-        dialog.setContentView(bottomSheetBinding.root)
 
         val titleInput = bottomSheetBinding.titleInput
         val spinner = bottomSheetBinding.tagInput
@@ -148,6 +147,7 @@ class FamilyAnniversaryFragment : Fragment() {
 
         cancelButton.setOnClickListener { dialog.dismiss() }
 
+        dialog.setContentView(bottomSheetBinding.root)
         dialog.show()
         dialog.setCanceledOnTouchOutside(true) // 바깥 터치 시 닫히도록 설정
     }
