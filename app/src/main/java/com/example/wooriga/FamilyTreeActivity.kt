@@ -95,4 +95,56 @@ class FamilyTreeActivity : AppCompatActivity() {
         dialog.setCanceledOnTouchOutside(true) // 바깥 터치 시 닫히도록 설정
     }
 
+    internal fun showEditFamilyMemberDialog(member: FamilyMember) {
+        val dialog = BottomSheetDialog(this)
+        val bottomSheetBinding = BottomSheetAddFamilyBinding.inflate(LayoutInflater.from(this))
+
+        // 사진
+        val name = bottomSheetBinding.nameInputF
+        val birth = bottomSheetBinding.birthInputF
+
+        val relation = member.relation // 수정 불가
+        bottomSheetBinding.relationText.text = relation
+        bottomSheetBinding.relationSpinner.visibility = android.view.View.GONE // 스피너 숨김
+        bottomSheetBinding.relationText.visibility = android.view.View.VISIBLE // 텍스트 보이기
+
+        val cancelButton = bottomSheetBinding.cancelButtonF
+        val submitButton = bottomSheetBinding.submitButtonF
+
+        // 기존 정보 세팅
+        name.setText(member.name)
+        birth.setText(member.birth)
+
+
+        cancelButton.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        submitButton.setOnClickListener {
+            val newName = name.text.toString()
+            val newBirth = birth.text.toString()
+
+            if (newName.isBlank() || newBirth.isBlank()) {
+                Toast.makeText(this, "이름과 생년월일을 입력해주세요.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // 데이터 수정
+            member.name = newName
+            member.birth = newBirth
+
+            // 다시 그리기
+            familyTreeView.layoutMembers()
+            familyTreeView.addMemberViews(this)
+            familyTreeView.invalidate()
+
+            dialog.dismiss()
+        }
+
+        dialog.setContentView(bottomSheetBinding.root)
+        dialog.show()
+
+        dialog.setCanceledOnTouchOutside(true) // 바깥 터치 시 닫히도록 설정
+    }
+
 }
