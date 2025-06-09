@@ -44,7 +44,7 @@ class FamilyTreeActivity : AppCompatActivity() {
             familyTreeView.post {
                 val x = it.x.toInt()
                 val y = it.y.toInt()
-                horizontalScrollView.scrollTo(x-400, 0) // 가로 스크롤 위치
+                horizontalScrollView.scrollTo(x-202, 0) // 가로 스크롤 위치
                 scrollView.scrollTo(0, y) // 세로 스크롤 위치
             }
         }

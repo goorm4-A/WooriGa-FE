@@ -3,12 +3,9 @@ package com.example.wooriga
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
-import android.widget.LinearLayout
 import android.widget.TextView
 
 
@@ -28,9 +25,13 @@ class FamilyTreeView @JvmOverloads constructor(
 
     private var container: ViewGroup? = null
 
+    private var centerX = 0f// 고정 중심 변수
+
     private var isInitialized = false
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
+
+        centerX = width / 2f // 화면의 가로 중앙을 고정 중심으로 설정
 
         if (!isInitialized && members.isNotEmpty()) {
             layoutMembers()
@@ -64,16 +65,19 @@ class FamilyTreeView @JvmOverloads constructor(
     }
 
     fun addMember(context: Context, member: FamilyMember) {
-        members.add(member)
-        layoutMembers()
-        addMemberViews(context)
-        invalidate()
+        members.add(member)             // 리스트에 추가
+        layoutMembers()                 // 모든 구성원의 위치 재배치
+        addMemberViews(context)        // 새 멤버는 새 View 추가, 기존은 위치만 갱신
+        invalidate()                    // 선 다시 그림
     }
 
     internal fun addMemberViews(context: Context) {
+
         container?.removeAllViews()
         for (member in members) {
-            val view = LayoutInflater.from(context).inflate(R.layout.item_home_tree_member, container, false)
+
+            val view = LayoutInflater.from(context)
+                .inflate(R.layout.item_home_tree_member, container, false)
             view.setOnClickListener {
                 (context as? FamilyTreeActivity)?.showEditFamilyMemberDialog(member)
             }
@@ -88,11 +92,12 @@ class FamilyTreeView @JvmOverloads constructor(
                 MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY)
             )
             view.layout(0, 0, width, height)
+
             view.x = member.x
             view.y = member.y
+
             container?.addView(view)
             memberViews[member] = view
-
         }
     }
 
@@ -178,8 +183,6 @@ class FamilyTreeView @JvmOverloads constructor(
     }
 
     internal fun layoutMembers() {
-        val baseX = members.find { it.relation == "나" }?.x ?: width / 2f
-        val centerX = baseX // '나'가 처음 위치했던 X좌표 유지
         val spacingY = 400f
         val spacingX = 300f
         val extraSpacing = 200f
@@ -187,6 +190,7 @@ class FamilyTreeView @JvmOverloads constructor(
         val me = members.find { it.relation == "나" }
         me?.x = centerX
         me?.y = height / 2f
+
 
         val father = members.find { it.relation == "아버지" }
         val mother = members.find { it.relation == "어머니" }
@@ -242,6 +246,5 @@ class FamilyTreeView @JvmOverloads constructor(
             member.y = father?.y ?: 0f
             member.x = (father?.x ?: centerX) - (i + 1) * extraSpacing
         }
-
     }
 }
