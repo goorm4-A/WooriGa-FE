@@ -12,7 +12,7 @@ class FamilyTreeView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
 ) : View(context, attrs) {
 
-    private val members = mutableListOf<FamilyMember>()
+    val members = mutableListOf<FamilyMember>()
     private val memberViews = mutableMapOf<FamilyMember, View>()
     private val paint = Paint().apply {
         color = Color.BLACK
@@ -90,7 +90,7 @@ class FamilyTreeView @JvmOverloads constructor(
         super.onDraw(canvas)
 
         fun centerOf(member: FamilyMember): PointF {
-            return PointF(member.x + 100f, member.y + 100f) // 뷰 크기 200 기준
+            return PointF(member.x + 125f, member.y + 125f) // 뷰 크기 200 기준
         }
 
         val me = members.find { it.relation == "나" }
@@ -113,12 +113,18 @@ class FamilyTreeView @JvmOverloads constructor(
         drawParents(canvas, "친할아버지", "친할머니", father)
         drawParents(canvas, "외할아버지", "외할머니", mother)
 
+        // 할머니, 할아버지의 y값
+        val grandParent = members.find { it.relation == "외할아버지" }
+
+
         // 엄마 형제자매 연결 (이모, 외삼촌)
         val motherSiblings = members.filter { it.relation in listOf("이모", "외삼촌") }
         for (sibling in motherSiblings) {
             val from = centerOf(sibling)
             val to = centerOf(mother ?: continue)
-            canvas.drawLine(from.x, from.y, to.x, to.y, paint)
+            if (grandParent != null) {
+                canvas.drawLine(from.x, from.y, to.x, grandParent.y+ 100f, paint)
+            }
         }
 
         // 아빠 형제자매 연결 (고모, 삼촌, 작은아빠)
@@ -126,12 +132,14 @@ class FamilyTreeView @JvmOverloads constructor(
         for (sibling in fatherSiblings) {
             val from = centerOf(sibling)
             val to = centerOf(father ?: continue)
-            canvas.drawLine(from.x, from.y, to.x, to.y, paint)
+            if (grandParent != null) {
+                canvas.drawLine(from.x, from.y, to.x, grandParent.y+ 100f, paint)
+            }
         }
 
         // 형제자매 → 부모 중앙 → 연결
         val siblings = members.filter {
-            it.relation in listOf("오빠", "형", "언니", "여동생", "남동생")
+            it.relation in listOf("오빠/형", "언니/누나", "여동생", "남동생")
         }
         if (father != null && mother != null) {
             val fc = centerOf(father)
@@ -140,7 +148,7 @@ class FamilyTreeView @JvmOverloads constructor(
             for (sibling in siblings) {
                 val child = centerOf(sibling)
                 canvas.drawLine(midX, fc.y, midX, child.y, paint)
-                canvas.drawLine(midX, child.y, child.x, child.y, paint)
+                canvas.drawLine(midX, fc.y, child.x, child.y, paint)
             }
         }
     }
@@ -163,7 +171,7 @@ class FamilyTreeView @JvmOverloads constructor(
         val centerX = width / 2f
         val spacingY = 400f
         val spacingX = 300f
-        val extraSpacing = 400f
+        val extraSpacing = 200f
 
         val me = members.find { it.relation == "나" }
         me?.x = centerX
@@ -172,32 +180,32 @@ class FamilyTreeView @JvmOverloads constructor(
         val father = members.find { it.relation == "아버지" }
         val mother = members.find { it.relation == "어머니" }
 
-        father?.x = centerX - spacingX
+        father?.x = centerX - spacingX - extraSpacing
         father?.y = (me?.y ?: 0f) - spacingY
-        mother?.x = centerX + spacingX
+        mother?.x = centerX + spacingX + extraSpacing
         mother?.y = (me?.y ?: 0f) - spacingY
 
         // 조부모
         members.find { it.relation == "친할아버지" }?.apply {
-            x = (father?.x ?: centerX) - spacingX +80f
+            x = (father?.x ?: centerX) - spacingX
             y = (father?.y ?: 0f) - spacingY
         }
         members.find { it.relation == "친할머니" }?.apply {
-            x = (father?.x ?: centerX) + spacingX -90f
+            x = (father?.x ?: centerX) + spacingX
             y = (father?.y ?: 0f) - spacingY
         }
         members.find { it.relation == "외할아버지" }?.apply {
-            x = (mother?.x ?: centerX) - spacingX +90f
+            x = (mother?.x ?: centerX) - spacingX
             y = (mother?.y ?: 0f) - spacingY
         }
         members.find { it.relation == "외할머니" }?.apply {
-            x = (mother?.x ?: centerX) + spacingX -80f
+            x = (mother?.x ?: centerX) + spacingX
             y = (mother?.y ?: 0f) - spacingY
         }
 
         // 형제자매
         val siblings = members.filter {
-            it.relation in listOf("오빠", "형", "언니", "여동생", "남동생")
+            it.relation in listOf("오빠/형", "언니/누나", "여동생", "남동생")
         }
         var siblingIndex = 1
         for ((i, member) in siblings.withIndex()) {

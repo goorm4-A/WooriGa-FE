@@ -35,6 +35,19 @@ class FamilyTreeActivity : AppCompatActivity() {
             finish() // 이전 화면으로 이동
         }
 
+        // 화면 '나'를 중심으로 이동
+        val horizontalScrollView  = binding.horizontalScrollView
+        val scrollView = binding.scrollView
+
+        val me = familyTreeView.members.find { it.relation == "나" }
+        me?.let {
+            familyTreeView.post {
+                val x = it.x.toInt()
+                val y = it.y.toInt()
+                horizontalScrollView.scrollTo(x-400, 0) // 가로 스크롤 위치
+                scrollView.scrollTo(0, y) // 세로 스크롤 위치
+            }
+        }
     }
 
     private fun showAddFamilyMemberDialog() {
