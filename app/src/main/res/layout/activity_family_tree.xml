@@ -14,12 +14,14 @@
 
     <!-- 스크롤 가능한 영역 (가로 + 세로) -->
     <HorizontalScrollView
+        android:id="@+id/horizontalScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize"
         android:fillViewport="true">
 
         <ScrollView
+            android:id="@+id/scrollView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:contentDescription="가족 트리 스크롤뷰"
