@@ -62,6 +62,9 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
+    implementation("com.kakao.sdk:v2-user:2.21.4") // 카카오 로그인 API 모듈
+
+
 }
 
 secrets {
