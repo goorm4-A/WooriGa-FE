@@ -11,6 +11,7 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.example.wooriga.databinding.FragmentFamilyRuleBinding
 
 class FamilyRuleFragment : Fragment() {
@@ -18,21 +19,13 @@ class FamilyRuleFragment : Fragment() {
     private var _binding: FragmentFamilyRuleBinding? = null
     private val binding get() = _binding!!
 
-    private val ruleList = mutableListOf<Rule>()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-
-        }
-    }
+    private val viewModel: RuleViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentFamilyRuleBinding.inflate(inflater, container, false)
-
         return binding.root
     }
 
@@ -45,21 +38,15 @@ class FamilyRuleFragment : Fragment() {
 
         title.text = "규칙"
 
-        // 초기 규칙 샘플 추가
-        ruleList.addAll(
-            listOf(
-                Rule("A가족", "필수 규칙", "착하게 살자.", "서로 예의를 지키자", "2025년 4월 12일 토요일"),
-                Rule("A가족", "권장 사항", "일찍 일어나기", "건강한 생활 습관", "2025년 4월 13일 일요일"),
-                Rule("B가족", "금기 사항", "욕하지 않기", "언제나 존중하는 말 사용", "2025년 4월 11일 금요일")
-            )
-        )
+        // ViewModel의 ruleList 관찰
+        viewModel.ruleList.observe(viewLifecycleOwner) { rules ->
+            updateUI(rules)
+        }
 
-        updateUI()
-
+        // 규칙 추가 버튼 클릭 시
         binding.addFamilyRule.setOnClickListener {
             RuleAddBottomSheet { newRule ->
-                ruleList.add(newRule)
-                updateUI()
+                viewModel.addRule(newRule)
             }.show(parentFragmentManager, "AddRuleBottomSheet")
         }
 
@@ -69,11 +56,10 @@ class FamilyRuleFragment : Fragment() {
         }
     }
 
-    private fun updateUI() {
+    private fun updateUI(ruleList: List<Rule>) {
         binding.ruleContainer.removeAllViews()
 
         val grouped = ruleList.groupBy { it.type }
-
         grouped.forEach { (type, items) ->
             addRuleSection(binding.ruleContainer, type, items)
         }
@@ -111,7 +97,6 @@ class FamilyRuleFragment : Fragment() {
             ruleText.text = rule.title
             dateText.text = rule.date
 
-            // 아이템 클릭시 규칙 상세 바텀시트
             itemView.setOnClickListener {
                 RuleDetailBottomSheet(rule).show(parentFragmentManager, "RuleDetailBottomSheet")
             }
@@ -124,5 +109,4 @@ class FamilyRuleFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 }
