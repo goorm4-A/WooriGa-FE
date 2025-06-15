@@ -50,7 +50,13 @@ class RecipeFragment : Fragment() {
         }
 
         // 어댑터 설정
-        recipeAdapter = RecipeAdapter()
+        recipeAdapter = RecipeAdapter { selectedRecipe ->
+            val fragment = RecipeDetailFragment.newInstance(selectedRecipe)
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
         binding.recyclerRecipe.adapter = recipeAdapter
 
         // LiveData 관찰

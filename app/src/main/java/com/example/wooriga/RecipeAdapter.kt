@@ -11,7 +11,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 
-class RecipeAdapter : ListAdapter<Recipe, RecipeAdapter.RecipeViewHolder>(DIFF_CALLBACK) {
+class RecipeAdapter(
+    private val onItemClick: (Recipe) -> Unit
+) : ListAdapter<Recipe, RecipeAdapter.RecipeViewHolder>(DIFF_CALLBACK) {
 
     inner class RecipeViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         private val title = view.findViewById<TextView>(R.id.text_recipe_title)
@@ -33,7 +35,7 @@ class RecipeAdapter : ListAdapter<Recipe, RecipeAdapter.RecipeViewHolder>(DIFF_C
                 .into(image)
 
             view.setOnClickListener {
-                // TODO: 클릭 이벤트 처리
+                onItemClick(recipe)
             }
         }
     }
