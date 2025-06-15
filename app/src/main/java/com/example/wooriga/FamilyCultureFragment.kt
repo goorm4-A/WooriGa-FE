@@ -45,7 +45,6 @@ class FamilyCultureFragment : Fragment() {
             Toast.makeText(requireContext(), "가족 선택 클릭됨", Toast.LENGTH_SHORT).show()
         }
 
-        // item_culture_motto 안의 버튼 클릭 시 이동
         val buttonMotto = view.findViewById<ImageButton>(R.id.button_motto)
         buttonMotto.setOnClickListener {
             // 하단 네비게이션 숨기기
@@ -75,6 +74,17 @@ class FamilyCultureFragment : Fragment() {
             // 규칙 프래그먼트로 이동
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, FamilyRuleFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
+        val buttonRecipe = view.findViewById<ImageButton>(R.id.button_recipe)
+        buttonRecipe.setOnClickListener {
+            // 하단 네비게이션 숨기기
+            requireActivity().findViewById<View>(R.id.bottomNavigation).visibility = View.GONE
+            // 요리법 프래그먼트로 이동
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, RecipeFragment())
                 .addToBackStack(null)
                 .commit()
         }
