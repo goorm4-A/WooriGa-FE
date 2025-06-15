@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.example.wooriga.databinding.FragmentRecipeBinding
 
 class RecipeFragment : Fragment() {
@@ -14,8 +15,8 @@ class RecipeFragment : Fragment() {
     private var _binding: FragmentRecipeBinding? = null
     private val binding get() = _binding!!
 
-    //private lateinit var recipeAdapter: RecipeAdapter
-    //private val viewModel: RecipeViewModel by viewModels()
+    private lateinit var recipeAdapter: RecipeAdapter
+    private val viewModel: RecipeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,21 +49,25 @@ class RecipeFragment : Fragment() {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
-        // RecyclerView 세팅
-
+        // 어댑터 설정
+        recipeAdapter = RecipeAdapter()
+        binding.recyclerRecipe.adapter = recipeAdapter
 
         // LiveData 관찰
-
-
-        // 데이터 불러오기
-
+        viewModel.recipeList.observe(viewLifecycleOwner) { list ->
+            recipeAdapter.submitList(list)
+        }
 
         // 추가 플로팅 버튼 클릭
         binding.addRecipe.setOnClickListener {
-
+            // TODO: Upload 화면으로 이동
         }
 
+    }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }
