@@ -48,7 +48,7 @@ class RecipeDetailFragment : Fragment() {
         // 재료 리스트 동적 추가
         recipe.ingredients.forEach { ingredient ->
             val textView = TextView(requireContext()).apply {
-                text = "✔ ${ingredient.name} ${ingredient.quantity}"
+                text = "✔ ${ingredient.name}"
                 textSize = 14f
                 setPadding(0, 4, 0, 4)
             }
