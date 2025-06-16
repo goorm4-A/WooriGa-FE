@@ -3,7 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="backgroundColor">#FFFAF1</color>
+    <color name="backgroundColor">#FFFFFFFF</color>
     <color name="logoColor">#4B3A2A</color>
     <color name="navIconDefaultColor">#999999</color>
     <color name="navIconActiveColor">#4B3A2A</color>
@@ -14,6 +14,7 @@
     <color name="peach">#EDAE8D</color>
     <color name="mint">#88A79F</color>
     <color name="Charcoal">#66665E</color>
+    <color name="dark_gray">#888888</color>
     <color name="gray">#ECEDEC</color>
 
     <color name="primary_color">#A6C1CC</color>
