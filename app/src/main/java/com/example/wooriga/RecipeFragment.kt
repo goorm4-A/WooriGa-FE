@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import com.example.wooriga.databinding.FragmentRecipeBinding
 
 class RecipeFragment : Fragment() {
@@ -16,7 +16,8 @@ class RecipeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var recipeAdapter: RecipeAdapter
-    private val viewModel: RecipeViewModel by viewModels()
+    //private val viewModel: RecipeViewModel by viewModels()
+    private val viewModel: RecipeViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +67,11 @@ class RecipeFragment : Fragment() {
 
         // 추가 플로팅 버튼 클릭
         binding.addRecipe.setOnClickListener {
-            // TODO: Upload 화면으로 이동
+            val addFragment = RecipeAddFragment()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, addFragment)
+                .addToBackStack(null)
+                .commit()
         }
 
     }
