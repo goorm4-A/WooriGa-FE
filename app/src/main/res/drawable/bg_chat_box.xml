@@ -3,7 +3,7 @@
     android:shape="rectangle">
 
     <!-- 배경 색상 지정 -->
-    <solid android:color="#EFEFEF" />
+    <solid android:color="@color/gray" />
 
     <!-- 모서리 반지름 지정 -->
     <corners android:radius="12dp" />

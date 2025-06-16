@@ -37,7 +37,6 @@
                 android:layout_height="wrap_content"
                 android:text="가훈"
                 android:textSize="16sp"
-                android:textColor="@android:color/black"
                 android:textStyle="bold" />
 
             <TextView
@@ -46,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:text="날짜"
                 android:textSize="14sp"
-                android:textColor="#888888"
+                android:textColor="@color/dark_gray"
                 android:layout_marginTop="4dp" />
         </LinearLayout>
 
