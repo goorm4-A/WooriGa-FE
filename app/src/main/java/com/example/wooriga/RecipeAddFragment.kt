@@ -213,13 +213,13 @@ class RecipeAddFragment : Fragment() {
     }
 
     // 입력된 재료 리스트 추출 함수
-    private fun getIngredientList(): List<Ingredient> {
-        val list = mutableListOf<Ingredient>()
+    private fun getIngredientList(): List<String> {
+        val list = mutableListOf<String>()
         for (i in 0 until binding.layoutIngredients.childCount) {
             val itemLayout = binding.layoutIngredients.getChildAt(i) as LinearLayout
             val editText = itemLayout.getChildAt(0) as EditText
-            val name = editText.text.toString().trim()
-            if (name.isNotEmpty()) list.add(Ingredient(name))
+            val ingredient = editText.text.toString().trim()
+            if (ingredient.isNotEmpty()) list.add(ingredient)
         }
         return list
     }

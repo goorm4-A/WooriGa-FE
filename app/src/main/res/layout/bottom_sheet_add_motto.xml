@@ -23,16 +23,19 @@
 <!--        />-->
     <EditText
         android:id="@+id/etFamilyName"
-        android:hint="가족 이름"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="48dp"
+        android:hint="가족 이름"
+        android:background="@drawable/edit_text_box"
+        android:layout_marginBottom="20dp"/>
 
     <!-- 가훈 -->
     <EditText
         android:id="@+id/etMotto"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:hint="가훈"
+        android:hint="가훈을 입력하세요."
+        android:background="@drawable/edit_text_box"
         android:layout_marginBottom="20dp"/>
 
     <TextView

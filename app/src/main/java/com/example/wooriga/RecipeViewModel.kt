@@ -23,11 +23,11 @@ class RecipeViewModel : ViewModel() {
                 cookTimeMinutes = 60,
                 coverImageUrl = null,
                 ingredients = listOf(
-                    Ingredient("밥 1공기"),
-                    Ingredient("김치 1/2컵"),
-                    Ingredient("대파 1/2대"),
-                    Ingredient("참기름 1큰술"),
-                    Ingredient("고추장 1작은술")
+                    "밥 1공기",
+                    "김치 1/2컵",
+                    "대파 1/2대",
+                    "참기름 1큰술",
+                    "고추장 1작은술"
                 ),
                 steps = listOf(
                     CookingStep(
@@ -60,11 +60,11 @@ class RecipeViewModel : ViewModel() {
                 cookTimeMinutes = 45,
                 coverImageUrl = null,
                 ingredients = listOf(
-                    Ingredient("두부 1모"),
-                    Ingredient("간장 3큰술"),
-                    Ingredient("고춧가루 1큰술"),
-                    Ingredient("다진 마늘 1작은술"),
-                    Ingredient("물 1/2컵")
+                    "두부 1모",
+                    "간장 3큰술",
+                    "고춧가루 1큰술",
+                    "다진 마늘 1작은술",
+                    "물 1/2컵"
                 ),
                 steps = listOf(
                     CookingStep(

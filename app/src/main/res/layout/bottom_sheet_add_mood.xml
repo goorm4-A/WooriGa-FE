@@ -9,51 +9,28 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="규칙 등록"
+        android:text="분위기 등록"
         android:textSize="20sp"
         android:textStyle="bold"
         android:layout_marginBottom="40dp"/>
 
-    <!-- 가족 선택 -->
-    <Spinner
-        android:id="@+id/spinnerFamily"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginBottom="10dp" />
-
-    <!-- 규칙 종류 선택 -->
-    <Spinner
-        android:id="@+id/spinnerType"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginBottom="10dp" />
-
-    <!-- 규칙 -->
+    <!-- 분류 -->
     <EditText
-        android:id="@+id/etRule"
+        android:id="@+id/etCategory"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:hint="규칙을 입력하세요."
+        android:hint="태그 이름을 입력하세요."
         android:background="@drawable/edit_text_box"
         android:layout_marginBottom="20dp"/>
 
-    <!-- 설명 -->
+    <!-- 태그 -->
     <EditText
-        android:id="@+id/etDescription"
+        android:id="@+id/etTag"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:hint="설명을 입력하세요."
+        android:hint="태그를 입력하세요. (예: #화목, #기쁨)"
         android:background="@drawable/edit_text_box"
         android:layout_marginBottom="20dp"/>
-
-    <TextView
-        android:id="@+id/dateText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="end"
-        android:text="4월 12일 토요일"
-        android:textSize="16sp"
-        android:layout_marginBottom="10dp"/>
 
     <!-- 버튼 -->
     <LinearLayout
