@@ -56,11 +56,11 @@ class FamilyMoodFragment : Fragment() {
         }
 
         binding.addFamilyMood.setOnClickListener {
-            MoodAddBottomSheet { emotion, tags ->
+            MoodAddBottomSheet { category, tags ->
                 val newMood = Mood(
                     id = System.currentTimeMillis(),
                     family = "test",
-                    emotion = emotion,
+                    category = category,
                     tags = tags
                 )
                 viewModel.addMood(newMood)
