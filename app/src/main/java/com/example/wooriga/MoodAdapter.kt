@@ -17,7 +17,7 @@ class MoodAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(mood: Mood) {
-            binding.textEmotion.text = mood.emotion
+            binding.textEmotion.text = mood.category
             binding.layoutTags.removeAllViews()
 
             mood.tags.forEach { tag ->

@@ -28,10 +28,10 @@ class MoodAddBottomSheet(
 
         // 추가 버튼 클릭
         binding.btnSubmit.setOnClickListener {
-            val emotion = binding.etEmotion.text.toString().trim()
+            val category = binding.etCategory.text.toString().trim()
             val tagInput = binding.etTag.text.toString().trim()
 
-            if (emotion.isBlank()) {
+            if (category.isBlank()) {
                 Toast.makeText(requireContext(), "감정을 입력해주세요.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -41,7 +41,7 @@ class MoodAddBottomSheet(
                 .map { it.trim() }
                 .filter { it.isNotEmpty() }
 
-            onSubmit(emotion, tags)
+            onSubmit(category, tags)
             dismiss()
         }
 

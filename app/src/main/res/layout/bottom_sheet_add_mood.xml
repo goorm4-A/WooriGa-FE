@@ -14,12 +14,12 @@
         android:textStyle="bold"
         android:layout_marginBottom="40dp"/>
 
-    <!-- 감정 -->
+    <!-- 분류 -->
     <EditText
-        android:id="@+id/etEmotion"
+        android:id="@+id/etCategory"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:hint="감정을 입력하세요."
+        android:hint="태그 이름을 입력하세요."
         android:background="@drawable/edit_text_box"
         android:layout_marginBottom="20dp"/>
 
