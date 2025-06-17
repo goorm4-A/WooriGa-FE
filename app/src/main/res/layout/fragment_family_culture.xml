@@ -61,8 +61,6 @@
                 android:id="@+id/item_culture_recipe"
                 layout="@layout/item_culture_recipe" />
 
-            <!-- 추가 콘텐츠 -->
-
         </LinearLayout>
     </ScrollView>
 

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/familyCultureFragment">
+
+    <fragment
+        android:id="@+id/familyCultureFragment"
+        android:name="com.example.wooriga.FamilyCultureFragment"
+        android:label="fragment_family_culture"
+        tools:layout="@layout/fragment_family_culture" >
+        <action
+            android:id="@+id/action_familyCultureFragment_to_familyMottoFragment"
+            app:destination="@id/familyMottoFragment" />
+        <action
+            android:id="@+id/action_familyCultureFragment_to_familyMoodFragment"
+            app:destination="@id/familyMoodFragment" />
+        <action
+            android:id="@+id/action_familyCultureFragment_to_familyRuleFragment"
+            app:destination="@id/familyRuleFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/familyMottoFragment"
+        android:name="com.example.wooriga.FamilyMottoFragment"
+        android:label="fragment_family_motto"
+        tools:layout="@layout/fragment_family_motto" />
+    <fragment
+        android:id="@+id/familyMoodFragment"
+        android:name="com.example.wooriga.FamilyMoodFragment"
+        android:label="fragment_family_mood"
+        tools:layout="@layout/fragment_family_mood" />
+    <fragment
+        android:id="@+id/familyRuleFragment"
+        android:name="com.example.wooriga.FamilyRuleFragment"
+        android:label="fragment_family_rule"
+        tools:layout="@layout/fragment_family_rule" />
+    <fragment
+        android:id="@+id/familyDiaryFragment"
+        android:name="com.example.wooriga.FamilyDiaryFragment"
+        android:label="FamilyDiaryFragment" >
+        <action
+            android:id="@+id/action_familyDiaryFragment_to_diaryDetailFragment"
+            app:destination="@id/diaryDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/diaryDetailFragment"
+        android:name="com.example.wooriga.DiaryDetailFragment"
+        android:label="DiaryDetailFragment" />
+</navigation>

@@ -3,6 +3,7 @@ package com.example.wooriga
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Typeface
+import android.os.Build
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
@@ -10,37 +11,43 @@ import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.wooriga.databinding.BottomSheetAddHistoryBinding
 import com.example.wooriga.databinding.FragmentFamilyHistoryBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
-
-data class TimelineEvent(
-    val date: String,
-    val title: String,
-    val location: String
-)
+import com.example.wooriga.model.History
 
 class FamilyHistoryFragment : Fragment() {
 
     private lateinit var timelineRecyclerView: RecyclerView
     private lateinit var adapter: TimelineAdapter
-    private val events = mutableListOf<TimelineEvent>()
+    private val events = mutableListOf<History>()
 
     private var _binding: FragmentFamilyHistoryBinding? = null
     private val binding get() = _binding!!
 
+    private var selectedLatitude: Double = 0.0
+    private var selectedLongitude: Double = 0.0
+    private var selectedAddress: String = ""
+    private var dialogView: View? = null
 
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = FragmentFamilyHistoryBinding.inflate(inflater, container, false)
 
@@ -57,8 +64,8 @@ class FamilyHistoryFragment : Fragment() {
 
         // 상단바 지도 아이콘 클릭 -> 지도 액티비티로 이동
         val mapButton = binding.toolbarHistory.iconMap
-        mapButton.setOnClickListener() {
-            val intent = Intent(requireContext(), HistoryMapActivity::class.java)
+        mapButton.setOnClickListener {
+            val intent = Intent(requireContext(), HistoryMapsActivity::class.java)
             startActivity(intent)
         }
 
@@ -67,31 +74,7 @@ class FamilyHistoryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-/*
-        // 가족 선택
-        val spinner: Spinner = binding.selectFamilyHistory
-        val items = listOf("가족 선택", "A 가족", "B 가족", "C 가족")
-        val spinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, items)
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinner.adapter = spinnerAdapter
 
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View,
-                position: Int,
-                id: Long
-            ) {
-                val selected = items[position]
-                if (position != 0) {
-                    Toast.makeText(requireContext(), "선택한 항목: $selected", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                // 아무 것도 선택되지 않았을 때
-            }
-        }*/
 
         // 가족사 화면 타이틀
         val name = "송이"
@@ -107,24 +90,30 @@ class FamilyHistoryFragment : Fragment() {
     }
 
     // 타임라인 항목 추가 함수
-    private fun addTimelineEvent(event: TimelineEvent) {
+    private fun addTimelineEvent(event: History) {
         events.add(event)
-        adapter.notifyItemInserted(events.size - 1)
+        sortEventsByDate()
+        adapter.notifyDataSetChanged()
         timelineRecyclerView.scrollToPosition(events.size - 1)
     }
 
     // 가족사 등록 다이얼로그
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun showHistoryBottomSheetDialog() {
-        val dialog = BottomSheetDialog(requireContext(), R.style.CustomBottomSheetDialogTheme) // 스타일 적용
-        val view = layoutInflater.inflate(R.layout.bottom_sheet_add_history, null)
+        val dialog = BottomSheetDialog(requireContext())
+        val bottomSheetBinding = BottomSheetAddHistoryBinding.inflate(LayoutInflater.from(requireContext()))
+        dialogView = view // 위치 선택 후 주소 반영 위해 저장
 
-        val dateInput = view.findViewById<TextView>(R.id.dateInput)
-        val dateOutput = view.findViewById<TextView>(R.id.dateOutput)
-        val titleInput = view.findViewById<EditText>(R.id.titleInput)
-        val locationInput = view.findViewById<EditText>(R.id.locationInput)
+        val dateInput = bottomSheetBinding.dateInput
+        val dateOutput = bottomSheetBinding.dateOutput
+        val titleInput = bottomSheetBinding.titleInput
+        val locationInput = bottomSheetBinding.locationInput
+        /*val locationOutput = bottomSheetBinding.locationOutput*/
 
-        val cancelButton = view.findViewById<Button>(R.id.cancelButton)
-        val addButton = view.findViewById<Button>(R.id.submitButton)
+        val cancelButton = bottomSheetBinding.cancelButton
+        val addButton = bottomSheetBinding.submitButton
+
+        var selectedLocalDate: LocalDate? = null  // 선택된 날짜 저장용
 
         // 날짜 선택
         dateInput.setOnClickListener {
@@ -132,8 +121,9 @@ class FamilyHistoryFragment : Fragment() {
             val datePickerDialog = DatePickerDialog(
                 requireContext(),
                 { _, year, month, dayOfMonth ->
-                    val selectedDate = String.format("%04d.%02d.%02d", year, month + 1, dayOfMonth)
-                    dateOutput.text = selectedDate
+                    selectedLocalDate = LocalDate.of(year, month + 1, dayOfMonth)
+                    val formattedDate = selectedLocalDate!!.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+                    dateOutput.text = formattedDate
                 },
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
@@ -141,18 +131,33 @@ class FamilyHistoryFragment : Fragment() {
             )
             datePickerDialog.show()
         }
-        // 위치 선택 or 위치 작성..
+        // 위치 선택
+        locationInput.setOnClickListener {
+            val intent = Intent(requireContext(), LocationPickerActivity::class.java)
+            locationPickerLauncher.launch(intent)
+        }
+
 
 
         // 추가 버튼
         addButton.setOnClickListener {
             val title = titleInput.text.toString()
-            val location = locationInput.text.toString()
-            val date = dateOutput.text.toString()
+            val dateString = dateOutput.text.toString()
 
-            if (title.isNotBlank() && location.isNotBlank()) {
-                val event = TimelineEvent(date = date, title = title, location = location)
+            if (title.isNotBlank() && selectedAddress.isNotBlank() && selectedLocalDate != null) {
+                val event = History(
+                    family = "A 가족", // 임시, 실제로는 선택된 가족 이름으로 변경 필요
+                    dateString = dateString,
+                    dateObject = selectedLocalDate!!,
+                    title = title,
+                    locationName = selectedAddress,
+                    latitude = selectedLatitude,
+                    longitude = selectedLongitude
+
+                )
                 addTimelineEvent(event)
+                // 추가된 가족사 전달
+
                 dialog.dismiss()
             } else {
                 Toast.makeText(requireContext(), "모든 필드를 입력해주세요.", Toast.LENGTH_SHORT).show()
@@ -164,13 +169,9 @@ class FamilyHistoryFragment : Fragment() {
             dialog.dismiss()
         }
 
-        dialog.setContentView(view)
-        view.post {
-            val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-            bottomSheet?.layoutParams?.height = ViewGroup.LayoutParams.MATCH_PARENT
-        }
-
+        dialog.setContentView(bottomSheetBinding.root)
         dialog.show()
+        dialog.setCanceledOnTouchOutside(true) // 바깥 터치 시 닫히도록 설정
 
 
     }
@@ -182,6 +183,27 @@ class FamilyHistoryFragment : Fragment() {
 
     
     // 날짜 별로 정렬
+    private fun sortEventsByDate() {
+        events.sortWith(compareBy { it.dateObject })
+        adapter.notifyDataSetChanged()
+    }
+
+    //지도 위치 선택 관련
+    private val locationPickerLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == AppCompatActivity.RESULT_OK) {
+            val data = result.data
+            selectedAddress = data?.getStringExtra("address") ?: ""
+            selectedLatitude = data?.getDoubleExtra("latitude", 0.0) ?: 0.0
+            selectedLongitude = data?.getDoubleExtra("longitude", 0.0) ?: 0.0
+
+            // 다이얼로그 안의 locationOutput TextView 갱신
+            dialogView?.findViewById<TextView>(R.id.locationOutput)?.text = selectedAddress
+        }
+    }
+
+
 
 
 

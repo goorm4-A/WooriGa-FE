@@ -18,5 +18,18 @@
         <item>김눈송</item>
     </string-array>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="title_activity_history_maps">HistoryMapsActivity</string>
+
+    <string-array name="relation_array">
+        <item>오빠/형</item>
+        <item>언니/누나</item>
+        <item>여동생</item>
+        <item>남동생</item>
+        <item>이모</item>
+        <item>외삼촌</item>
+        <item>고모</item>
+        <item>작은아빠</item>
+    </string-array>
+
 
 </resources>

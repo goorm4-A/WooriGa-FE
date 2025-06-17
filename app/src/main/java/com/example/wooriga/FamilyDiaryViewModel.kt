@@ -1,9 +1,8 @@
-package com.example.wooriga.ui.familydiary
+package com.example.wooriga
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.wooriga.model.Diary
 
 class FamilyDiaryViewModel : ViewModel() {
 

@@ -1,64 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/custom_toolbar"
+    android:id="@+id/home_group_toolbar"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="@color/transparent"
     android:paddingHorizontal="16dp"
     android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:weightSum="1">
+        android:layout_height="match_parent">
 
-        <!-- 좌측 로고 + 타이틀 -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="0.7"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+        <ImageButton
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/backButton"
+            android:src="@drawable/ic_arrow_back"
+            android:background="@color/transparent"
+            android:layout_gravity="center_vertical|start"
+            android:contentDescription="뒤로가기" />
 
-            <ImageView
-                android:id="@+id/logoImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/logo_toolbar"
-                android:contentDescription="우리家 로고"
-                android:adjustViewBounds="true"
-                android:maxHeight="40dp"
-                android:layout_marginEnd="8dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="가족 그룹 관리"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:layout_gravity="center"
+            android:textStyle="bold" />
 
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/home_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_setting"
+            android:contentDescription="설정"
+            android:layout_gravity="center_vertical|end"
+            android:layout_marginEnd="5dp"
+            android:padding="8dp"/>
 
-        <!-- 우측 아이콘 영역 -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="0.3"
-            android:layout_height="match_parent"
-            android:gravity="end|center_vertical"
-            android:orientation="horizontal"
-            android:layout_gravity="end">
+    </FrameLayout>
 
-            <ImageView
-                android:id="@+id/home_setting"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_setting"
-                android:contentDescription="설정"
-                android:padding="8dp"/>
 
-            <ImageView
-                android:id="@+id/home_notice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_notice"
-                android:contentDescription="알림"
-                android:padding="8dp" />
-        </LinearLayout>
-    </LinearLayout>
 </androidx.appcompat.widget.Toolbar>
