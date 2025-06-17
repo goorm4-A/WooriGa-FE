@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="규칙 등록"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="40dp"/>
+
+    <!-- 감정 -->
+    <EditText
+        android:id="@+id/etEmotion"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:hint="감정을 입력하세요."
+        android:background="@drawable/edit_text_box"
+        android:layout_marginBottom="20dp"/>
+
+    <!-- 태그 -->
+    <EditText
+        android:id="@+id/etTag"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:hint="태그를 입력하세요. (예: #화목, #기쁨)"
+        android:background="@drawable/edit_text_box"
+        android:layout_marginBottom="20dp"/>
+
+    <!-- 버튼 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        android:paddingHorizontal="16dp">
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:text="취소"
+            android:backgroundTint="@color/backgroundColor"/>
+
+        <Button
+            android:id="@+id/btnSubmit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:layout_marginStart="8dp"
+            android:text="추가"/>
+    </LinearLayout>
+
+</LinearLayout>
