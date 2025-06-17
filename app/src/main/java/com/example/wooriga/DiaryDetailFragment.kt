@@ -30,6 +30,13 @@ class DiaryDetailFragment : Fragment() {
         Comment("이유진", "나도 가보고 싶어!", "2025.04.13", null)
     )
 
+    private lateinit var diary: Diary
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        diary = requireArguments().getParcelable("diary")!!
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,6 +47,38 @@ class DiaryDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // 일기 정보 바인딩
+        binding.tvUser.text = "김숙명"
+        binding.tvDate.text = diary.date
+        binding.tvTitle.text = diary.title
+        binding.tvContent.text = diary.content
+        binding.tvLocation.text = diary.location
+
+        if (diary.imageUri != null) {
+            binding.ivPhoto.visibility = View.VISIBLE
+            Glide.with(this)
+                .load(diary.imageUri)
+                .into(binding.ivPhoto)
+        } else {
+            binding.ivPhoto.visibility = View.GONE
+        }
+
+        // 태그 바인딩
+        binding.containerTag.removeAllViews()
+        diary.tag.forEach { tag ->
+            val tagView = layoutInflater.inflate(R.layout.item_diary_tag, binding.containerTag, false) as TextView
+            tagView.text = tag
+            binding.containerTag.addView(tagView)
+        }
+
+        // 멘션 바인딩
+        binding.containerMention.removeAllViews()
+        diary.member.forEach { mention ->
+            val mentionView = layoutInflater.inflate(R.layout.item_diary_mention, binding.containerMention, false) as TextView
+            mentionView.text = mention
+            binding.containerMention.addView(mentionView)
+        }
 
         // 댓글 표시
         renderComments()

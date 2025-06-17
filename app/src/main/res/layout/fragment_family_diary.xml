@@ -40,7 +40,7 @@
         android:overScrollMode="never"
         tools:listitem="@layout/item_diary_card"
         app:layout_constraintTop_toBottomOf="@id/diaryTitle"
-        app:layout_constraintBottom_toTopOf="@id/addFamilyHistoryButton"
+        app:layout_constraintBottom_toTopOf="@id/addFamilyDiaryButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"
@@ -48,7 +48,7 @@
 
     <!-- FAB -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/addFamilyHistoryButton"
+        android:id="@+id/addFamilyDiaryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="가족일기 추가 버튼"

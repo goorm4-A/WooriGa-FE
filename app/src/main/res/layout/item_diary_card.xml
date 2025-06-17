@@ -45,7 +45,7 @@
             android:src="@drawable/ic_user_circle" />
 
         <TextView
-            android:id="@+id/textTitle"
+            android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="0dp"
