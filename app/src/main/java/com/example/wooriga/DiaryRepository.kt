@@ -12,6 +12,7 @@ import java.io.File
 class DiaryRepository {
     private val api = RetrofitClient.diaryApi
 
+    // 일기 목록 조회
     suspend fun fetchDiaryList(
         page: Int,
         size: Int,
@@ -25,6 +26,7 @@ class DiaryRepository {
         } else null
     }
 
+    // 일기 상세 조회
     suspend fun fetchDiaryDetail(diaryId: Long): DiaryDetailItem? {
         val response = api.getDiaryDetail(diaryId)
         return if (response.isSuccessful && response.body()?.isSuccess == true) {
@@ -32,6 +34,7 @@ class DiaryRepository {
         } else null
     }
 
+    // 일기 등록
     suspend fun uploadDiary(
         dto: FamilyDiaryDto,
         imageUri: Uri?,
@@ -59,6 +62,22 @@ class DiaryRepository {
         }
         return file
     }
+
+    // 일기 검색
+    suspend fun searchDiaryList(
+        familyId: Long,
+        keyword: String,
+        page: Int = 0,
+        size: Int = 20,
+        sort: List<String> = listOf("createdAt,desc"),
+        lastDiaryId: Long? = null
+    ): List<DiaryListItem>? {
+        val response = api.searchDiaries(familyId, keyword, lastDiaryId, page, size, sort)
+        return if (response.isSuccessful && response.body()?.isSuccess == true) {
+            response.body()?.result?.contents
+        } else null
+    }
+
 
 }
 

@@ -39,7 +39,7 @@ class DiarySearchFragment : Fragment() {
         diaryAdapter = DiaryAdapter { diary ->
             val fragment = DiaryDetailFragment().apply {
                 arguments = Bundle().apply {
-                    putParcelable("diary", diary)
+                    putLong("diaryId", diary.id)
                 }
             }
             parentFragmentManager.beginTransaction()
@@ -58,11 +58,11 @@ class DiarySearchFragment : Fragment() {
     private fun setupSearch() {
         binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                val query = s.toString()
-                val result = viewModel.searchDiary(query)
-                diaryAdapter.submitList(result)
+                val keyword = s.toString().trim()
+                if (keyword.isNotEmpty()) {
+                    viewModel.searchDiaries(keyword)
+                }
             }
-
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })

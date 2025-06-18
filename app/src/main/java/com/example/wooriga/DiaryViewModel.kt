@@ -15,6 +15,9 @@ class DiaryViewModel : ViewModel() {
     private val _diaryList = MutableLiveData<List<DiaryListItem>>()
     val diaryList: LiveData<List<DiaryListItem>> get() = _diaryList
 
+    private val _searchResult = MutableLiveData<List<DiaryListItem>>()
+    val searchResult: LiveData<List<DiaryListItem>> get() = _searchResult
+
     // 일기 목록 조회
     fun loadDiaries() {
         viewModelScope.launch {
@@ -54,17 +57,15 @@ class DiaryViewModel : ViewModel() {
         }
     }
 
-    // 제목 + 내용 + 해시태그 기준 검색
-//    fun searchDiary(query: String): List<Diary> {
-//        val trimmedQuery = query.trim()
-//        if (trimmedQuery.isEmpty()) return emptyList()
-//
-//        return _diaryList.value.orEmpty().filter {
-//            it.title.contains(trimmedQuery, true) ||
-//                    it.content.contains(trimmedQuery, true) ||
-//                    it.tag.any { tag -> tag.contains(trimmedQuery, true) }
-//        }
-//    }
-
+    // 일기 검색
+    fun searchDiaries(keyword: String, familyId: Long = 123L) {
+        viewModelScope.launch {
+            val results = repository.searchDiaryList(
+                familyId = familyId,
+                keyword = keyword
+            )
+            _searchResult.value = results ?: emptyList()
+        }
+    }
 
 }

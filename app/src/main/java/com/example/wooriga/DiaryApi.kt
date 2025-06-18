@@ -35,4 +35,15 @@ interface DiaryApi {
         @Part images: List<MultipartBody.Part>?
     ): Response<DiaryDetailResponse>
 
+    // 일기 검색
+    @GET("family-diary/search")
+    suspend fun searchDiaries(
+        @Query("familyId") familyId: Long,
+        @Query("keyword") keyword: String,
+        @Query("lastDiaryId") lastDiaryId: Long? = null,
+        @Query("pageable.page") page: Int = 0,
+        @Query("pageable.size") size: Int = 20,
+        @Query("pageable.sort") sort: List<String> = listOf("createdAt,desc")
+    ): Response<DiaryListResponse>
+
 }
