@@ -42,7 +42,7 @@
                     android:id="@+id/iv_profile"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:src="@drawable/ic_user_circle"
+                    android:background="@drawable/bg_rect_gray"
                     android:scaleType="centerCrop"
                     android:contentDescription="사용자 사진" />
               

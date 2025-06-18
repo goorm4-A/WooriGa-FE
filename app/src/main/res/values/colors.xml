@@ -14,8 +14,9 @@
     <color name="peach">#EDAE8D</color>
     <color name="mint">#88A79F</color>
     <color name="Charcoal">#66665E</color>
-    <color name="dark_gray">#888888</color>
+    <color name="dark_gray">#A6A6A6</color>
     <color name="gray">#ECEDEC</color>
+    <color name="light_gray">#F9F9F9</color>
 
     <color name="primary_color">#A6C1CC</color>
     <color name="primary_dark_color">#4B3A2A</color>
