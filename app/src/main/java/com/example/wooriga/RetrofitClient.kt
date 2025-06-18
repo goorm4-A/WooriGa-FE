@@ -6,11 +6,19 @@ import retrofit2.converter.gson.GsonConverterFactory
 object RetrofitClient {
     private const val BASE_URL = "http://54.180.104.168:8081/"
 
-    val mottoApi: MottoApiService by lazy {
+    val mottoApi: MottoApi by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(MottoApiService::class.java)
+            .create(MottoApi::class.java)
+    }
+
+    val diaryApi: DiaryApi by lazy {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(DiaryApi::class.java)
     }
 }

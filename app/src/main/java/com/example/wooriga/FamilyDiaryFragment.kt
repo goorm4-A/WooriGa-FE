@@ -42,13 +42,16 @@ class FamilyDiaryFragment : Fragment() {
         setupRecyclerView()
         observeViewModel()
         setupListeners()
+
+        viewModel.loadDiaries()
     }
 
     private fun setupRecyclerView() {
         diaryAdapter = DiaryAdapter { diary ->
             val fragment = DiaryDetailFragment().apply {
                 arguments = Bundle().apply {
-                    putParcelable("diary", diary)
+                    // 일기 아이디 넘겨주기
+                    putLong("diaryId", diary.id)
                 }
             }
             parentFragmentManager.beginTransaction()

@@ -7,9 +7,11 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.wooriga.databinding.FragmentDiaryDetailBinding
 import com.example.wooriga.databinding.ItemCommentBinding
+import kotlinx.coroutines.launch
 
 // data 클래스 정의
 data class Comment(
@@ -30,11 +32,13 @@ class DiaryDetailFragment : Fragment() {
         Comment("이유진", "나도 가보고 싶어!", "2025.04.13", null)
     )
 
-    private lateinit var diary: Diary
+    // diaryId만 받아서 API 호출
+    private var diaryId: Long = -1L
+    private lateinit var diary: DiaryDetailItem
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        diary = requireArguments().getParcelable("diary")!!
+        diaryId = requireArguments().getLong("diaryId", -1L)
     }
 
     override fun onCreateView(
@@ -48,37 +52,49 @@ class DiaryDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 일기 정보 바인딩
-        binding.tvUser.text = "김숙명"
-        binding.tvDate.text = diary.date
-        binding.tvTitle.text = diary.title
-        binding.tvContent.text = diary.content
-        binding.tvLocation.text = diary.location
-
-        if (diary.imageUri != null) {
-            binding.ivPhoto.visibility = View.VISIBLE
-            Glide.with(this)
-                .load(diary.imageUri)
-                .into(binding.ivPhoto)
-        } else {
-            binding.ivPhoto.visibility = View.GONE
+        viewLifecycleOwner.lifecycleScope.launch {
+            val repository = DiaryRepository()
+            val detail = repository.fetchDiaryDetail(diaryId)
+            if (detail != null) {
+                diary = detail
+                bindDiary(detail)
+            } else {
+                // 오류 처리 (예: Toast 띄우기 등)
+            }
         }
 
-        // 태그 바인딩
-        binding.containerTag.removeAllViews()
-        diary.tag.forEach { tag ->
-            val tagView = layoutInflater.inflate(R.layout.item_diary_tag, binding.containerTag, false) as TextView
-            tagView.text = tag
-            binding.containerTag.addView(tagView)
-        }
-
-        // 멘션 바인딩
-        binding.containerMention.removeAllViews()
-        diary.member.forEach { mention ->
-            val mentionView = layoutInflater.inflate(R.layout.item_diary_mention, binding.containerMention, false) as TextView
-            mentionView.text = mention
-            binding.containerMention.addView(mentionView)
-        }
+//
+//        // 일기 정보 바인딩
+//        binding.tvUser.text = "김숙명"
+//        binding.tvDate.text = diary.date
+//        binding.tvTitle.text = diary.title
+//        binding.tvContent.text = diary.content
+//        binding.tvLocation.text = diary.location
+//
+//        if (diary.imageUri != null) {
+//            binding.ivPhoto.visibility = View.VISIBLE
+//            Glide.with(this)
+//                .load(diary.imageUri)
+//                .into(binding.ivPhoto)
+//        } else {
+//            binding.ivPhoto.visibility = View.GONE
+//        }
+//
+//        // 태그 바인딩
+//        binding.containerTag.removeAllViews()
+//        diary.tag.forEach { tag ->
+//            val tagView = layoutInflater.inflate(R.layout.item_diary_tag, binding.containerTag, false) as TextView
+//            tagView.text = tag
+//            binding.containerTag.addView(tagView)
+//        }
+//
+//        // 멘션 바인딩
+//        binding.containerMention.removeAllViews()
+//        diary.member.forEach { mention ->
+//            val mentionView = layoutInflater.inflate(R.layout.item_diary_mention, binding.containerMention, false) as TextView
+//            mentionView.text = mention
+//            binding.containerMention.addView(mentionView)
+//        }
 
         // 댓글 표시
         renderComments()
@@ -107,6 +123,40 @@ class DiaryDetailFragment : Fragment() {
         }
 
     }
+
+    private fun bindDiary(diary: DiaryDetailItem) {
+        binding.tvTitle.text = diary.title
+        binding.tvLocation.text = diary.location
+        binding.tvContent.text = diary.description
+        binding.tvDate.text = "추후 추가" // TODO
+
+        // 이미지
+        if (diary.imgUrls.isNotEmpty()) {
+            binding.ivPhoto.visibility = View.VISIBLE
+            Glide.with(this)
+                .load(diary.imgUrls.first())
+                .into(binding.ivPhoto)
+        } else {
+            binding.ivPhoto.visibility = View.GONE
+        }
+
+        // 태그
+        binding.containerTag.removeAllViews()
+        diary.diaryTags.forEach { tag ->
+            val tagView = layoutInflater.inflate(R.layout.item_diary_tag, binding.containerTag, false) as TextView
+            tagView.text = tag.diaryTagName
+            binding.containerTag.addView(tagView)
+        }
+
+        // 멘션
+        binding.containerMention.removeAllViews()
+        diary.participantIds.forEach { id ->
+            val mentionView = layoutInflater.inflate(R.layout.item_diary_mention, binding.containerMention, false) as TextView
+            mentionView.text = "@참여자$id"  // TODO
+            binding.containerMention.addView(mentionView)
+        }
+    }
+
 
     private fun renderComments() {
         binding.containerCommentList.removeAllViews()
