@@ -1,47 +1,38 @@
 package com.example.wooriga
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.wooriga.databinding.FragmentFamilyDiaryBinding
+import com.example.wooriga.databinding.FragmentDiarySearchBinding
 
+class DiarySearchFragment : Fragment() {
 
-class FamilyDiaryFragment : Fragment() {
-
-    private var _binding: FragmentFamilyDiaryBinding? = null
+    private var _binding: FragmentDiarySearchBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: DiaryViewModel by activityViewModels()
     private lateinit var diaryAdapter: DiaryAdapter
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentFamilyDiaryBinding.inflate(inflater, container, false)
+        _binding = FragmentDiarySearchBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 검색
-        binding.customToolbar.iconSearch.setOnClickListener {
-            // 일기 검색 프래그먼트로 이동
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, DiarySearchFragment())
-                .addToBackStack(null)
-                .commit()
-        }
-
         setupRecyclerView()
-        observeViewModel()
-        setupListeners()
+        setupSearch()
+        setupBackButton()
     }
 
     private fun setupRecyclerView() {
@@ -55,29 +46,31 @@ class FamilyDiaryFragment : Fragment() {
                 .replace(R.id.fragment_container, fragment)
                 .addToBackStack(null)
                 .commit()
-
         }
 
-        binding.recyclerDiary.apply {
+        binding.recyclerSearchResult.apply {
             layoutManager = GridLayoutManager(requireContext(), 2)
             adapter = diaryAdapter
             setHasFixedSize(true)
         }
     }
 
+    private fun setupSearch() {
+        binding.etSearch.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                val query = s.toString()
+                val result = viewModel.searchDiary(query)
+                diaryAdapter.submitList(result)
+            }
 
-    private fun observeViewModel() {
-        viewModel.diaryList.observe(viewLifecycleOwner) { diaries ->
-            diaryAdapter.submitList(diaries)
-        }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
     }
 
-    private fun setupListeners() {
-        binding.addFamilyDiaryButton.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, DiaryAddFragment())
-                .addToBackStack(null)
-                .commit()
+    private fun setupBackButton() {
+        binding.btnBack.setOnClickListener {
+            parentFragmentManager.popBackStack()
         }
     }
 
@@ -85,5 +78,4 @@ class FamilyDiaryFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 }
