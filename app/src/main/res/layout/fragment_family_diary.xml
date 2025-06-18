@@ -51,10 +51,12 @@
         android:id="@+id/addFamilyDiaryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="가족일기 추가 버튼"
+        android:layout_margin="20dp"
         android:src="@drawable/ic_add"
+        app:tint="@android:color/white"
+        app:backgroundTint="@color/stormGrey"
+        android:contentDescription="가족일기 추가 버튼"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="16dp" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
