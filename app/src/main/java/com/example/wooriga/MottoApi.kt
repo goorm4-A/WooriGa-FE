@@ -9,7 +9,7 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface MottoApiService {
+interface MottoApi {
 
     // 가훈 전체 조회
     @GET("/culture/motto")
