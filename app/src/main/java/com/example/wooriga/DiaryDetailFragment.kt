@@ -168,17 +168,17 @@ class DiaryDetailFragment : Fragment() {
     private fun addCommentView(comment: Comment) {
         val commentBinding = ItemCommentBinding.inflate(layoutInflater, binding.containerCommentList, false)
 
-        commentBinding.tvCommentUser.text = comment.userName
-        commentBinding.tvCommentText.text = comment.content
-        commentBinding.tvCommentDate.text = comment.date
+        commentBinding.tvUserName.text = comment.userName
+        commentBinding.tvContent.text = comment.content
+        commentBinding.tvTime.text = comment.date
 
         if (comment.profileImageUrl != null) {
             Glide.with(this)
                 .load(comment.profileImageUrl)
                 .circleCrop()
-                .into(commentBinding.ivCommentUserImage)
+                .into(commentBinding.ivUserImage)
         } else {
-            commentBinding.ivCommentUserImage.setImageResource(R.drawable.ic_user_circle)
+            commentBinding.ivUserImage.setImageResource(R.drawable.ic_user_circle)
         }
 
         binding.containerCommentList.addView(commentBinding.root)
