@@ -5,20 +5,23 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.wooriga.databinding.ItemDiaryCardBinding
 
 class DiaryAdapter(
-    private val onItemClick: (Diary) -> Unit
-) : ListAdapter<Diary, DiaryAdapter.DiaryViewHolder>(DIFF_CALLBACK) {
+    private val onItemClick: (DiaryListItem) -> Unit
+) : ListAdapter<DiaryListItem, DiaryAdapter.DiaryViewHolder>(DIFF_CALLBACK) {
 
-    inner class DiaryViewHolder(private val binding: ItemDiaryCardBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: Diary) {
+    inner class DiaryViewHolder(private val binding: ItemDiaryCardBinding)
+        : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(item: DiaryListItem) {
             binding.tvTitle.text = item.title
-            // TODO: 사진 바인딩
-            binding.root.setOnClickListener {
-                onItemClick(item)
-            }
+            Glide.with(binding.imageDiary)
+                .load(item.imgUrl)
+                .into(binding.imageDiary)
+
+            binding.root.setOnClickListener { onItemClick(item) }
         }
     }
 
@@ -32,14 +35,9 @@ class DiaryAdapter(
     }
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Diary>() {
-            override fun areItemsTheSame(oldItem: Diary, newItem: Diary): Boolean {
-                return oldItem.title == newItem.title && oldItem.date == newItem.date
-            }
-
-            override fun areContentsTheSame(oldItem: Diary, newItem: Diary): Boolean {
-                return oldItem == newItem
-            }
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<DiaryListItem>() {
+            override fun areItemsTheSame(oldItem: DiaryListItem, newItem: DiaryListItem) = oldItem.id == newItem.id
+            override fun areContentsTheSame(oldItem: DiaryListItem, newItem: DiaryListItem) = oldItem == newItem
         }
     }
 }

@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:padding="16dp">
 
-    <!-- 닫기 버튼 -->
+    <!-- 뒤로가기 버튼 -->
     <ImageButton
         android:id="@+id/btn_close"
         android:layout_width="24dp"
@@ -44,4 +44,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
