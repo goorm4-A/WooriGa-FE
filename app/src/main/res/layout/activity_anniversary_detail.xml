@@ -38,8 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="15dp"
-        android:padding="10dp">
+        android:layout_marginTop="10dp">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="55dp"
@@ -50,37 +49,25 @@
             android:id="@+id/annivTypeEvent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/tag_anniversary"
-            android:textSize="16sp"
-            android:gravity="center"
+            style="@style/TagTextViewStyle"
             android:layout_marginRight="10dp"
-            android:elevation="4dp"
-            android:text="# 경조사"
-            android:textStyle="bold" />
+            android:text="# 경조사" />
 
         <TextView
             android:id="@+id/annivTypeBirth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/tag_anniversary"
-            android:textSize="16sp"
-            android:gravity="center"
+            style="@style/TagTextViewStyle"
             android:layout_marginRight="10dp"
-            android:elevation="6dp"
-            android:text="# 생일"
-            android:textStyle="bold" />
+            android:text="# 기념일"/>
 
         <TextView
             android:id="@+id/annivTypeAppoint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/tag_anniversary"
-            android:textSize="16sp"
-            android:gravity="center"
+            style="@style/TagTextViewStyle"
             android:layout_marginRight="10dp"
-            android:elevation="6dp"
-            android:text="# 약속"
-            android:textStyle="bold" />
+            android:text="# 모임/약속"/>
 
     </LinearLayout>
     <LinearLayout
@@ -93,25 +80,17 @@
             android:id="@+id/annivTypeEtc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/tag_anniversary"
-            android:textSize="16sp"
-            android:gravity="center"
+            style="@style/TagTextViewStyle"
             android:layout_marginRight="10dp"
-            android:elevation="6dp"
-            android:text="# 기타"
-            android:textStyle="bold" />
+            android:text="# 기타"/>
 
         <TextView
             android:id="@+id/annivTypeAll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/tag_anniversary"
-            android:textSize="16sp"
-            android:gravity="center"
+            style="@style/TagTextViewStyle"
             android:layout_marginRight="10dp"
-            android:elevation="6dp"
-            android:text="# 전체"
-            android:textStyle="bold" />
+            android:text="# 전체" />
 
 
     </LinearLayout>
