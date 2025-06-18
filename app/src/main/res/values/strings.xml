@@ -31,5 +31,22 @@
         <item>작은아빠</item>
     </string-array>
 
+    <string-array name="anniv_weekdays">
+        <item>일</item>
+        <item>월</item>
+        <item>화</item>
+        <item>수</item>
+        <item>목</item>
+        <item>금</item>
+        <item>토</item>
+    </string-array>
+
+    <string-array name="anniv_tag">
+        <item>경조사</item>
+        <item>기념일</item>
+        <item>모임/약속</item>
+        <item>기타</item>
+    </string-array>
+
 
 </resources>

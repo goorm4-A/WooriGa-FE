@@ -46,7 +46,6 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.play.services.maps)
@@ -65,6 +64,7 @@ dependencies {
 
     implementation("com.kakao.sdk:v2-user:2.21.4") // 카카오 로그인 API 모듈
 
+    implementation("com.prolificinteractive:material-calendarview:1.4.3") // Material CalendarView
 
 }
 

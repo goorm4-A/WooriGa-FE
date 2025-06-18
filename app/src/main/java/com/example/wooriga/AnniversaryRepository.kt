@@ -11,9 +11,9 @@ object AnniversaryRepository {
         anniversaryList.clear()
         anniversaryList.addAll(
             listOf(
-                Anniversary("2025-06-01", "엄마 생신", "생일", "집", "미역국 끓이기"),
+                Anniversary("2025-06-01", "엄마 생신", "기념일", "집", "미역국 끓이기"),
                 Anniversary("2025-07-15", "친구 결혼식", "경조사", "웨딩홀", "축의금 챙기기"),
-                Anniversary("2025-08-20", "치과 예약", "약속", "치과", "충치 치료"),
+                Anniversary("2025-08-20", "치과 예약", "모임/약속", "치과", "충치 치료"),
                 Anniversary("2025-09-01", "기타 일정", "기타", "카페", "생각 정리")
             )
         )
