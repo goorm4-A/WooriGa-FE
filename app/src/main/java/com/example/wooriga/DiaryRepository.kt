@@ -1,5 +1,14 @@
 package com.example.wooriga
 
+import android.content.Context
+import android.net.Uri
+import com.google.gson.Gson
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.File
+
 class DiaryRepository {
     private val api = RetrofitClient.diaryApi
 
@@ -14,6 +23,41 @@ class DiaryRepository {
         return if (response.isSuccessful && response.body()?.isSuccess == true) {
             response.body()?.result?.contents
         } else null
+    }
+
+    suspend fun fetchDiaryDetail(diaryId: Long): DiaryDetailItem? {
+        val response = api.getDiaryDetail(diaryId)
+        return if (response.isSuccessful && response.body()?.isSuccess == true) {
+            response.body()?.result
+        } else null
+    }
+
+    suspend fun uploadDiary(
+        dto: FamilyDiaryDto,
+        imageUri: Uri?,
+        context: Context
+    ): Boolean {
+        val gson = Gson()
+        val json = gson.toJson(dto)
+        val dtoBody = json.toRequestBody("application/json; charset=utf-8".toMediaType())
+
+        val imagePart = imageUri?.let {
+            val file = it.toFile(context)
+            val requestFile = file.asRequestBody("image/*".toMediaType())
+            MultipartBody.Part.createFormData("image", file.name, requestFile)
+        }
+
+        val response = api.postFamilyDiary(dtoBody, imagePart?.let { listOf(it) })
+        return response.isSuccessful && response.body()?.isSuccess == true
+    }
+
+    fun Uri.toFile(context: Context): File {
+        val inputStream = context.contentResolver.openInputStream(this)!!
+        val file = File.createTempFile("upload", ".jpg", context.cacheDir)
+        file.outputStream().use { outputStream ->
+            inputStream.copyTo(outputStream)
+        }
+        return file
     }
 
 }

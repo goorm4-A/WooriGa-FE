@@ -1,7 +1,12 @@
 package com.example.wooriga
 
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Multipart
+import retrofit2.http.POST
+import retrofit2.http.Part
 import retrofit2.http.Query
 
 interface DiaryApi {
@@ -22,31 +27,12 @@ interface DiaryApi {
         @Query("diaryId") diaryId: Long
     ): Response<DiaryDetailResponse>
 
+    // 일기 등록
+    @Multipart
+    @POST("family-diary")
+    suspend fun postFamilyDiary(
+        @Part("familyDiaryDto") familyDiaryDto: RequestBody,
+        @Part images: List<MultipartBody.Part>?
+    ): Response<DiaryDetailResponse>
 
-//    @GET("family-diary")
-//    suspend fun getDiary(@Query("diaryId") diaryId: Long): Response<Diary>
-//
-//    @POST("family-diary")
-//    suspend fun postDiary(@Body diaryRequest: DiaryRequest): Response<Unit>
-//
-//    @DELETE("family-diary")
-//    suspend fun deleteDiary(@Query("diaryId") diaryId: Long): Response<Unit>
-//
-//    @GET("family-diary/comment")
-//    suspend fun getComments(@Query("diaryId") diaryId: Long): Response<List<Comment>>
-//
-//    @POST("family-diary/comment")
-//    suspend fun postComment(@Body commentRequest: CommentRequest): Response<Unit>
-//
-//    @GET("family-diary/re-comment")
-//    suspend fun getReComments(@Query("commentId") commentId: Long): Response<List<ReComment>>
-//
-//    @POST("family-diary/re-comment")
-//    suspend fun postReComment(@Body reCommentRequest: ReCommentRequest): Response<Unit>
-//
-//    @DELETE("family-diary/comment/delete")
-//    suspend fun deleteComment(@Query("commentId") commentId: Long): Response<Unit>
-//
-//    @GET("family-diary/search")
-//    suspend fun searchDiary(@Query("title") title: String): Response<List<Diary>>
 }

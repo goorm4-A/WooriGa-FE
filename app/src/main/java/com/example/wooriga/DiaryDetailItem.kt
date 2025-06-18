@@ -18,3 +18,8 @@ data class DiaryDetailResponse(
     val result: DiaryDetailItem
 )
 
+data class DiaryTag(
+    val diaryTagId: Long,
+    val diaryTagName: String
+)
+

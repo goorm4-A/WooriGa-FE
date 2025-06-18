@@ -1,5 +1,7 @@
 package com.example.wooriga
 
+import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,6 +15,7 @@ class DiaryViewModel : ViewModel() {
     private val _diaryList = MutableLiveData<List<DiaryListItem>>()
     val diaryList: LiveData<List<DiaryListItem>> get() = _diaryList
 
+    // 일기 목록 조회
     fun loadDiaries() {
         viewModelScope.launch {
             val items = repository.fetchDiaryList(
@@ -24,43 +27,32 @@ class DiaryViewModel : ViewModel() {
         }
     }
 
-    init {
-        // 초기 더미 데이터
-//        _diaryList.value = listOf(
-//            Diary(
-//                date = "6월 15일 토요일",
-//                imageUri = null,
-//                title = "주말 나들이",
-//                location = "서울숲",
-//                content = "가족과 함께 서울숲 나들이를 다녀왔다. 날씨가 맑고 기분이 좋았다. good",
-//                tag = listOf("#화목", "#산책"),
-//                member = listOf("@엄마", "@아빠")
-//            ),
-//            Diary(
-//                date = "6월 13일 월요일",
-//                imageUri = null,
-//                title = "학교 발표",
-//                location = "학교",
-//                content = "오늘은 학교에서 프로젝트 발표를 했다. 떨렸지만 잘 마무리했다.",
-//                tag = listOf("#성장", "#도전", "#tag"),
-//                member = listOf("@나", "@친구")
-//            ),
-//            Diary(
-//                date = "6월 10일 월요일",
-//                imageUri = null,
-//                title = "test",
-//                location = "학교",
-//                content = "오늘은 학교에서 프로젝트 발표를 했다. 떨렸지만 잘 마무리했다. good",
-//                tag = listOf("#성장", "#도전"),
-//                member = listOf("@나", "@친구")
-//            )
-//        )
-    }
+    // 일기 등록
+    fun postDiary(
+        title: String,
+        location: String,
+        description: String,
+        tags: List<String>,
+        imageUri: Uri?,
+        context: Context
+    ) {
+        viewModelScope.launch {
+            val dto = FamilyDiaryDto(
+                title = title,
+                location = location,
+                description = description,
+                diaryTags = tags,
+                participantIds = listOf(1L, 2L) // 참여자 ID: 추후 실제 값으로 교체
+            )
 
-//    fun addDiary(newDiary: Diary) {
-//        val currentList = _diaryList.value ?: emptyList()
-//        _diaryList.value = currentList + newDiary
-//    }
+            val success = repository.uploadDiary(dto, imageUri, context)
+            if (success) {
+                loadDiaries() // 등록 후 목록 다시 불러오기
+            } else {
+                // 실패 처리
+            }
+        }
+    }
 
     // 제목 + 내용 + 해시태그 기준 검색
 //    fun searchDiary(query: String): List<Diary> {

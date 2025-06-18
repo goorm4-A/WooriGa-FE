@@ -104,13 +104,13 @@
                 android:background="#DDDDDD">
 
                 <ImageView
-                    android:id="@+id/imagePreview"
+                    android:id="@+id/image_preview"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop" />
 
                 <ImageButton
-                    android:id="@+id/buttonAddImage"
+                    android:id="@+id/btn_add_image"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_gravity="bottom|end"
