@@ -4,12 +4,15 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="backgroundColor">#FFFFFFFF</color>
-    <color name="logoColor">#4B3A2A</color>
+    <color name="logoColor">#74C43C</color>
     <color name="navIconDefaultColor">#999999</color>
-    <color name="navIconActiveColor">#4B3A2A</color>
+    <color name="navIconActiveColor">#74C43C</color>
 
     <color name="skyBlue">#A6C1CC</color>
-    <color name="green">#5A8736</color>
+
+    <color name="green">#74C43C</color>
+
+    <color name="stormGrey">#0A0B0D</color>
 
     <color name="peach">#EDAE8D</color>
     <color name="mint">#88A79F</color>
