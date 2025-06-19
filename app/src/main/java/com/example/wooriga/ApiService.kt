@@ -5,6 +5,6 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface ApiService {
-    @GET("oauth/kakao")
+    @GET("/oauth/success")
     fun loginWithKakao(@Query("code") code: String): Call<LoginResponse>
 }

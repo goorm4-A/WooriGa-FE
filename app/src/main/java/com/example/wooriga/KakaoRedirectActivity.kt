@@ -34,7 +34,7 @@ class KakaoRedirectActivity : AppCompatActivity() {
         Log.d("KakaoRedirect", "sendCodeToBackend 호출, code = $code")
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://54.180.104.168:8081/") //배포주소
+            .baseUrl("http://54.180.104.168:8081") //배포주소
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
