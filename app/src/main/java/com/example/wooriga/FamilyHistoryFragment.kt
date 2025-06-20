@@ -78,7 +78,7 @@ class FamilyHistoryFragment : Fragment() {
 
         // 가족사 화면 타이틀
         val name = "송이"
-        val message = "${name}님의 기념일들을\n관리해보세요!"
+        val message = "${name}님의 가족사들을\n관리해보세요!"
 
         val spannable = SpannableString(message)
         spannable.setSpan(
@@ -108,7 +108,7 @@ class FamilyHistoryFragment : Fragment() {
         val dateOutput = bottomSheetBinding.dateOutput
         val titleInput = bottomSheetBinding.titleInput
         val locationInput = bottomSheetBinding.locationInput
-        /*val locationOutput = bottomSheetBinding.locationOutput*/
+        val locationOutput = bottomSheetBinding.locationOutput
 
         val cancelButton = bottomSheetBinding.cancelButton
         val addButton = bottomSheetBinding.submitButton
@@ -137,7 +137,7 @@ class FamilyHistoryFragment : Fragment() {
             locationPickerLauncher.launch(intent)
         }
 
-
+        locationOutput.text = selectedAddress
 
         // 추가 버튼
         addButton.setOnClickListener {
