@@ -4,6 +4,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -52,6 +53,12 @@ interface DiaryApi {
         @Part("familyDiaryDto") familyDiaryDto: RequestBody,
         @Part images: List<MultipartBody.Part>?
     ): Response<DiaryDetailResponse>
+
+    // 일기 삭제
+    @DELETE("family-diary")
+    suspend fun deleteDiary(
+        @Query("diaryId") diaryId: Long
+    ): Response<CommonResponse>
 
     // 일기 검색
     @GET("family-diary/search")

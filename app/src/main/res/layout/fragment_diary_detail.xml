@@ -8,7 +8,7 @@
     <!-- 상단 툴바 고정 -->
     <include
         android:id="@+id/custom_toolbar"
-        layout="@layout/toolbar_back"
+        layout="@layout/toolbar_detail"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -40,11 +40,11 @@
 
                 <ImageView
                     android:id="@+id/iv_profile"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:background="@drawable/bg_rect_gray"
                     android:scaleType="centerCrop"
-                    android:contentDescription="사용자 사진" />
+                    android:contentDescription="작성자 사진" />
               
                 <LinearLayout
                     android:orientation="vertical"
@@ -58,14 +58,14 @@
                         android:layout_height="wrap_content"
                         android:text="이름"
                         android:textStyle="bold"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/tv_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="2025.04.12"
-                        android:textSize="12sp"
+                        android:text="06/20 22:26"
+                        android:textSize="14sp"
                         android:textColor="@color/dark_gray"
                         android:layout_marginTop="2dp" />
                   
@@ -80,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:text="제목"
                 android:textStyle="bold"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:layout_marginTop="16dp" />
 
             <!-- 일기 본문 -->
@@ -89,25 +89,40 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="일기 내용"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:layout_marginTop="8dp" />
 
             <!-- 이미지 -->
             <ImageView
                 android:id="@+id/iv_photo"
                 android:layout_width="match_parent"
-                android:layout_height="180dp"
+                android:layout_height="200dp"
                 android:layout_marginTop="16dp"
-                android:background="#EFEFEF"
+                android:background="@drawable/bg_rect_gray"
                 android:scaleType="centerCrop" />
 
             <!-- 장소 -->
-            <TextView
-                android:id="@+id/tv_location"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:layout_marginTop="8dp" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="8dp" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_location"
+                    app:tint="@color/green"
+                    android:paddingRight="4dp"/>
+
+                <TextView
+                    android:id="@+id/tv_location"
+                    android:text="장소"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp" />
+            </LinearLayout>
 
             <!-- 구분선 -->
             <View

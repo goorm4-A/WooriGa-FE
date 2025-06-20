@@ -26,19 +26,6 @@ class DiaryViewModel : ViewModel() {
     private val _searchResult = MutableLiveData<List<DiaryListItem>>()
     val searchResult: LiveData<List<DiaryListItem>> get() = _searchResult
 
-    fun addDummyDiary() {
-        val dummyDiary = DiaryListItem(
-            id = -1L, // 더미라서 음수 ID 사용
-            imgUrl = "https://ik.imagekit.io/tvlk/blog/2024/10/shutterstock_2479862045.jpg?tr=q-70,c-at_max,w-500,h-250,dpr-2", // 임시 이미지 URL
-            title = "테스트 일기입니다."
-        )
-
-        // 기존 목록에서 추가
-        val currentList = _diaryList.value?.toMutableList() ?: mutableListOf()
-        currentList.add(0, dummyDiary) // 상단에 추가
-        _diaryList.value = currentList
-    }
-
     fun loadFamilies() {
         val dummy = listOf(
             Family(1, "A가족"),
@@ -48,9 +35,6 @@ class DiaryViewModel : ViewModel() {
         _familyList.value = dummy
         _selectedFamilyId.value = dummy.first().familyId
         loadDiaries(dummy.first().familyId)
-
-        // 더미 일기 추가
-        addDummyDiary()
     }
 
     // 가족 선택
@@ -75,8 +59,16 @@ class DiaryViewModel : ViewModel() {
                 page = 0,
                 size = 20,
                 familyId = familyId
+            ) ?: emptyList()
+
+            // 리스트 맨 위에 더미 추가
+            val dummy = DiaryListItem(
+                id = -1L,
+                imgUrl = "https://ik.imagekit.io/tvlk/blog/2024/10/shutterstock_2479862045.jpg?tr=q-70,c-at_max,w-500,h-250,dpr-2",
+                title = "테스트 일기입니다."
             )
-            _diaryList.value = items ?: emptyList()
+
+            _diaryList.value = listOf(dummy) + items
         }
     }
 
@@ -111,6 +103,19 @@ class DiaryViewModel : ViewModel() {
                 loadDiaries() // 등록 후 목록 다시 불러오기
             } else {
                 // 실패 처리
+            }
+        }
+    }
+
+    // 일기 삭제
+    fun deleteDiary(diaryId: Long, onSuccess: () -> Unit, onFailure: () -> Unit) {
+        viewModelScope.launch {
+            val result = repository.deleteDiary(diaryId)
+            if (result?.isSuccess == true) {
+                onSuccess()
+                loadDiaries() // 삭제 후 목록 다시 불러오기
+            } else {
+                onFailure()
             }
         }
     }

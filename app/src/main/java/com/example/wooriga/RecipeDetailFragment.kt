@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -84,11 +86,16 @@ class RecipeDetailFragment : Fragment() {
         val toolbar = view.findViewById<View>(R.id.custom_toolbar)
         val title = toolbar.findViewById<TextView>(R.id.tv_toolbar_title)
         val backBtn = toolbar.findViewById<View>(R.id.btn_back)
+        val btnMore = toolbar.findViewById<ImageButton>(R.id.btn_more)
 
         title.text = "요리법"
 
         backBtn.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
+
+        btnMore.setOnClickListener {
+            Toast.makeText(requireContext(), "더보기 버튼 클릭됨", Toast.LENGTH_SHORT).show()
         }
     }
 

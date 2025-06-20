@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -13,8 +14,8 @@ import com.bumptech.glide.Glide
 import com.example.wooriga.databinding.FragmentDiaryDetailBinding
 import com.example.wooriga.databinding.ItemCommentBinding
 import kotlinx.coroutines.launch
-import java.util.Locale
 import java.text.SimpleDateFormat
+import java.util.Locale
 import java.util.TimeZone
 
 class DiaryDetailFragment : Fragment() {
@@ -58,6 +59,17 @@ class DiaryDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // 하단 네비게이션 숨기기
+        requireActivity().findViewById<View>(R.id.bottomNavigation).visibility = View.GONE
+
+        if (diaryId == -1L) {
+            // 더미 데이터 직접 바인딩
+            diary = dummyDiaryDetail
+            bindDiary(diary)
+            renderComments()  // 샘플 댓글 없으면 비워짐
+            return
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             val repository = DiaryRepository()
@@ -105,18 +117,6 @@ class DiaryDetailFragment : Fragment() {
             }
         }
 
-        // 툴바
-        val toolbar = view.findViewById<View>(R.id.custom_toolbar)
-        val title = toolbar.findViewById<TextView>(R.id.tv_toolbar_title)
-        val btnBack = toolbar.findViewById<ImageButton>(R.id.btn_back)
-
-        title.text = "추억"
-
-        btnBack.setOnClickListener {
-            requireActivity().findViewById<View>(R.id.bottomNavigation).visibility = View.VISIBLE
-            requireActivity().onBackPressedDispatcher.onBackPressed()
-        }
-
     }
 
     private fun bindDiary(diary: DiaryDetailItem) {
@@ -149,6 +149,64 @@ class DiaryDetailFragment : Fragment() {
             val mentionView = layoutInflater.inflate(R.layout.item_diary_mention, binding.containerMention, false) as TextView
             mentionView.text = "@참여자$id"  // TODO
             binding.containerMention.addView(mentionView)
+        }
+
+        // 툴바
+        val toolbar = view?.findViewById<View>(R.id.custom_toolbar)
+        val title = toolbar?.findViewById<TextView>(R.id.tv_toolbar_title)
+        val btnBack = toolbar?.findViewById<ImageButton>(R.id.btn_back)
+        val btnMore = toolbar?.findViewById<ImageButton>(R.id.btn_more)
+
+        title?.text = "추억"
+
+        btnBack?.setOnClickListener {
+            requireActivity().findViewById<View>(R.id.bottomNavigation).visibility = View.VISIBLE
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
+
+        btnMore?.setOnClickListener {
+            val popupMenu = PopupMenu(requireContext(), it)
+
+            // TODO: 로그인한 사용자 ID (예: 현재 로그인한 사용자 ID)
+            val currentUserId = 1L
+
+            if (diary.participantIds.contains(currentUserId)) {
+                // 본인 글일 경우
+                popupMenu.menu.add("수정")
+                popupMenu.menu.add("삭제")
+            } else {
+                // 타인 글일 경우
+                popupMenu.menu.add("신고")
+            }
+
+            popupMenu.setOnMenuItemClickListener { menuItem ->
+                when (menuItem.title) {
+                    "수정" -> {
+                        Toast.makeText(requireContext(), "수정 클릭됨", Toast.LENGTH_SHORT).show()
+                        true
+                    }
+                    "삭제" -> {
+                        lifecycleScope.launch {
+                            val repository = DiaryRepository()
+                            val response = repository.deleteDiary(diaryId)
+                            if (response?.isSuccess == true) {
+                                Toast.makeText(requireContext(), "삭제되었습니다", Toast.LENGTH_SHORT).show()
+                                requireActivity().onBackPressedDispatcher.onBackPressed()
+                            } else {
+                                Toast.makeText(requireContext(), "삭제 실패", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                        true
+                    }
+                    "신고" -> {
+                        Toast.makeText(requireContext(), "신고 클릭됨", Toast.LENGTH_SHORT).show()
+                        true
+                    }
+                    else -> false
+                }
+            }
+
+            popupMenu.show()
         }
     }
 

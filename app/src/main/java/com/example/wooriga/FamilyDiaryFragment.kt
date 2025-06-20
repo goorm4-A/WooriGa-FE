@@ -10,7 +10,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.wooriga.databinding.FragmentFamilyDiaryBinding
 
-
 class FamilyDiaryFragment : Fragment() {
 
     private var _binding: FragmentFamilyDiaryBinding? = null
