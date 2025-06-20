@@ -1,6 +1,7 @@
 package com.example.wooriga
 
 data class DiaryComment(
+    val commentId: Long,
     val content: String,
     val createdAt: String,
     val username: String,

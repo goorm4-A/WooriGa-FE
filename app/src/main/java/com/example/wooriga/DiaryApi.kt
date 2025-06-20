@@ -46,6 +46,12 @@ interface DiaryApi {
         @Body request: CommentPostRequest
     ): Response<CommentPostResponse>
 
+    // 댓글 삭제
+    @DELETE("/family-diary/comment/delete")
+    suspend fun deleteComment(
+        @Query("commentId") commentId: Long
+    ): Response<CommonResponse>
+
     // 일기 등록
     @Multipart
     @POST("family-diary")

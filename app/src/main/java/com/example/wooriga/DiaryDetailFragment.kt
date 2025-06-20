@@ -228,6 +228,45 @@ class DiaryDetailFragment : Fragment() {
         // TODO: 유저 프로필 이미지 받아오기
         commentBinding.ivUserImage.setImageResource(R.drawable.ic_user_default)
 
+        // 댓글 삭제
+        // TODO: 현재 로그인한 사용자 ID
+        val currentUserId = 1L
+
+        commentBinding.btnMore.setOnClickListener {
+            val popupMenu = PopupMenu(requireContext(), it)
+
+            if (comment.familyMemberId == currentUserId) {
+                popupMenu.menu.add("삭제")
+            } else {
+                popupMenu.menu.add("신고")
+            }
+
+            popupMenu.setOnMenuItemClickListener { item ->
+                when (item.title) {
+                    "삭제" -> {
+                        lifecycleScope.launch {
+                            val result = DiaryRepository().deleteComment(comment.commentId)
+                            if (result?.isSuccess == true) {
+                                Toast.makeText(context, "댓글 삭제 완료", Toast.LENGTH_SHORT).show()
+                                // UI에서 삭제
+                                binding.containerCommentList.removeView(commentBinding.root)
+                            } else {
+                                Toast.makeText(context, "댓글 삭제 실패", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                        true
+                    }
+                    "신고" -> {
+                        Toast.makeText(context, "댓글 신고 클릭됨", Toast.LENGTH_SHORT).show()
+                        true
+                    }
+                    else -> false
+                }
+            }
+
+            popupMenu.show()
+        }
+
         binding.containerCommentList.addView(commentBinding.root)
     }
 

@@ -74,6 +74,16 @@ class DiaryRepository {
         return sdf.format(Date())
     }
 
+    // 댓글 삭제
+    suspend fun deleteComment(commentId: Long): CommonResponse? {
+        return try {
+            val response = api.deleteComment(commentId)
+            if (response.isSuccessful) response.body() else null
+        } catch (e: Exception) {
+            null
+        }
+    }
+
     // 일기 등록
     suspend fun uploadDiary(
         dto: FamilyDiaryDto,
