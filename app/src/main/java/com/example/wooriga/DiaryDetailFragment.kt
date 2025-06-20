@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
@@ -13,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.wooriga.databinding.FragmentDiaryDetailBinding
 import com.example.wooriga.databinding.ItemCommentBinding
+import com.example.wooriga.databinding.ItemCommentReBinding
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -268,6 +270,27 @@ class DiaryDetailFragment : Fragment() {
         }
 
         binding.containerCommentList.addView(commentBinding.root)
+    }
+
+    // 대댓글 조회
+    private fun loadAndRenderReComments(parentCommentId: Long, parentContainer: LinearLayout) {
+        lifecycleScope.launch {
+            val reComments = DiaryRepository().fetchReComments(parentCommentId)
+            if (reComments != null) {
+                for (comment in reComments) {
+                    val reBinding = ItemCommentReBinding.inflate(layoutInflater, parentContainer, false)
+
+                    reBinding.tvName.text = comment.username
+                    reBinding.tvContent.text = comment.content
+                    reBinding.tvTime.text = formatDisplayTime(comment.createdAt)
+                    reBinding.ivUserImage.setImageResource(R.drawable.ic_user_default)
+
+                    // TODO: 대댓글 더보기 버튼 처리
+
+                    parentContainer.addView(reBinding.root)
+                }
+            }
+        }
     }
 
     fun formatDisplayTime(isoTime: String): String {

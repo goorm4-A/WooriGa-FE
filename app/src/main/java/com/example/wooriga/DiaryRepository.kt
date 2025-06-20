@@ -84,6 +84,22 @@ class DiaryRepository {
         }
     }
 
+    // 대댓글 조회
+    suspend fun fetchReComments(parentCommentId: Long, page: Int = 0, size: Int = 10): List<DiaryComment>? {
+        return try {
+            val response = api.getReComments(
+                commentId = parentCommentId,
+                page = page,
+                size = size
+            )
+            if (response.isSuccessful) {
+                response.body()?.result?.comments
+            } else null
+        } catch (e: Exception) {
+            null
+        }
+    }
+
     // 일기 등록
     suspend fun uploadDiary(
         dto: FamilyDiaryDto,
