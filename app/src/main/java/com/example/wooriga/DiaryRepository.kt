@@ -2,12 +2,17 @@ package com.example.wooriga
 
 import android.content.Context
 import android.net.Uri
+import com.example.wooriga.RetrofitClient.diaryApi
 import com.google.gson.Gson
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 class DiaryRepository {
     private val api = RetrofitClient.diaryApi
@@ -32,6 +37,51 @@ class DiaryRepository {
         return if (response.isSuccessful && response.body()?.isSuccess == true) {
             response.body()?.result
         } else null
+    }
+
+    // 댓글 조회
+    suspend fun fetchDiaryComments(diaryId: Long): List<DiaryComment>? {
+        val response = api.getDiaryComments(
+            diaryId = diaryId,
+            page = 0,
+            size = 20
+        )
+        return if (response.isSuccessful && response.body()?.isSuccess == true) {
+            response.body()?.result?.comments
+        } else null
+    }
+
+    // 댓글 작성
+    suspend fun postDiaryComment(
+        diaryId: Long,
+        memberId: Long,
+        content: String
+    ): DiaryComment? {
+        val request = CommentPostRequest(
+            content = content,
+            createdAt = getCurrentTimeIso()
+        )
+
+        val response = api.postDiaryComment(diaryId, memberId, request)
+        return if (response.isSuccessful && response.body()?.isSuccess == true) {
+            response.body()?.result
+        } else null
+    }
+
+    fun getCurrentTimeIso(): String {
+        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+        sdf.timeZone = TimeZone.getTimeZone("UTC")
+        return sdf.format(Date())
+    }
+
+    // 댓글 삭제
+    suspend fun deleteComment(commentId: Long): CommonResponse? {
+        return try {
+            val response = api.deleteComment(commentId)
+            if (response.isSuccessful) response.body() else null
+        } catch (e: Exception) {
+            null
+        }
     }
 
     // 일기 등록
@@ -61,6 +111,18 @@ class DiaryRepository {
             inputStream.copyTo(outputStream)
         }
         return file
+    }
+
+    // 일기 삭제
+    suspend fun deleteDiary(diaryId: Long): CommonResponse? {
+        return try {
+            val response = diaryApi.deleteDiary(diaryId)
+            if (response.isSuccessful) {
+                response.body()
+            } else null
+        } catch (e: Exception) {
+            null
+        }
     }
 
     // 일기 검색

@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_reply"
         android:layout_marginVertical="12dp"
+        android:layout_marginRight="4dp"
         android:background="?android:attr/selectableItemBackgroundBorderless"
         app:tint="@color/dark_gray" />
 
@@ -104,7 +105,7 @@
             <TextView
                 android:id="@+id/tv_time"
                 android:text="06/18 18:35"
-                android:textSize="12sp"
+                android:textSize="13sp"
                 android:textColor="@color/dark_gray"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
