@@ -3,6 +3,7 @@ package com.example.wooriga
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -27,6 +28,23 @@ interface DiaryApi {
         @Query("diaryId") diaryId: Long
     ): Response<DiaryDetailResponse>
 
+    // 댓글 조회
+    @GET("family-diary/comment")
+    suspend fun getDiaryComments(
+        @Query("familyDiaryId") diaryId: Long,
+        @Query("pageable.page") page: Int,
+        @Query("pageable.size") size: Int,
+        @Query("pageable.sort") sort: List<String> = listOf("createdAt,desc")
+    ): Response<CommentResponse>
+
+    // 댓글 작성
+    @POST("family-diary/comment")
+    suspend fun postDiaryComment(
+        @Query("diaryId") diaryId: Long,
+        @Query("familyMemberId") familyMemberId: Long,
+        @Body request: CommentPostRequest
+    ): Response<CommentPostResponse>
+
     // 일기 등록
     @Multipart
     @POST("family-diary")
@@ -45,5 +63,6 @@ interface DiaryApi {
         @Query("pageable.size") size: Int = 20,
         @Query("pageable.sort") sort: List<String> = listOf("createdAt,desc")
     ): Response<DiaryListResponse>
+
 
 }

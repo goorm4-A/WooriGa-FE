@@ -20,8 +20,24 @@ class DiaryViewModel : ViewModel() {
 
     private val _selectedFamilyId = MutableLiveData<Long>()
 
+    private val _comments = MutableLiveData<List<DiaryComment>>()
+    val comments: LiveData<List<DiaryComment>> get() = _comments
+
     private val _searchResult = MutableLiveData<List<DiaryListItem>>()
     val searchResult: LiveData<List<DiaryListItem>> get() = _searchResult
+
+    fun addDummyDiary() {
+        val dummyDiary = DiaryListItem(
+            id = -1L, // 더미라서 음수 ID 사용
+            imgUrl = "https://ik.imagekit.io/tvlk/blog/2024/10/shutterstock_2479862045.jpg?tr=q-70,c-at_max,w-500,h-250,dpr-2", // 임시 이미지 URL
+            title = "테스트 일기입니다."
+        )
+
+        // 기존 목록에서 추가
+        val currentList = _diaryList.value?.toMutableList() ?: mutableListOf()
+        currentList.add(0, dummyDiary) // 상단에 추가
+        _diaryList.value = currentList
+    }
 
     fun loadFamilies() {
         val dummy = listOf(
@@ -32,6 +48,9 @@ class DiaryViewModel : ViewModel() {
         _familyList.value = dummy
         _selectedFamilyId.value = dummy.first().familyId
         loadDiaries(dummy.first().familyId)
+
+        // 더미 일기 추가
+        addDummyDiary()
     }
 
     // 가족 선택
@@ -41,12 +60,15 @@ class DiaryViewModel : ViewModel() {
     }
 
     // 일기 목록 조회
+
     // 오버로딩
+    // familyId를 내부에서 가져와서 호출
     fun loadDiaries() {
         val currentFamilyId = _selectedFamilyId.value ?: return
         loadDiaries(currentFamilyId)
     }
 
+    // familyId를 외부에서 받아서 호출
     fun loadDiaries(familyId: Long) {
         viewModelScope.launch {
             val items = repository.fetchDiaryList(
@@ -55,6 +77,14 @@ class DiaryViewModel : ViewModel() {
                 familyId = familyId
             )
             _diaryList.value = items ?: emptyList()
+        }
+    }
+
+    // 댓글 조회
+    fun loadComments(diaryId: Long) {
+        viewModelScope.launch {
+            val result = repository.fetchDiaryComments(diaryId)
+            _comments.value = result ?: emptyList()
         }
     }
 
