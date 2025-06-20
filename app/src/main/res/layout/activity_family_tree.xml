@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FamilyTreeActivity">
+    tools:context=".FamilyTreeActivity"
+    android:background="@color/backgroundColor">
 
     <!-- 툴바 (항상 상단 고정) -->
     <include

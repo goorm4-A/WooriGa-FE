@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:layout_gravity="center"
-    android:background="@color/backgroundColor"
+    android:background="@drawable/bottom_sheet_background"
     android:padding="24dp">
 
     <TextView
@@ -44,6 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="가족 그룹 이름"
+        android:layout_marginTop="12dp"
         android:layout_marginBottom="5dp"/>
 
     <EditText

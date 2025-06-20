@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:layout_gravity="center"
-    android:background="@color/backgroundColor"
+    android:background="@drawable/bottom_sheet_background"
     android:padding="24dp">
 
     <TextView
@@ -15,60 +15,70 @@
         android:textStyle="bold"
         android:layout_marginBottom="40dp"/>
 
+    <!-- 날짜 -->
     <TextView
-        android:id="@+id/dateInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="날짜"
+        android:layout_marginBottom="5dp"/>
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:text="날짜 선택"
-        android:clickable="true"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:gravity="bottom"
-        android:layout_marginBottom="10dp"/>
-    <TextView
-        android:id="@+id/dateOutput"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:hint="선택된 날짜"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/edit_text_box"/>
+        android:layout_marginBottom="10dp">
+        <TextView
+            android:id="@+id/dateOutput"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/edit_text_box"/>
+        <ImageButton
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:id="@+id/dateInput"
+            android:layout_gravity="end|center_vertical"
+            android:src="@drawable/ic_calendar"
+            android:background="@color/transparent"
+            android:layout_marginEnd="10dp"/>
+    </FrameLayout>
 
 
+    <!-- 제목 -->
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:text="제목"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:gravity="bottom"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginBottom="5dp"/>
+
     <EditText
         android:id="@+id/titleInput"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_marginBottom="20dp"
-        android:hint="제목을 입력하세요"
-        android:background="@drawable/edit_text_box"/>
+        android:background="@drawable/edit_text_box"
+        android:layout_marginBottom="10dp"/>
 
+    <!-- 위치 -->
     <TextView
-        android:id="@+id/locationInput"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginBottom="10dp"
-        android:clickable="true"
-        android:text="위치 선택"
-        android:textSize="22sp"
-        android:gravity="bottom"
-        android:textStyle="bold" />
+        android:layout_height="wrap_content"
+        android:text="위치"
+        android:layout_marginBottom="5dp"/>
 
-    <TextView
-        android:id="@+id/locationOutput"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginBottom="20dp"
-        android:hint="선택된 위치"
-        android:background="@drawable/edit_text_box"/>
-
+        android:layout_height="48dp">
+        <TextView
+            android:id="@+id/locationOutput"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/edit_text_box"/>
+        <ImageButton
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:id="@+id/locationInput"
+            android:layout_gravity="end|center_vertical"
+            android:src="@drawable/ic_location"
+            android:background="@color/transparent"
+            android:layout_marginEnd="10dp"/>
+    </FrameLayout>
 
 
 

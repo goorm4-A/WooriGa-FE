@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:layout_gravity="center"
-    android:background="@color/backgroundColor"
+    android:background="@drawable/bottom_sheet_background"
     android:padding="24dp">
 
     <TextView
@@ -63,15 +63,18 @@
             android:layout_marginBottom="10dp"
             /> -->
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="관계"
+            android:layout_marginBottom="5dp"/>
         <Spinner
             android:id="@+id/relationSpinner"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="@drawable/edit_text_box"
-            android:hint="'나'와의 관계"
             android:inputType="text"
             android:layout_marginBottom="10dp"/>
-
         <TextView
             android:id="@+id/relationText"
             android:layout_width="match_parent"
@@ -79,26 +82,34 @@
             android:gravity="center|start"
             android:layout_marginBottom="10dp"
             android:background="@drawable/edit_text_box"
-            android:inputType="text"
             android:text="'나'와의 관계"
-            android:visibility="gone"
-            android:textSize="18sp" />
+            android:visibility="gone" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="이름"
+            android:layout_marginBottom="5dp"/>
         <EditText
             android:id="@+id/nameInputF"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="@drawable/edit_text_box"
-            android:hint="이름"
             android:inputType="textPersonName"
+            android:contentDescription="name"
             android:layout_marginBottom="10dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="생년월일"
+            android:layout_marginBottom="5dp"/>
         <EditText
             android:id="@+id/birthInputF"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:hint="생년월일  DD/MM/YYYY"
+            android:hint="YYYY-MM-DD"
             android:background="@drawable/edit_text_box"
-            android:textColor="@color/black"
             android:inputType="date"
             android:layout_marginBottom="10dp"/>
 
