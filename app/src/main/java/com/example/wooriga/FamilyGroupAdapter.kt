@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.wooriga.databinding.ItemHomeGroupBinding
+import com.example.wooriga.model.FamilyGroup
 
 class FamilyGroupAdapter(private val groups: List<FamilyGroup>) :
     RecyclerView.Adapter<FamilyGroupAdapter.FamilyGroupViewHolder>() {

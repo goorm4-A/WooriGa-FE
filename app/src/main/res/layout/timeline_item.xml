@@ -3,63 +3,72 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/transparent"
-    android:padding="16dp">
+    android:background="@color/transparent" >
 
     <!-- 세로 선 -->
+
     <ImageView
         android:id="@+id/timelineLine"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:background="@drawable/circle_green"
         android:padding="5dp"
-        android:src="@drawable/ic_star"
+        android:src="@drawable/ic_heart"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.897"
         app:tint="#FFFFFF" />
 
     <!-- 왼쪽 카드 -->
     <LinearLayout
         android:id="@+id/leftCard"
         android:orientation="vertical"
-        android:background="@drawable/rounded_background"
-        android:padding="12dp"
+        android:background="@drawable/timeline_right"
+        android:padding="30dp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
+        android:gravity="end"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/timelineLine"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/titleTextLeft"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="제목" />
+            android:text="제목"
+            android:textSize="15sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/locationTextLeft"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="장소" />
+            android:text="장소"
+            android:textSize="13sp" />
 
         <TextView
             android:id="@+id/dateTextLeft"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="날짜" />
+            android:text="날짜"
+            android:textSize="13sp"
+            android:paddingBottom="15dp"/>
     </LinearLayout>
 
     <!-- 오른쪽 카드 -->
     <LinearLayout
         android:id="@+id/rightCard"
         android:orientation="vertical"
-        android:background="@drawable/rounded_background"
-        android:padding="12dp"
+        android:background="@drawable/timeline_left"
+        android:padding="30dp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:gravity="start"
         app:layout_constraintStart_toEndOf="@id/timelineLine"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -69,19 +78,24 @@
             android:id="@+id/titleTextRight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="15sp"
             android:text="제목" />
 
         <TextView
             android:id="@+id/locationTextRight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="13sp"
             android:text="장소" />
 
         <TextView
             android:id="@+id/dateTextRight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="날짜" />
+            android:textSize="13sp"
+            android:text="날짜"
+            android:paddingBottom="15dp"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

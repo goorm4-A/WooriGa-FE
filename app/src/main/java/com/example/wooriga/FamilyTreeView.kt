@@ -142,8 +142,8 @@ class FamilyTreeView @JvmOverloads constructor(
             }
         }
 
-        // 아빠 형제자매 연결 (고모, 삼촌, 작은아빠)
-        val fatherSiblings = members.filter { it.relation in listOf("고모", "삼촌", "작은아빠") }
+        // 아빠 형제자매 연결 (고모, 큰아버지, 작은아버지)
+        val fatherSiblings = members.filter { it.relation in listOf("고모", "큰아버지", "작은아버지") }
         for (sibling in fatherSiblings) {
             val from = centerOf(sibling)
             val to = centerOf(father ?: continue)
@@ -240,7 +240,7 @@ class FamilyTreeView @JvmOverloads constructor(
 
         // 아빠 형제자매 (왼쪽)
         val fatherSiblings = members.filter {
-            it.relation in listOf("고모", "삼촌", "작은아빠")
+            it.relation in listOf("고모", "큰아버지", "작은아버지")
         }
         for ((i, member) in fatherSiblings.withIndex()) {
             member.y = father?.y ?: 0f

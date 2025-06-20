@@ -6,13 +6,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.wooriga.databinding.ActivityManageFamilyGroupBinding
 import com.example.wooriga.databinding.BottomSheetAddFamilyGroupBinding
+import com.example.wooriga.model.FamilyGroup
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
-data class FamilyGroup(
-    val imageResId: Int,
-    val title: String,
-    val memberCount: Int
-)
+
 
 class ManageFamilyGroupActivity : AppCompatActivity() {
 

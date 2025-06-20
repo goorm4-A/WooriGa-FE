@@ -19,11 +19,14 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.time.LocalDate
 import java.util.Locale
 
+
+// 지도에서 가족사 모아보기
 class HistoryMapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityHistoryMapsBinding
     private lateinit var geocoder: Geocoder
+
 
     // 테스트용 데이터 (나중에 서버에서 받아올 부분)
     @RequiresApi(Build.VERSION_CODES.O)
@@ -74,9 +77,13 @@ class HistoryMapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
-        // 초기 위치: 서울
+/*        // 초기 위치: 서울 중심
         val seoul = LatLng(37.5665, 126.978)
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(seoul, 10f))
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(seoul, 10f))*/
+
+        // 초기 위치: 한국 중심
+        val koreaCenter = LatLng(36.5, 127.5)
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(koreaCenter, 7f))
 
         // 지도에 마커 추가
         for (history in historyList) {

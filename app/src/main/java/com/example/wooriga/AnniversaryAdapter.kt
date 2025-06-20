@@ -27,14 +27,15 @@ class AnniversaryAdapter(
         }
     }
 
-    fun updateList(newList: MutableList<Anniversary>) {
-        annivList = newList
+    fun updateList(newList: List<Anniversary>) {
+        annivList = newList.toMutableList()
         notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.anniversary_item, parent, false)
+        /*view.elevation = 8f*/
         return ViewHolder(view)
     }
 

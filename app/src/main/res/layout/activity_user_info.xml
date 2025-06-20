@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="center"
+    android:background="@color/backgroundColor"
     android:layout_marginTop="100dp"
     android:padding="24dp">
 
@@ -36,14 +37,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="생년월일"/>
+
     <EditText
         android:id="@+id/user_birth"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:hint="DD/MM/YYYY"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/edit_text_box"
-        android:inputType="date"
-        android:layout_marginBottom="20dp"/>
+        android:hint="YYYY-MM-DD"
+        android:inputType="date" />
 
     <!-- 전화번호 -->
     <TextView
@@ -55,7 +57,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@drawable/edit_text_box"
-        android:hint="전화번호를 입력하세요"
+        android:hint="010-xxxx-xxxx"
         android:inputType="phone"
         android:layout_marginBottom="20dp"/>
 

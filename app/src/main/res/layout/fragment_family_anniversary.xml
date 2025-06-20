@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor">
 
     <include
         layout="@layout/toolbar_anniversary"
@@ -23,26 +24,6 @@
             tools:context=".FamilyAnniversaryFragment"
             android:padding="5dp" >
 
-<!--            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:orientation="horizontal"
-                android:gravity="end"
-                android:paddingHorizontal="10dp">
-
-                <Spinner
-                    android:id="@+id/selectFamilyAnniv"
-                    android:layout_width="100dp"
-                    android:layout_height="48dp"
-                    android:layout_gravity="center"
-                    android:textAlignment="center"
-                    android:background="@drawable/rounded_background"
-                    android:elevation="4dp"
-                    android:spinnerMode="dropdown" />
-
-            </LinearLayout>-->
-
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -57,28 +38,33 @@
                     android:text="송이님의 기념일들을\n관리해보세요!"
                     android:paddingHorizontal="20dp"/>
 
+
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/backgroundColor" >
 
                     <androidx.cardview.widget.CardView
-                        xmlns:android="http://schemas.android.com/apk/res/android"
-                        xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="16dp"
                         app:cardCornerRadius="16dp"
-                        app:cardElevation="8dp"
-                        app:cardBackgroundColor="@color/white">
+                        app:cardElevation="8dp">
 
-                        <android.widget.CalendarView
+                        <com.prolificinteractive.materialcalendarview.MaterialCalendarView
                             android:id="@+id/calendarAnniv"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            android:padding="12dp"
+                            app:mcv_dateTextAppearance="@style/CalenderViewDateCustomText"
+                            app:mcv_firstDayOfWeek="monday"
+                            app:mcv_selectionColor="@color/green"
+                            app:mcv_showOtherDates="none"
+                            app:mcv_weekDayTextAppearance="@style/CalenderViewWeekCustomText" />
 
                     </androidx.cardview.widget.CardView>
                 </FrameLayout>
+
 
             </LinearLayout>
 

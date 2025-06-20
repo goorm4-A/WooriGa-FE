@@ -28,6 +28,23 @@ class AnniversaryDetailActivity : AppCompatActivity() {
             finish()
         }
 
+        // 검색 기능 추가
+        binding.annivSearchView.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                query?.let {
+                    filterByTitle(it)  // 입력된 검색어로 필터링
+                }
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                newText?.let {
+                    filterByTitle(it)  // 입력된 검색어로 필터링
+                }
+                return true
+            }
+        })
+
     }
 
     private fun initRecyclerView() {
@@ -44,18 +61,33 @@ class AnniversaryDetailActivity : AppCompatActivity() {
     private fun initData() {
         repository.getAll()  // 샘플 데이터 불러오기
         filterByTag("") // 전체 보기
+
     }
 
     private fun initFilterButtons() {
         binding.annivTypeEvent.setOnClickListener { filterByTag("경조사") }
-        binding.annivTypeBirth.setOnClickListener { filterByTag("생일") }
-        binding.annivTypeAppoint.setOnClickListener { filterByTag("약속") }
+        binding.annivTypeBirth.setOnClickListener { filterByTag("기념일") }
+        binding.annivTypeAppoint.setOnClickListener { filterByTag("모임/약속") }
         binding.annivTypeEtc.setOnClickListener { filterByTag("기타") }
         binding.annivTypeAll.setOnClickListener { filterByTag("") }
     }
 
+    // 태그 클릭
     private fun filterByTag(tag: String) {
         filteredAnnivList = repository.getFiltered(tag).toMutableList()
+        adapter.updateList(filteredAnnivList)
+    }
+
+    // 검색
+    private fun filterByTitle(query: String) {
+        val allList = repository.getAll()
+        filteredAnnivList = if (query.isBlank()) {
+            allList.toMutableList()
+        } else {
+            allList.filter {
+                it.title.contains(query, ignoreCase = true)
+            }.toMutableList()
+        }
         adapter.updateList(filteredAnnivList)
     }
 
