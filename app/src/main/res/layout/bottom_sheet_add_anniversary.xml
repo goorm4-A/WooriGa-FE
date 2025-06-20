@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:layout_gravity="center"
+    android:background="@color/backgroundColor"
     android:padding="24dp">
 
     <TextView
@@ -21,13 +22,15 @@
         android:text="4월 12일 토요일"
         android:textSize="22sp"
         android:textStyle="bold"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginBottom="20dp"/>
 
     <EditText
         android:id="@+id/titleInput"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:hint="제목"
+        android:background="@drawable/edit_text_box"
+        android:paddingHorizontal="15dp"
         android:layout_marginBottom="10dp"/>
 
     <Spinner
@@ -35,6 +38,8 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_marginBottom="10dp"
+        android:background="@drawable/edit_text_box"
+        android:paddingHorizontal="15dp"
         />
 
     <EditText
@@ -42,17 +47,20 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:hint="장소"
+        android:background="@drawable/edit_text_box"
+        android:paddingHorizontal="15dp"
         android:layout_marginBottom="10dp"/>
 
     <EditText
         android:id="@+id/memoInput"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/edit_text_box"
         android:hint="메모"
-        android:minLines="3"
-        android:gravity="top"
         android:inputType="textMultiLine"
-        android:layout_marginBottom="10dp"/>
+        android:minLines="3"
+        android:paddingHorizontal="15dp" />
 
 
 
@@ -70,8 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginEnd="8dp"
-            android:text="취소"
-            android:backgroundTint="@color/backgroundColor"/>
+            android:text="취소"/>
 
         <Button
             android:id="@+id/submitButton"

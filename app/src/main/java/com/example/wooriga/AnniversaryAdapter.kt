@@ -35,7 +35,7 @@ class AnniversaryAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.anniversary_item, parent, false)
-        view.elevation = 8f
+        /*view.elevation = 8f*/
         return ViewHolder(view)
     }
 
