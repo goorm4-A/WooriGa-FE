@@ -6,7 +6,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import com.example.wooriga.databinding.FragmentHomeBinding
+import com.example.wooriga.utils.ToolbarUtils
 
 class HomeFragment : Fragment() {
 
@@ -47,6 +49,26 @@ class HomeFragment : Fragment() {
             val intent = Intent(requireContext(), ManageFamilyGroupActivity::class.java)
             startActivity(intent)
         }
+
+        // 프로필 가족 그룹 태그
+        val familyTextViews = listOf(
+            binding.itemHomeUserprofile.family1,
+            binding.itemHomeUserprofile.family2,
+            binding.itemHomeUserprofile.family3,
+            binding.itemHomeUserprofile.family4
+        )
+        val FamilyGroup = ToolbarUtils.groupList.map { it.title }
+
+        familyTextViews.forEachIndexed { index, textView ->
+            if (index < FamilyGroup.size) {
+                textView.text = "#${FamilyGroup[index]}"
+                textView.visibility = View.VISIBLE
+            } else {
+                textView.visibility = View.GONE
+            }
+        }
+
+
         return binding.root
     }
 }

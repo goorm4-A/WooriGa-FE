@@ -26,6 +26,8 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 import com.example.wooriga.model.History
+import com.example.wooriga.utils.ToolbarUtils
+import com.example.wooriga.utils.ToolbarUtils.setupFamilyGroupIcon
 
 class FamilyHistoryFragment : Fragment() {
 
@@ -72,6 +74,17 @@ class FamilyHistoryFragment : Fragment() {
             val intent = Intent(requireContext(), HistoryMapsActivity::class.java)
             startActivity(intent)
         }
+
+        // 상단바 가족 선택 아이콘 클릭 -> 가족 선택
+        val selectFamilyGroup = binding.toolbarHistory.iconSelectFamily
+        selectFamilyGroup.setOnClickListener() {
+            setupFamilyGroupIcon(it, requireContext(), ToolbarUtils.groupList) { selectedGroup ->
+                // 선택된 가족 그룹에 대한 처리
+                Toast.makeText(requireContext(), "${selectedGroup.title} 선택됨", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
 
         return binding.root
     }
