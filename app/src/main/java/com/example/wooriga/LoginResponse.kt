@@ -1,14 +1,17 @@
 package com.example.wooriga
 
+data class ApiResponse<T>(
+    val code: String,
+    val message: String,
+    val result: T
+)
+
 data class LoginResponse(
     val accessToken: String,
     val refreshToken: String,
-    val user: UserInfo
+    val result: ResultData
 )
 
-data class UserInfo(
-    val id: Long,
-    val nickname: String,
-    val email: String?
+data class ResultData(
+    val userInfo: UserManager.UserInfo
 )
-
