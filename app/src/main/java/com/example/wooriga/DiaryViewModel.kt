@@ -15,16 +15,44 @@ class DiaryViewModel : ViewModel() {
     private val _diaryList = MutableLiveData<List<DiaryListItem>>()
     val diaryList: LiveData<List<DiaryListItem>> get() = _diaryList
 
+    private val _familyList = MutableLiveData<List<Family>>()
+    val familyList: LiveData<List<Family>> get() = _familyList
+
+    private val _selectedFamilyId = MutableLiveData<Long>()
+
     private val _searchResult = MutableLiveData<List<DiaryListItem>>()
     val searchResult: LiveData<List<DiaryListItem>> get() = _searchResult
 
+    fun loadFamilies() {
+        val dummy = listOf(
+            Family(1, "A가족"),
+            Family(2, "B가족"),
+            Family(3, "C가족")
+        )
+        _familyList.value = dummy
+        _selectedFamilyId.value = dummy.first().familyId
+        loadDiaries(dummy.first().familyId)
+    }
+
+    // 가족 선택
+    fun selectFamily(familyId: Long) {
+        _selectedFamilyId.value = familyId
+        loadDiaries(familyId)
+    }
+
     // 일기 목록 조회
+    // 오버로딩
     fun loadDiaries() {
+        val currentFamilyId = _selectedFamilyId.value ?: return
+        loadDiaries(currentFamilyId)
+    }
+
+    fun loadDiaries(familyId: Long) {
         viewModelScope.launch {
             val items = repository.fetchDiaryList(
                 page = 0,
                 size = 20,
-                familyId = 123L  // TODO: 실제 familyId로 바꾸기
+                familyId = familyId
             )
             _diaryList.value = items ?: emptyList()
         }

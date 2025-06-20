@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -29,6 +30,26 @@ class FamilyDiaryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel.loadFamilies()
+
+        // 가족 선택
+        binding.customToolbar.iconSelectFamily.setOnClickListener {
+            val families = viewModel.familyList.value ?: return@setOnClickListener
+            val popupMenu = PopupMenu(requireContext(), binding.customToolbar.iconSelectFamily)
+
+            families.forEachIndexed { index, family ->
+                popupMenu.menu.add(0, index, 0, family.name)
+            }
+
+            popupMenu.setOnMenuItemClickListener { menuItem ->
+                val selectedFamily = families[menuItem.itemId]
+                viewModel.selectFamily(selectedFamily.familyId)
+                true
+            }
+
+            popupMenu.show()
+        }
 
         // 검색
         binding.customToolbar.iconSearch.setOnClickListener {
