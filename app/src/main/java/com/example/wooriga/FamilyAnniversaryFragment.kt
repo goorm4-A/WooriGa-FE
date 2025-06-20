@@ -73,8 +73,9 @@ class FamilyAnniversaryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 기념일 화면 타이틀
-        val name = "송이"
+        val savedUser = UserManager.loadUserInfo()
+        // 사용자 이름을 가져와서 기념일 제목에 적용
+        val name = savedUser?.name ?: "이름 없음"
         val message = "${name}님의 기념일들을\n관리해보세요!"
 
         val spannable = SpannableString(message)

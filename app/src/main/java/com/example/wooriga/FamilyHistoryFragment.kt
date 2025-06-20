@@ -76,8 +76,9 @@ class FamilyHistoryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-        // 가족사 화면 타이틀
-        val name = "송이"
+        val savedUser = UserManager.loadUserInfo()
+        // 사용자 이름을 가져와서 가족사 제목에 적용
+        val name = savedUser?.name ?: "이름 없음"
         val message = "${name}님의 가족사들을\n관리해보세요!"
 
         val spannable = SpannableString(message)
