@@ -40,7 +40,7 @@
             android:layout_marginTop="4dp">
 
             <TextView
-                android:id="@+id/family_a"
+                android:id="@+id/family_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
@@ -50,7 +50,7 @@
                 android:textSize="14sp"/>
 
             <TextView
-                android:id="@+id/family_b"
+                android:id="@+id/family_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
@@ -60,11 +60,21 @@
                 android:textSize="14sp"/>
 
             <TextView
-                android:id="@+id/family_c"
+                android:id="@+id/family_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 android:text="#C가족"
+                android:background="@drawable/rectangle_background"
+                android:layout_marginRight="10dp"
+                android:textSize="14sp"/>
+
+            <TextView
+                android:id="@+id/family_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="#D가족"
                 android:background="@drawable/rectangle_background"
                 android:layout_marginRight="10dp"
                 android:textSize="14sp"/>

@@ -20,6 +20,8 @@ import com.example.wooriga.databinding.BottomSheetDetailAnniversaryBinding
 import com.example.wooriga.databinding.FragmentFamilyAnniversaryBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.example.wooriga.model.Anniversary
+import com.example.wooriga.utils.ToolbarUtils
+import com.example.wooriga.utils.ToolbarUtils.setupFamilyGroupIcon
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.format.ArrayWeekDayFormatter
 import java.time.LocalDate
@@ -65,6 +67,14 @@ class FamilyAnniversaryFragment : Fragment() {
         // 요일을 한글로 보이게 설정
         binding.calendarAnniv.setWeekDayFormatter(ArrayWeekDayFormatter(resources.getTextArray(R.array.anniv_weekdays)))
 
+        // 상단바 가족 선택 아이콘 클릭 -> 가족 선택
+        val selectFamilyGroup = binding.customToolbar.iconSelectFamily
+        selectFamilyGroup.setOnClickListener() {
+            setupFamilyGroupIcon(it, requireContext(), ToolbarUtils.groupList) { selectedGroup ->
+                // 선택된 가족 그룹에 대한 처리
+                Toast.makeText(requireContext(), "${selectedGroup.title} 선택됨", Toast.LENGTH_SHORT).show()
+            }
+        }
 
         return binding.root
     }

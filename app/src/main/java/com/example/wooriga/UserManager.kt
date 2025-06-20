@@ -35,6 +35,9 @@ object UserManager {
     )
 
     data class FamilyGroup(
+        val imageResId: Int,
+        val title: String,
+        val memberCount: Int,
         val familyId: Long,
         val name: String
     )
