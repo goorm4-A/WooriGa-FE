@@ -3,7 +3,6 @@ package com.example.wooriga
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.wooriga.databinding.ActivityUserInfoBinding
 import retrofit2.Call
@@ -33,7 +32,6 @@ class UserInfoActivity : AppCompatActivity() {
         // 버튼 클릭하면 사용자 정보 저장 및 PUT한 후 정보 동의 화면으로 이동
         binding.submitButton.setOnClickListener() {
 
-            Toast.makeText(this, "클릭됨", Toast.LENGTH_SHORT).show()
             Log.d("KakaoRedirect", "submit button clicked")
 
             val name = binding.userName.text.toString()

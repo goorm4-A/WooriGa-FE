@@ -10,6 +10,7 @@
     <fragment
         android:id="@+id/historyMapFragment"
         android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_marginTop="65dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

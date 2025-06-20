@@ -36,9 +36,13 @@ class FamilyHistoryFragment : Fragment() {
     private var _binding: FragmentFamilyHistoryBinding? = null
     private val binding get() = _binding!!
 
+    private var _bottomSheetBinding: BottomSheetAddHistoryBinding? = null
+    private val bottomSheetBinding get() = _bottomSheetBinding!!
+
     private var selectedLatitude: Double = 0.0
     private var selectedLongitude: Double = 0.0
-    private var selectedAddress: String = ""
+    private var selectedAddress: String = "" // 선택된 주소 저장용
+    private var selectedLocalDate: LocalDate? = null  // 선택된 날짜 저장용
     private var dialogView: View? = null
 
 
@@ -76,8 +80,9 @@ class FamilyHistoryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-        // 가족사 화면 타이틀
-        val name = "송이"
+        val savedUser = UserManager.loadUserInfo()
+        // 사용자 이름을 가져와서 가족사 제목에 적용
+        val name = savedUser?.name ?: "이름 없음"
         val message = "${name}님의 가족사들을\n관리해보세요!"
 
         val spannable = SpannableString(message)
@@ -101,19 +106,18 @@ class FamilyHistoryFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun showHistoryBottomSheetDialog() {
         val dialog = BottomSheetDialog(requireContext())
-        val bottomSheetBinding = BottomSheetAddHistoryBinding.inflate(LayoutInflater.from(requireContext()))
+        _bottomSheetBinding = BottomSheetAddHistoryBinding.inflate(LayoutInflater.from(requireContext()))
         dialogView = view // 위치 선택 후 주소 반영 위해 저장
 
         val dateInput = bottomSheetBinding.dateInput
         val dateOutput = bottomSheetBinding.dateOutput
         val titleInput = bottomSheetBinding.titleInput
         val locationInput = bottomSheetBinding.locationInput
-        val locationOutput = bottomSheetBinding.locationOutput
+        // val locationOutput = bottomSheetBinding.locationOutput
 
         val cancelButton = bottomSheetBinding.cancelButton
         val addButton = bottomSheetBinding.submitButton
 
-        var selectedLocalDate: LocalDate? = null  // 선택된 날짜 저장용
 
         // 날짜 선택
         dateInput.setOnClickListener {
@@ -137,8 +141,6 @@ class FamilyHistoryFragment : Fragment() {
             locationPickerLauncher.launch(intent)
         }
 
-        locationOutput.text = selectedAddress
-
         // 추가 버튼
         addButton.setOnClickListener {
             val title = titleInput.text.toString()
@@ -155,8 +157,8 @@ class FamilyHistoryFragment : Fragment() {
                     longitude = selectedLongitude
 
                 )
-                addTimelineEvent(event)
-                // 추가된 가족사 전달
+                addTimelineEvent(event) // 추가된 가족사 전달
+
 
                 dialog.dismiss()
             } else {
@@ -197,9 +199,8 @@ class FamilyHistoryFragment : Fragment() {
             selectedAddress = data?.getStringExtra("address") ?: ""
             selectedLatitude = data?.getDoubleExtra("latitude", 0.0) ?: 0.0
             selectedLongitude = data?.getDoubleExtra("longitude", 0.0) ?: 0.0
-
-            // 다이얼로그 안의 locationOutput TextView 갱신
-            dialogView?.findViewById<TextView>(R.id.locationOutput)?.text = selectedAddress
+            // 선택된 주소를 다이얼로그에 반영
+            bottomSheetBinding.locationOutput.text = selectedAddress
         }
     }
 

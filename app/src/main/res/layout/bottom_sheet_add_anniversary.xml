@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:layout_gravity="center"
-    android:background="@color/backgroundColor"
+    android:background="@drawable/bottom_sheet_background"
     android:padding="24dp">
 
     <TextView
@@ -24,43 +24,61 @@
         android:textStyle="bold"
         android:layout_marginBottom="20dp"/>
 
+    <!-- 제목 -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="제목"
+        android:layout_marginBottom="5dp"/>
+
     <EditText
         android:id="@+id/titleInput"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:hint="제목"
         android:background="@drawable/edit_text_box"
-        android:paddingHorizontal="15dp"
         android:layout_marginBottom="10dp"/>
 
+    <!-- 태그 -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="태그"
+        android:layout_marginBottom="5dp"/>
     <Spinner
         android:id="@+id/tagInput"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/edit_text_box"
-        android:paddingHorizontal="15dp"
         />
+
+    <!-- 장소 -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="장소"
+        android:layout_marginBottom="5dp"/>
 
     <EditText
         android:id="@+id/locationInput"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:hint="장소"
         android:background="@drawable/edit_text_box"
-        android:paddingHorizontal="15dp"
         android:layout_marginBottom="10dp"/>
+
+    <!-- 메모 -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="메모"
+        android:layout_marginBottom="5dp"/>
 
     <EditText
         android:id="@+id/memoInput"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_marginBottom="10dp"
         android:background="@drawable/edit_text_box"
-        android:hint="메모"
-        android:inputType="textMultiLine"
-        android:minLines="3"
-        android:paddingHorizontal="15dp" />
+        android:layout_marginBottom="10dp"/>
 
 
 
