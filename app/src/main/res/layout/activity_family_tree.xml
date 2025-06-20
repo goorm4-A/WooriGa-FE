@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".FamilyTreeActivity"
     android:background="@color/backgroundColor">
 
@@ -54,8 +55,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_add"
-        android:contentDescription="가족 구성원 추가 버튼" />
+        android:layout_margin="20dp"
+        app:tint="@android:color/white"
+        app:backgroundTint="@color/stormGrey"
+        android:contentDescription="가족 구성원 추가 버튼"
+        android:src="@drawable/ic_add" />
 
 </FrameLayout>
