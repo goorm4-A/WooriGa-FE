@@ -12,11 +12,12 @@ object ToolbarUtils {
 
     val groupList = mutableListOf<FamilyGroup>()
 
-    init {
+   /* init {
+
         groupList.add(FamilyGroup(R.drawable.ic_family, "가족G", 3))
         groupList.add(FamilyGroup(R.drawable.ic_family, "가족Q", 7))
         groupList.add(FamilyGroup(R.drawable.ic_family, "가족P", 4))
-    }
+    }*/
 
     // 툴바 아이콘 클릭 리스너 설정
     fun setupFamilyGroupIcon(view: View, context: Context, groupList: List<FamilyGroup>, onSelected: (FamilyGroup) -> Unit) {
