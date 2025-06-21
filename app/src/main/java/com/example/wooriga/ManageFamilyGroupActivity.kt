@@ -8,7 +8,12 @@ import com.example.wooriga.databinding.ActivityManageFamilyGroupBinding
 import com.example.wooriga.databinding.BottomSheetAddFamilyGroupBinding
 import com.example.wooriga.model.FamilyGroup
 import com.google.android.material.bottomsheet.BottomSheetDialog
-
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.File
 
 
 class ManageFamilyGroupActivity : AppCompatActivity() {
@@ -28,7 +33,8 @@ class ManageFamilyGroupActivity : AppCompatActivity() {
         binding.familyGroupRecyclerView.adapter = adapter
 
         // 테스트
-        groupList.add(FamilyGroup(R.drawable.ic_family, "가족 그룹 A", 4))
+        //groupList.add(FamilyGroup(R.drawable.ic_family, "가족 그룹 A", 4))
+
         adapter.notifyDataSetChanged()
 
         // 뒤로가기 버튼 클릭 -> 이전 화면으로 이동
@@ -62,7 +68,8 @@ class ManageFamilyGroupActivity : AppCompatActivity() {
             val groupName = name.text.toString()
             if (groupName.isNotEmpty()) {
                 // 그룹 추가 로직 (DB 연동 등)
-                groupList.add(FamilyGroup(R.drawable.ic_family, groupName, 1)) // 임시로 0명
+                //groupList.add(FamilyGroup(R.drawable.ic_family, groupName, 1)) // 임시로 0명
+                groupList.add(FamilyGroup(null,null , groupName, 1)) // 임시로 1명
                 adapter.notifyDataSetChanged()
                 dialog.dismiss() // 다이얼로그 닫기
             } else {
@@ -76,5 +83,18 @@ class ManageFamilyGroupActivity : AppCompatActivity() {
         dialog.setCanceledOnTouchOutside(true) // 바깥 터치 시 닫히도록 설정
 
     }
+
+    // image, name 요청 형식에 맞게 준비
+    fun prepareRequest(name: String, imageFile: File?): Pair<RequestBody, MultipartBody.Part?> {
+        val nameBody = name.toRequestBody("text/plain".toMediaTypeOrNull())
+
+        val imagePart = imageFile?.let {
+            val requestFile = it.asRequestBody("image/*".toMediaTypeOrNull())
+            MultipartBody.Part.createFormData("image", it.name, requestFile)
+        }
+
+        return Pair(nameBody, imagePart)
+    }
+
 
 }
