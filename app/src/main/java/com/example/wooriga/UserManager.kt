@@ -8,6 +8,7 @@ object UserManager {
     private const val PREFS_NAME = "USER_PREFS"
     private lateinit var prefs: SharedPreferences
 
+
     fun init(context: Context) {
         prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     }

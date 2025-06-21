@@ -1,14 +1,44 @@
 package com.example.wooriga
 
+import android.util.Log
 import com.example.wooriga.model.Anniversary
 
 object AnniversaryRepository {
 
     private val anniversaryList = mutableListOf<Anniversary>()
+    private val sampleList = mutableListOf<Anniversary>()
+
+
+    // API 연동
+
+    // 서버에서 받아오기
+    suspend fun fetchAnniversariesFromApi(
+        type: String?,
+        lastId: Long?,
+        pageable: Map<String, String>
+    ): List<Anniversary>? {
+        val response = RetrofitClient2.annivApi.getAnniversaries(null, null, pageable)
+        Log.d("AnnivAPI", "code=${response.code()}, body=${response.body()}, error=${response.errorBody()?.string()}")
+
+        return if (response.isSuccessful && response.body()?.isSuccess == true) {
+            response.body()?.result?.contents
+        } else {
+            null
+        }
+    }
+
+    // 서버에 등록
+    suspend fun addToApi(anniv: Anniversary): Boolean {
+        val response = RetrofitClient2.annivApi.addAnniversary(anniv)
+        if (response.isSuccessful) {
+            anniversaryList.add(anniv)
+        }
+        return response.isSuccessful
+    }
 
     // 샘플 데이터 초기화
-    fun loadSampleData() {
-        anniversaryList.clear()
+/*    fun loadSampleData() {
+        sampleList.clear()
         anniversaryList.addAll(
             listOf(
                 Anniversary("2025-06-01", "엄마 생신", "기념일", "집", "미역국 끓이기"),
@@ -17,7 +47,7 @@ object AnniversaryRepository {
                 Anniversary("2025-09-01", "기타 일정", "기타", "카페", "생각 정리")
             )
         )
-    }
+    }*/
 
     // 태그 필터링된 리스트 반환 (tag가 ""이면 전체)
     fun getFiltered(tag: String): List<Anniversary> {
