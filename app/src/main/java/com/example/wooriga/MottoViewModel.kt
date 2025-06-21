@@ -50,12 +50,22 @@ class MottoViewModel : ViewModel() {
         )
         mottos.value = currentList + newMotto
 
-        // api 사용
-//        viewModelScope.launch {
-//            repository.addMotto(userId, MottoRequest(familyName, motto))
-//            loadMottos(familyId = 1L, userId = userId)  // 새로고침
-//        }
+        viewModelScope.launch {
+            try {
+                val response = repository.addMotto(userId, MottoRequest(familyName, motto))
+                if (response.isSuccessful && response.body()?.isSuccess == true) {
+                    Log.d("MottoViewModel", "가훈 등록 성공")
+                    // 등록 후 새로 불러오기
+                    loadMottos(familyId = 1L, userId = userId) // TODO: 실제 familyId로 교체
+                } else {
+                    Log.e("MottoViewModel", "가훈 등록 실패: ${response.code()}")
+                }
+            } catch (e: Exception) {
+                Log.e("MottoViewModel", "네트워크 오류: ${e.localizedMessage}")
+            }
+        }
     }
+
 
     fun editMotto(mottoId: Long, newFamily: String, newTitle: String) {
         val currentList = mottos.value.orEmpty()
