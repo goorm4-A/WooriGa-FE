@@ -8,6 +8,7 @@ data class MottoRequest(
 data class Motto(
     val id: Long,
     val title: String,
+    val familyId: Long,
     val familyName: String,
     val createdAt: String
 )

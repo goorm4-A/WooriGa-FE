@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:layout_gravity="center"
+    android:background="@drawable/bottom_sheet_background"
     android:padding="24dp">
 
     <TextView
@@ -76,7 +77,8 @@
             android:layout_weight="1"
             android:layout_marginEnd="8dp"
             android:text="닫기"
-            android:backgroundTint="@color/backgroundColor"/>
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/stormGrey"/>
 
         <Button
             android:id="@+id/btnEdit"
@@ -84,7 +86,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:layout_marginStart="8dp"
-            android:text="수정"/>
+            android:text="수정"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/stormGrey"/>
     </LinearLayout>
 
 </LinearLayout>

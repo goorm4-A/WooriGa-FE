@@ -25,7 +25,7 @@ object UserManager {
         set(value) = prefs.edit().putBoolean("isLoggedIn", value).apply()
 
     data class UserInfo(
-        val userId: String,
+        val userId: Long,
         val name: String,
         val status: String,
         val image: String?,

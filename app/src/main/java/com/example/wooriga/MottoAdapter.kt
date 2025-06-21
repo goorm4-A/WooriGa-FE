@@ -2,12 +2,17 @@ package com.example.wooriga
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.wooriga.databinding.ItemFamilyMottoBinding
 
-class MottoAdapter(private val onItemClick: (Motto) -> Unit) : ListAdapter<Motto, MottoAdapter.MottoViewHolder>(DIFF_CALLBACK) {
+class MottoAdapter(
+    private val onItemClick: (Motto) -> Unit,
+    private val onDeleteClick: (Motto) -> Unit,
+    private val onEditClick: (Motto) -> Unit
+) : ListAdapter<Motto, MottoAdapter.MottoViewHolder>(DIFF_CALLBACK) {
 
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Motto>() {
@@ -26,6 +31,28 @@ class MottoAdapter(private val onItemClick: (Motto) -> Unit) : ListAdapter<Motto
             // 아이템 클릭 시 상세 하단시트
             binding.root.setOnClickListener {
                 onItemClick(motto)
+            }
+
+            // 더보기 버튼 클릭
+            binding.btnMore.setOnClickListener { view ->
+                val popup = PopupMenu(view.context, view)
+                popup.menuInflater.inflate(R.menu.menu_motto_options, popup.menu)
+
+                popup.setOnMenuItemClickListener { item ->
+                    when (item.itemId) {
+                        R.id.menu_edit -> {
+                            onEditClick(motto)
+                            true
+                        }
+                        R.id.menu_delete -> {
+                            onDeleteClick(motto)
+                            true
+                        }
+                        else -> false
+                    }
+                }
+
+                popup.show()
             }
         }
     }
