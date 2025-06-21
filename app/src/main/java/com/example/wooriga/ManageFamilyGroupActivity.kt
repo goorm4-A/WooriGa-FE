@@ -3,12 +3,11 @@ package com.example.wooriga
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.wooriga.databinding.ActivityManageFamilyGroupBinding
 import com.example.wooriga.databinding.BottomSheetAddFamilyGroupBinding
-import com.example.wooriga.model.FamilyGroup
+import com.example.wooriga.model.FamilyGroupResponse
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -26,7 +25,7 @@ class ManageFamilyGroupActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityManageFamilyGroupBinding
     private lateinit var adapter: FamilyGroupAdapter
-    private val groupList = mutableListOf<FamilyGroup>()
+    private val groupList = mutableListOf<FamilyGroupResponse>()
 
     private lateinit var dialog: BottomSheetDialog
     private lateinit var bottomSheetBinding: BottomSheetAddFamilyGroupBinding
@@ -46,8 +45,8 @@ class ManageFamilyGroupActivity : AppCompatActivity() {
         binding.familyGroupRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.familyGroupRecyclerView.adapter = adapter
 
-        // 테스트
-        //groupList.add(FamilyGroup(R.drawable.ic_family, "가족 그룹 A", 4))
+        // 서버에서 데이터 불러오기
+        fetchFamilyGroupsFromServer()
 
 
         // 뒤로가기 버튼 클릭 -> 이전 화면으로 이동
@@ -64,6 +63,12 @@ class ManageFamilyGroupActivity : AppCompatActivity() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        fetchFamilyGroupsFromServer()
+    }
+
+
     private fun showFamilyGroupBottomSheetDialog() {
 
         dialog = BottomSheetDialog(this)
@@ -77,11 +82,6 @@ class ManageFamilyGroupActivity : AppCompatActivity() {
         val submitButton = bottomSheetBinding.submitButton
 
         imageButton.setOnClickListener {
-            // 이미지 선택 로직 (예: 갤러리 열기)
-            // 현재는 임시로 null 설정
-            // 실제 구현 시 이미지 선택 후 File 객체 생성 필요
-            //val imageFile: File? = selectImageFromGallery()
-            //imageButton.setImageURI(imageUri) // 선택한 이미지로 변경
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
             startActivityForResult(intent, REQUEST_CODE_IMAGE_PICK)
@@ -94,23 +94,38 @@ class ManageFamilyGroupActivity : AppCompatActivity() {
         submitButton.setOnClickListener {
             val groupName = name.text.toString()
             if (groupName.isNotEmpty()) {
+
+                // 서버에 저장
                 val (nameBody, imagePart) = prepareRequest(groupName, selectedImageFile)
 
                 RetrofitClient2.familyGroupApi.createGroup(nameBody, imagePart).enqueue(object :
-                    Callback<Void> {
-                    override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                        if (response.isSuccessful) {
-                            Log.d("GroupCreate", "그룹 생성 성공!")
-                            groupList.add(FamilyGroup(null, null, groupName, 1))
-                            adapter.notifyDataSetChanged()
-                            dialog.dismiss()
+                    Callback<ApiResponse<FamilyGroupResponse>> {
+                    override fun onResponse(
+                        call: Call<ApiResponse<FamilyGroupResponse>>,
+                        response: Response<ApiResponse<FamilyGroupResponse>>
+                    ) {
+                        if (response.isSuccessful) { // 응답이 성공적일 때
+                            val body = response.body()
+                            val result = body?.result
+                            if (result != null) {  // 그룹 리스트에 추가
+                                groupList.add(result)
+                                adapter.notifyItemInserted(groupList.size - 1)
+
+                                dialog.dismiss()
+
+                                Log.d("GroupData", "그룹 이름: ${result.familyName}, 이미지: ${result.familyImage}")
+                                Log.d("GroupCreate", "그룹 생성 성공: $result")
+
+                            } else {
+                                Log.e("GroupCreate", "결과가 null입니다")
+                            }
                         } else {
-                            Log.e("GroupCreate", "실패: ${response.code()}")
+                            Log.e("GroupCreate", "서버 오류: ${response.code()} ${response.message()}")
                         }
                     }
 
-                    override fun onFailure(call: Call<Void>, t: Throwable) {
-                        Log.e("GroupCreate", "에러 발생", t)
+                    override fun onFailure(call: Call<ApiResponse<FamilyGroupResponse>>, t: Throwable) {
+                        Log.e("GroupCreate", "네트워크 오류", t)
                     }
                 })
 
@@ -153,6 +168,38 @@ class ManageFamilyGroupActivity : AppCompatActivity() {
 
         return Pair(nameBody, imagePart)
     }
+
+    // 서버에서 데이터 불러오기
+    private fun fetchFamilyGroupsFromServer() {
+        RetrofitClient2.familyGroupApi.getGroups().enqueue(object : Callback<ApiResponse<List<FamilyGroupResponse>>> {
+            override fun onResponse(
+                call: Call<ApiResponse<List<FamilyGroupResponse>>>,
+                response: Response<ApiResponse<List<FamilyGroupResponse>>>
+            ) {
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    val resultList = body?.result
+
+                    if (resultList != null) {
+                        groupList.clear()
+                        groupList.addAll(resultList)
+                        adapter.notifyDataSetChanged()
+                        Log.d("FetchGroups", "가족 그룹 ${resultList.size}개 로드 성공")
+                    } else {
+                        Log.e("FetchGroups", "result가 null입니다. message=${body?.message}")
+                    }
+                } else {
+                    Log.e("FetchGroups", "HTTP 오류: ${response.code()} ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<ApiResponse<List<FamilyGroupResponse>>>, t: Throwable) {
+                Log.e("FetchGroups", "네트워크 오류", t)
+            }
+        })
+    }
+
+
 
 
 }

@@ -76,12 +76,9 @@ class FamilyHistoryFragment : Fragment() {
         }
 
         // 상단바 가족 선택 아이콘 클릭 -> 가족 선택
-        val selectFamilyGroup = binding.toolbarHistory.iconSelectFamily
-        selectFamilyGroup.setOnClickListener() {
-            setupFamilyGroupIcon(it, requireContext(), ToolbarUtils.groupList) { selectedGroup ->
-                // 선택된 가족 그룹에 대한 처리
-                Toast.makeText(requireContext(), "${selectedGroup.title} 선택됨", Toast.LENGTH_SHORT).show()
-            }
+        ToolbarUtils.setupFamilyGroupIcon(binding.toolbarHistory.iconSelectFamily, requireContext()) { selectedGroup ->
+            // 선택된 가족 그룹에 대한 처리
+            Toast.makeText(requireContext(), "${selectedGroup.familyName} 선택됨", Toast.LENGTH_SHORT).show()
         }
 
 

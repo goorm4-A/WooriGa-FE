@@ -16,7 +16,9 @@ object RetrofitClient2 {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
+    // 기념일
     val annivApi: ApiService = retrofit.create(ApiService::class.java)
+    // 가족 그룹
     val familyGroupApi: ApiService = retrofit.create(ApiService::class.java)
 
 
@@ -25,7 +27,10 @@ object RetrofitClient2 {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
+    // 사용자
     val userApi: ApiService = retrofit2.create(ApiService::class.java)
+
+
 
 
 }

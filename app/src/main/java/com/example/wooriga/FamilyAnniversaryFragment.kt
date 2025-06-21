@@ -93,11 +93,8 @@ class FamilyAnniversaryFragment : Fragment() {
         binding.calendarAnniv.setWeekDayFormatter(ArrayWeekDayFormatter(resources.getTextArray(R.array.anniv_weekdays)))
 
         // 상단바 가족 선택 아이콘 클릭 -> 가족 선택
-        binding.customToolbar.iconSelectFamily.setOnClickListener() {
-            setupFamilyGroupIcon(it, requireContext(), ToolbarUtils.groupList) { selectedGroup ->
-                // 선택된 가족 그룹에 대한 처리
-                Toast.makeText(requireContext(), "${selectedGroup.title} 선택됨", Toast.LENGTH_SHORT).show()
-            }
+        ToolbarUtils.setupFamilyGroupIcon(binding.customToolbar.iconSelectFamily, requireContext()) { selectedGroup ->
+            Toast.makeText(requireContext(), "${selectedGroup.familyName} 선택됨", Toast.LENGTH_SHORT).show()
         }
 
         return binding.root

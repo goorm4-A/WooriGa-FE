@@ -1,13 +1,12 @@
 package com.example.wooriga
 
 import com.example.wooriga.model.Anniversary
+import com.example.wooriga.model.FamilyGroupResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Multipart
@@ -62,7 +61,10 @@ interface ApiService {
     fun createGroup(
         @Part("name") name: RequestBody,
         @Part image: MultipartBody.Part?
-    ): Call<Void>
+    ): Call<ApiResponse<FamilyGroupResponse>>
 
-
+    // 가족 그룹 목록 조회
+    @GET("/groups")
+    fun getGroups(
+    ): Call<ApiResponse<List<FamilyGroupResponse>>>
 }

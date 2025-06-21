@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import com.example.wooriga.databinding.FragmentHomeBinding
 import com.example.wooriga.utils.ToolbarUtils
 
@@ -34,14 +33,7 @@ class HomeFragment : Fragment() {
         }
         val savedUser = UserManager.loadUserInfo()
 
-        // 이름
-        binding.itemHomeUserprofile.userName.text = savedUser?.name ?: "이름 없음"
-        /*
-        // Test
-        binding.itemHomeUserprofile.familyA.text = savedUser?.status ?: "상태 없음"
-        binding.itemHomeUserprofile.familyB.text = savedUser?.birthDate ?: "b 없음"
-        binding.itemHomeUserprofile.familyC.text = savedUser?.userId ?: "c 없음"
-        */
+
         // 가족 그룹 관리 > 클릭
         binding.itemHomeFamily.buttonFamilyGroup.setOnClickListener {
 
@@ -50,6 +42,10 @@ class HomeFragment : Fragment() {
             startActivity(intent)
         }
 
+
+        // 이름
+        binding.itemHomeUserprofile.userName.text = savedUser?.name ?: "이름 없음"
+
         // 프로필 가족 그룹 태그
         val familyTextViews = listOf(
             binding.itemHomeUserprofile.family1,
@@ -57,11 +53,11 @@ class HomeFragment : Fragment() {
             binding.itemHomeUserprofile.family3,
             binding.itemHomeUserprofile.family4
         )
-        val FamilyGroup = ToolbarUtils.groupList.map { it.title }
+        val familyGroupName = ToolbarUtils.groupList.map { it.familyName ?: "그룹 이름 없음" }
 
         familyTextViews.forEachIndexed { index, textView ->
-            if (index < FamilyGroup.size) {
-                textView.text = "#${FamilyGroup[index]}"
+            if (index < familyGroupName.size) {
+                textView.text = "#${familyGroupName[index]}"
                 textView.visibility = View.VISIBLE
             } else {
                 textView.visibility = View.GONE
