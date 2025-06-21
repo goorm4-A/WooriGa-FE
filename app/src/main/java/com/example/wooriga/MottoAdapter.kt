@@ -2,6 +2,9 @@ package com.example.wooriga
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.PopupMenu
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -26,6 +29,32 @@ class MottoAdapter(private val onItemClick: (Motto) -> Unit) : ListAdapter<Motto
             // 아이템 클릭 시 상세 하단시트
             binding.root.setOnClickListener {
                 onItemClick(motto)
+            }
+
+            // 더보기 버튼 클릭
+            binding.btnMore.setOnClickListener { view ->
+                val popup = PopupMenu(view.context, view)
+                popup.menuInflater.inflate(R.menu.menu_motto_options, popup.menu)
+
+                popup.setOnMenuItemClickListener { item ->
+                    when (item.itemId) {
+                        R.id.menu_edit -> {
+                            val fragmentManager =
+                                (view.context as AppCompatActivity).supportFragmentManager
+                            val bottomSheet = MottoEditBottomSheet(motto, MottoViewModel())
+                            bottomSheet.show(fragmentManager, "MottoEditBottomSheet")
+                            true
+                        }
+
+                        R.id.menu_delete -> {
+                            Toast.makeText(view.context, "삭제 클릭됨", Toast.LENGTH_SHORT).show()
+                            true
+                        }
+
+                        else -> false
+                    }
+                }
+                popup.show()
             }
         }
     }
