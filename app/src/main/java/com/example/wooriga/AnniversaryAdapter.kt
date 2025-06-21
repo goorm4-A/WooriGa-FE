@@ -32,6 +32,12 @@ class AnniversaryAdapter(
         notifyDataSetChanged()
     }
 
+    fun addToList(newItems: List<Anniversary>) {
+        val start = annivList.size
+        annivList.addAll(newItems)
+        notifyItemRangeInserted(start, newItems.size)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.anniversary_item, parent, false)

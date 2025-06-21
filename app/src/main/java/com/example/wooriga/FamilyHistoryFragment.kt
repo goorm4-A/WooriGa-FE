@@ -27,6 +27,7 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 import com.example.wooriga.model.History
 import com.example.wooriga.utils.ToolbarUtils
+import com.example.wooriga.utils.ToolbarUtils.currentGroup
 import com.example.wooriga.utils.ToolbarUtils.setupFamilyGroupIcon
 
 class FamilyHistoryFragment : Fragment() {
@@ -46,6 +47,9 @@ class FamilyHistoryFragment : Fragment() {
     private var selectedAddress: String = "" // 선택된 주소 저장용
     private var selectedLocalDate: LocalDate? = null  // 선택된 날짜 저장용
     private var dialogView: View? = null
+
+    val selected = currentGroup?.familyGroup
+
 
 
 
@@ -78,7 +82,7 @@ class FamilyHistoryFragment : Fragment() {
         // 상단바 가족 선택 아이콘 클릭 -> 가족 선택
         ToolbarUtils.setupFamilyGroupIcon(binding.toolbarHistory.iconSelectFamily, requireContext()) { selectedGroup ->
             // 선택된 가족 그룹에 대한 처리
-            Toast.makeText(requireContext(), "${selectedGroup.familyName} 선택됨", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "${selected?.familyName} 선택됨", Toast.LENGTH_SHORT).show()
         }
 
 

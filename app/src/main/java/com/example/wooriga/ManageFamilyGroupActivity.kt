@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.wooriga.databinding.ActivityManageFamilyGroupBinding
 import com.example.wooriga.databinding.BottomSheetAddFamilyGroupBinding
 import com.example.wooriga.model.FamilyGroupResponse
+import com.example.wooriga.model.FamilyGroupWrapper
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -25,7 +26,7 @@ class ManageFamilyGroupActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityManageFamilyGroupBinding
     private lateinit var adapter: FamilyGroupAdapter
-    private val groupList = mutableListOf<FamilyGroupResponse>()
+    private val groupList = mutableListOf<FamilyGroupWrapper>()
 
     private lateinit var dialog: BottomSheetDialog
     private lateinit var bottomSheetBinding: BottomSheetAddFamilyGroupBinding
@@ -108,13 +109,11 @@ class ManageFamilyGroupActivity : AppCompatActivity() {
                             val body = response.body()
                             val result = body?.result
                             if (result != null) {  // 그룹 리스트에 추가
-                                groupList.add(result)
+                                val wrapper = FamilyGroupWrapper(result, null, null)
+                                groupList.add(wrapper)
                                 adapter.notifyItemInserted(groupList.size - 1)
 
                                 dialog.dismiss()
-
-                                Log.d("GroupData", "그룹 이름: ${result.familyName}, 이미지: ${result.familyImage}")
-                                Log.d("GroupCreate", "그룹 생성 성공: $result")
 
                             } else {
                                 Log.e("GroupCreate", "결과가 null입니다")
@@ -171,10 +170,10 @@ class ManageFamilyGroupActivity : AppCompatActivity() {
 
     // 서버에서 데이터 불러오기
     private fun fetchFamilyGroupsFromServer() {
-        RetrofitClient2.familyGroupApi.getGroups().enqueue(object : Callback<ApiResponse<List<FamilyGroupResponse>>> {
+        RetrofitClient2.familyGroupApi.getGroups().enqueue(object : Callback<ApiResponse<List<FamilyGroupWrapper>>> {
             override fun onResponse(
-                call: Call<ApiResponse<List<FamilyGroupResponse>>>,
-                response: Response<ApiResponse<List<FamilyGroupResponse>>>
+                call: Call<ApiResponse<List<FamilyGroupWrapper>>>,
+                response: Response<ApiResponse<List<FamilyGroupWrapper>>>
             ) {
                 if (response.isSuccessful) {
                     val body = response.body()
@@ -193,7 +192,7 @@ class ManageFamilyGroupActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onFailure(call: Call<ApiResponse<List<FamilyGroupResponse>>>, t: Throwable) {
+            override fun onFailure(call: Call<ApiResponse<List<FamilyGroupWrapper>>>, t: Throwable) {
                 Log.e("FetchGroups", "네트워크 오류", t)
             }
         })

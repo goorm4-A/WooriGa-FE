@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.wooriga.databinding.ItemHomeGroupBinding
-import com.example.wooriga.model.FamilyGroupResponse
+import com.example.wooriga.model.FamilyGroupWrapper
 
-class FamilyGroupAdapter(private val groups: List<FamilyGroupResponse>) :
+class FamilyGroupAdapter(private val groups: List<FamilyGroupWrapper>) :
     RecyclerView.Adapter<FamilyGroupAdapter.FamilyGroupViewHolder>() {
 
     inner class FamilyGroupViewHolder(val binding: ItemHomeGroupBinding) :
@@ -21,9 +21,11 @@ class FamilyGroupAdapter(private val groups: List<FamilyGroupResponse>) :
     }
 
     override fun onBindViewHolder(holder: FamilyGroupViewHolder, position: Int) {
-        val group = groups[position]
+        val wrapper = groups[position]
+        val group = wrapper.familyGroup
+
         holder.binding.familyTitle.text = group.familyName
-        holder.binding.familyCount.text = "${group.totalCnt ?: 1}명"
+        holder.binding.familyCount.text = "${wrapper.totalCnt ?: 1}명"
         // 이미지 URL이 null 아니면 Glide로 이미지 로딩
         val imageUrl = group.familyImage
         if (!imageUrl.isNullOrEmpty()) {

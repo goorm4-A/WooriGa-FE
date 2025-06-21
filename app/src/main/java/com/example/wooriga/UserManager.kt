@@ -2,7 +2,6 @@ package com.example.wooriga
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.example.wooriga.model.FamilyGroupResponse
 import com.google.gson.Gson
 
 object UserManager {
@@ -33,16 +32,12 @@ object UserManager {
         val image: String?,
         val phone: String? = null,
         val birthDate: String? = null,
-        val userFamilies: List<FamilyGroupResponse> = emptyList()
+        val userFamilies: List<FamilyGroupSelected>? = emptyList()
     )
-
-/*    data class FamilyGroup(
-        val imageResId: Int,
-        val title: String,
-        val memberCount: Int,
-        val familyId: Long,
-        val name: String
-    )*/
+    data class FamilyGroupSelected(
+        val familyGroupId: Long,
+        val familyName: String
+    )
 
     // 사용자 정보 저장
     fun saveUserInfo(userInfo: UserInfo?) {
