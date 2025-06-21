@@ -20,9 +20,9 @@ class MottoViewModel : ViewModel() {
         // test
         // 더미 데이터로 리스트 채우기
         val dummyList = listOf(
-            Motto(1L, "착하게 살자", "A가족", "2025-06-04"),
-            Motto(2L, "정직하게 살자", "A가족", "2025-06-05"),
-            Motto(3L, "배려하며 살자", "A가족", "2025-06-06")
+            Motto(1L, "착하게 살자", 1L, "A가족", "2025-06-04"),
+            Motto(2L, "정직하게 살자", 2L, "A가족", "2025-06-05"),
+            Motto(3L, "배려하며 살자", 3L, "A가족", "2025-06-06")
         )
         mottos.value = dummyList
 
@@ -44,6 +44,7 @@ class MottoViewModel : ViewModel() {
         val newMotto = Motto(
             id = newId,
             title = motto,
+            familyId = -1L,
             familyName = familyName,
             createdAt = getToday()
         )

@@ -20,11 +20,15 @@ class FamilyMottoFragment : Fragment() {
     private lateinit var mottoAdapter: MottoAdapter
     private val viewModel: MottoViewModel by viewModels()
 
+    private var familyId: Long = -1L
+    val savedUser = UserManager.loadUserInfo()
+    val userId = savedUser?.userId
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
 
-        }
+        // 전달받은 familyId 가져오기
+        familyId = arguments?.getLong("familyId") ?: -1L
     }
 
     override fun onCreateView(
@@ -38,6 +42,9 @@ class FamilyMottoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // 확인용 로그
+        Log.d("FamilyMottoFragment", "선택된 familyId: $familyId")
 
         // 툴바
         val toolbar = view.findViewById<View>(R.id.custom_toolbar)
@@ -64,8 +71,12 @@ class FamilyMottoFragment : Fragment() {
             mottoAdapter.submitList(it)
         }
 
-        // 데이터 불러오기 (임시 id로 예시)
-        viewModel.loadMottos(familyId = 1L, userId = 1L)
+        // 데이터 불러오기
+        if (userId != null) {
+            viewModel.loadMottos(familyId = familyId, userId = userId)
+        } else {
+            Log.e("FamilyMottoFragment", "userId is null - 로그인 필요")
+        }
 
         // 추가 플로팅 버튼 클릭
         binding.addFamilyMotto.setOnClickListener {
