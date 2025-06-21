@@ -67,7 +67,7 @@
             android:layout_marginStart="8dp"
             android:text="추가"
             android:textColor="@android:color/white"
-            android:backgroundTint="@color/stormGrey" />
+            android:backgroundTint="@color/stormGrey"/>
     </LinearLayout>
 
 </LinearLayout>
