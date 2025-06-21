@@ -22,12 +22,8 @@ class UserInfoActivity : AppCompatActivity() {
         binding = ActivityUserInfoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Retrofit 초기화
-        val retrofit = Retrofit.Builder()
-            .baseUrl("http://54.180.104.168:8081") // 서버 주소 확인
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        service = retrofit.create(ApiService::class.java)
+        service = RetrofitClient2.userApi
+
 
         // 버튼 클릭하면 사용자 정보 저장 및 PUT한 후 정보 동의 화면으로 이동
         binding.submitButton.setOnClickListener() {

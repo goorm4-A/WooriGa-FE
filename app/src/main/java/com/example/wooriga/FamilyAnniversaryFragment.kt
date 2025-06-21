@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.StyleSpan
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,16 +15,21 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.wooriga.databinding.BottomSheetAddAnniversaryBinding
 import com.example.wooriga.databinding.BottomSheetDetailAnniversaryBinding
 import com.example.wooriga.databinding.FragmentFamilyAnniversaryBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.example.wooriga.model.Anniversary
+import com.example.wooriga.model.FamilyGroupResponse
 import com.example.wooriga.utils.ToolbarUtils
+import com.example.wooriga.utils.ToolbarUtils.currentGroup
 import com.example.wooriga.utils.ToolbarUtils.setupFamilyGroupIcon
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.format.ArrayWeekDayFormatter
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class FamilyAnniversaryFragment : Fragment() {
@@ -37,6 +43,14 @@ class FamilyAnniversaryFragment : Fragment() {
     private val allAnnivList = mutableListOf<Anniversary>()
 
     private var selectedDate: String = ""
+    val selected = currentGroup?.familyGroup
+
+    // 페이징 관련 변수
+    private var lastAnniversaryId: Long? = null
+    private var hasNextPage: Boolean = true
+    private var isLoading = false
+    private var selectedTag: String? = null // null이면 전체 조회
+
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -46,13 +60,41 @@ class FamilyAnniversaryFragment : Fragment() {
     ): View {
         _binding = FragmentFamilyAnniversaryBinding.inflate(inflater, container, false)
 
-        repository.loadSampleData()
-        allAnnivList.addAll(repository.getAll())
-
         // RecyclerView 설정
         adapter = AnniversaryAdapter(allAnnivList, ::onAnnivItemClicked)
         binding.annivListRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.annivListRecyclerView.adapter = adapter
+
+        Log.d("Auth", "Token: ${UserManager.accessToken}")
+
+        // 현재 선택된 가족 그룹
+        if (selected == null) {
+            Toast.makeText(requireContext(), "가족 그룹을 선택해주세요.", Toast.LENGTH_SHORT).show()
+        } else {
+            Log.d("FamilyAnniversaryFragment", "Selected group: ${selected.familyName}")
+        }
+
+
+        // 기념일 목록 조회 (서버에서 기념일 목록 받아오기)
+        lifecycleScope.launch {
+            val result = AnniversaryRepository.fetchAnniversariesFromApi(
+                type = selectedTag, // null이면 전체
+                lastId = lastAnniversaryId,
+                page = 0,           // 최초 페이지
+                size = 6,
+                sort = listOf("date,desc")
+            )
+            if (result != null) {
+                allAnnivList.clear()
+                allAnnivList.addAll(result.contents)
+                adapter.addToList(result.contents)
+                updateCalendarDecorators()
+                val today = LocalDate.now()
+                filterRecyclerByMonth(today.year, today.monthValue)
+            } else {
+                Toast.makeText(context, "기념일을 불러오지 못했습니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
 
         // 캘린더
         initCalendar()
@@ -60,21 +102,28 @@ class FamilyAnniversaryFragment : Fragment() {
         // 검색
         binding.customToolbar.iconSearch.setOnClickListener {
             // detail 액티비티로 이동
-            val intent = Intent(requireContext(), AnniversaryDetailActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(requireContext(), AnniversaryDetailActivity::class.java))
         }
 
         // 요일을 한글로 보이게 설정
         binding.calendarAnniv.setWeekDayFormatter(ArrayWeekDayFormatter(resources.getTextArray(R.array.anniv_weekdays)))
 
         // 상단바 가족 선택 아이콘 클릭 -> 가족 선택
-        val selectFamilyGroup = binding.customToolbar.iconSelectFamily
-        selectFamilyGroup.setOnClickListener() {
-            setupFamilyGroupIcon(it, requireContext(), ToolbarUtils.groupList) { selectedGroup ->
-                // 선택된 가족 그룹에 대한 처리
-                Toast.makeText(requireContext(), "${selectedGroup.title} 선택됨", Toast.LENGTH_SHORT).show()
-            }
+        ToolbarUtils.setupFamilyGroupIcon(binding.customToolbar.iconSelectFamily, requireContext()) { selectedGroup ->
+            Toast.makeText(requireContext(), "$selectedGroup 선택됨", Toast.LENGTH_SHORT).show()
         }
+
+        // 리사이클러뷰 스크롤
+        binding.annivListRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (!recyclerView.canScrollVertically(1) && !isLoading && hasNextPage) {
+                    lifecycleScope.launch {
+                        loadMoreAnniversaries()
+                    }
+                }
+            }
+        })
+
 
         return binding.root
     }
@@ -95,11 +144,6 @@ class FamilyAnniversaryFragment : Fragment() {
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
         binding.annivTitle.text = spannable
-
-        // 오늘 날짜 기준으로 기념일들 필터링 후 리사이클러뷰 갱신
-        val today = LocalDate.now()
-        filterRecyclerByMonth(today.year, today.monthValue)
-
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -149,6 +193,7 @@ class FamilyAnniversaryFragment : Fragment() {
                 Toast.makeText(requireContext(), "제목과 태그를 선택해주세요.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+            selectedTag = inputTag
 
             if (annivToEdit != null) {
                 // 수정: 기존 데이터 수정 후 리스트 갱신
@@ -157,23 +202,48 @@ class FamilyAnniversaryFragment : Fragment() {
                 annivToEdit.location = inputLocation
                 annivToEdit.memo = inputMemo
 
-                // repository.updateAnniversary(annivToEdit)
+                adapter.updateList(allAnnivList)
+                updateCalendarDecorators()
+                filterRecyclerByMonth(binding.calendarAnniv.currentDate.year, binding.calendarAnniv.currentDate.month + 1)
+                dialog.dismiss()
             } else {
-                // 새로 추가
-                val newAnniv = Anniversary(date, inputTitle, inputTag, inputLocation, inputMemo)
-                repository.addAnniversary(newAnniv)
-                allAnnivList.add(newAnniv)
+                // 기념일 등록
+                lifecycleScope.launch {
+                    val newAnniv = selected?.let { it1 ->
+                        Anniversary(
+                            familyId = it1.familyGroupId.toInt(),
+                            date = date,
+                            title = inputTitle,
+                            tag = inputTag,
+                            location = inputLocation,
+                            memo = inputMemo
+                        )
+                    }
+                    val success = newAnniv?.let { it1 -> repository.addToApi(it1) }
+                    if (success == true) {
+                        Toast.makeText(requireContext(), "등록 성공!", Toast.LENGTH_SHORT).show()
+
+                        allAnnivList.add(newAnniv)
+                        adapter.updateList(allAnnivList) // 어댑터에 새 기념일 추가
+                        updateCalendarDecorators(binding.calendarAnniv.currentDate.month + 1)
+                        filterRecyclerByMonth(binding.calendarAnniv.currentDate.year, binding.calendarAnniv.currentDate.month + 1)
+
+                        dialog.dismiss()
+                    } else {
+                        Toast.makeText(context, "등록에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+/*                adapter.updateList(allAnnivList) // 추가 및 수정 후 반드시 갱신 호출
+                dialog.dismiss()
+                updateCalendarDecorators(binding.calendarAnniv.currentDate.month + 1) // 캘린더 업데이트
+                // 현재 월 리스트 갱신
+                filterRecyclerByMonth(
+                    binding.calendarAnniv.currentDate.year,
+                    binding.calendarAnniv.currentDate.month + 1
+                )*/
+
             }
-
-            adapter.updateList(allAnnivList) // 추가 및 수정 후 반드시 갱신 호출
-            dialog.dismiss()
-            updateCalendarDecorators(binding.calendarAnniv.currentDate.month+1) // 캘린더 업데이트
-            // 현재 월 리스트 갱신
-            filterRecyclerByMonth(
-                binding.calendarAnniv.currentDate.year,
-                binding.calendarAnniv.currentDate.month+1
-            )
-
         }
 
         cancelButton.setOnClickListener { dialog.dismiss() }
@@ -199,14 +269,10 @@ class FamilyAnniversaryFragment : Fragment() {
         bottomSheetBinding.memoOutput.text = anniv.memo
 
         // 닫기 버튼
-        val closeButton =bottomSheetBinding.closeButton
-        closeButton.setOnClickListener {
-            dialog.dismiss()
-        }
-        
+        bottomSheetBinding.closeButton.setOnClickListener { dialog.dismiss() }
+
         // 수정 버튼
-        val editButton = bottomSheetBinding.editButton
-        editButton.setOnClickListener {
+        bottomSheetBinding.editButton.setOnClickListener {
             dialog.dismiss()  // 상세보기 다이얼로그 닫기
             showBottomSheetDialog(anniv.date, anniv) // 수정 화면으로 이동
         }
@@ -237,10 +303,8 @@ class FamilyAnniversaryFragment : Fragment() {
         }
         // 캘린더 날짜 선택 리스너 설정
         calendar.setOnDateChangedListener { _, date, _ ->
-
-            // 선택된 날짜를 저장
-            selectedDate = "%04d-%02d-%02d".format(date.year, date.month+1, date.day)
-            // BottomSheetDialog를 통해 기념일 추가 화면을 띄운다.
+            selectedDate = "%04d-%02d-%02d".format(date.year, date.month+1, date.day) // 선택된 날짜
+            // 기념일 추가 다이얼로그
             showBottomSheetDialog(selectedDate, null)
         }
     }
@@ -268,6 +332,67 @@ class FamilyAnniversaryFragment : Fragment() {
         }
         adapter.updateList(filtered)
     }
+
+    // 스크롤
+    private suspend fun loadMoreAnniversaries() {
+        if (isLoading || !hasNextPage) return
+        isLoading = true
+
+        val result = AnniversaryRepository.fetchAnniversariesFromApi(
+            type = selectedTag, // null이면 전체
+            lastId = lastAnniversaryId,
+            page = 0,           // 최초 페이지
+            size = 6,
+            sort = listOf("date,desc")
+        )
+
+        if (result != null) {
+            allAnnivList.addAll(result.contents)
+            adapter.updateList(result.contents)
+            lastAnniversaryId = result.contents.lastOrNull()?.anniversaryId?.toLong()
+            hasNextPage = result.hasNext
+        } else {
+            Toast.makeText(requireContext(), "기념일 로드 실패", Toast.LENGTH_SHORT).show()
+        }
+
+        isLoading = false
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun loadInitialAnniversaries() {
+        lifecycleScope.launch {
+            isLoading = true
+
+            val result = AnniversaryRepository.fetchAnniversariesFromApi(
+                type = selectedTag,
+                lastId = lastAnniversaryId,
+                page = 0,           // 최초 페이지
+                size = 6,
+                sort = listOf("date,desc")            )
+
+            if (result != null) {
+                allAnnivList.clear()
+                allAnnivList.addAll(result.contents)
+                adapter.updateList(result.contents)
+
+                lastAnniversaryId = result.contents.lastOrNull()?.anniversaryId?.toLong()
+                hasNextPage = result.hasNext
+
+                updateCalendarDecorators(binding.calendarAnniv.currentDate.month + 1)
+                filterRecyclerByMonth(
+                    binding.calendarAnniv.currentDate.year,
+                    binding.calendarAnniv.currentDate.month + 1
+                )
+            } else {
+                Toast.makeText(requireContext(), "기념일 새로고침 실패", Toast.LENGTH_SHORT).show()
+            }
+
+            isLoading = false
+        }
+    }
+
+
+
 
 
 }

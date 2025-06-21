@@ -8,6 +8,7 @@ object UserManager {
     private const val PREFS_NAME = "USER_PREFS"
     private lateinit var prefs: SharedPreferences
 
+
     fun init(context: Context) {
         prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     }
@@ -31,15 +32,11 @@ object UserManager {
         val image: String?,
         val phone: String? = null,
         val birthDate: String? = null,
-        val userFamilies: List<FamilyGroup> = emptyList()
+        val userFamilies: List<FamilyGroupSelected>? = emptyList()
     )
-
-    data class FamilyGroup(
-        val imageResId: Int,
-        val title: String,
-        val memberCount: Int,
-        val familyId: Long,
-        val name: String
+    data class FamilyGroupSelected(
+        val familyGroupId: Long,
+        val familyName: String
     )
 
     // 사용자 정보 저장

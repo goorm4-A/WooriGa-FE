@@ -2,18 +2,22 @@ package com.example.wooriga
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import com.example.wooriga.databinding.FragmentHomeBinding
-import com.example.wooriga.utils.ToolbarUtils
+import com.example.wooriga.model.FamilyGroupWrapper
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+    private val groupList = mutableListOf<FamilyGroupWrapper>()
 
 
     override fun onCreateView(
@@ -34,14 +38,7 @@ class HomeFragment : Fragment() {
         }
         val savedUser = UserManager.loadUserInfo()
 
-        // 이름
-        binding.itemHomeUserprofile.userName.text = savedUser?.name ?: "이름 없음"
-        /*
-        // Test
-        binding.itemHomeUserprofile.familyA.text = savedUser?.status ?: "상태 없음"
-        binding.itemHomeUserprofile.familyB.text = savedUser?.birthDate ?: "b 없음"
-        binding.itemHomeUserprofile.familyC.text = savedUser?.userId ?: "c 없음"
-        */
+
         // 가족 그룹 관리 > 클릭
         binding.itemHomeFamily.buttonFamilyGroup.setOnClickListener {
 
@@ -50,6 +47,10 @@ class HomeFragment : Fragment() {
             startActivity(intent)
         }
 
+
+        // 이름
+        binding.itemHomeUserprofile.userName.text = savedUser?.name ?: "이름 없음"
+
         // 프로필 가족 그룹 태그
         val familyTextViews = listOf(
             binding.itemHomeUserprofile.family1,
@@ -57,11 +58,11 @@ class HomeFragment : Fragment() {
             binding.itemHomeUserprofile.family3,
             binding.itemHomeUserprofile.family4
         )
-        val FamilyGroup = ToolbarUtils.groupList.map { it.title }
 
+        val familyGroupName = groupList.mapNotNull { it.familyGroup.familyName }.distinct()
         familyTextViews.forEachIndexed { index, textView ->
-            if (index < FamilyGroup.size) {
-                textView.text = "#${FamilyGroup[index]}"
+            if (index < familyGroupName.size) {
+                textView.text = "#${familyGroupName[index]}"
                 textView.visibility = View.VISIBLE
             } else {
                 textView.visibility = View.GONE
@@ -70,5 +71,38 @@ class HomeFragment : Fragment() {
 
 
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        fetchFamilyGroupsFromServer()
+    }
+
+    // 가족 그룹 리스트를 서버에서 받아오는 함수
+    fun fetchFamilyGroupsFromServer(onComplete: () -> Unit = {}) {
+        RetrofitClient2.familyGroupApi.getGroups().enqueue(object :
+            Callback<ApiResponse<List<FamilyGroupWrapper>>> {
+            override fun onResponse(
+                call: Call<ApiResponse<List<FamilyGroupWrapper>>>,
+                response: Response<ApiResponse<List<FamilyGroupWrapper>>>
+            ) {
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    if (body != null) {
+                        groupList.clear()
+                        groupList.addAll(body.result)
+                        onComplete() // 데이터 받아온 후 콜백 호출
+                    } else {
+                        Log.e("ToolbarUtils", "서버 응답 실패")
+                    }
+                } else {
+                    Log.e("ToolbarUtils", "서버 오류")
+                }
+            }
+
+            override fun onFailure(call: Call<ApiResponse<List<FamilyGroupWrapper>>>, t: Throwable) {
+                Log.e("ToolbarUtils", "네트워크 오류", t)
+            }
+        })
     }
 }
