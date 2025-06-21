@@ -13,6 +13,9 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.StyleSpan
 import android.graphics.Typeface
+import com.example.wooriga.utils.ToolbarUtils.setupFamilyGroupIcon
+import com.example.wooriga.utils.ToolbarUtils
+import android.widget.Toast
 
 class FamilyDiaryFragment : Fragment() {
 
@@ -49,25 +52,15 @@ class FamilyDiaryFragment : Fragment() {
 
         viewModel.loadFamilies()
 
-        // 가족 선택
+        // 상단바 가족 선택 버튼
         binding.customToolbar.iconSelectFamily.setOnClickListener {
-            val families = viewModel.familyList.value ?: return@setOnClickListener
-            val popupMenu = PopupMenu(requireContext(), binding.customToolbar.iconSelectFamily)
-
-            families.forEachIndexed { index, family ->
-                popupMenu.menu.add(0, index, 0, family.name)
+            setupFamilyGroupIcon(it, requireContext(), ToolbarUtils.groupList) { selectedGroup ->
+                // 선택된 가족 그룹에 대한 처리
+                Toast.makeText(requireContext(), "${selectedGroup.title} 선택됨", Toast.LENGTH_SHORT).show()
             }
-
-            popupMenu.setOnMenuItemClickListener { menuItem ->
-                val selectedFamily = families[menuItem.itemId]
-                viewModel.selectFamily(selectedFamily.familyId)
-                true
-            }
-
-            popupMenu.show()
         }
 
-        // 검색
+        // 상단바 검색 버튼
         binding.customToolbar.iconSearch.setOnClickListener {
             // 일기 검색 프래그먼트로 이동
             parentFragmentManager.beginTransaction()
