@@ -26,6 +26,8 @@ class HomeFragment : Fragment() {
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
+        fetchFamilyGroupsFromServer()
+
         // 일단 home_notice 누르면 로그아웃 되도록
         binding.customToolbar.homeNotice.setOnClickListener {
             // 로그아웃 처리
@@ -51,7 +53,7 @@ class HomeFragment : Fragment() {
         // 이름
         binding.itemHomeUserprofile.userName.text = savedUser?.name ?: "이름 없음"
 
-        // 프로필 가족 그룹 태그
+/*        // 프로필 가족 그룹 태그
         val familyTextViews = listOf(
             binding.itemHomeUserprofile.family1,
             binding.itemHomeUserprofile.family2,
@@ -67,7 +69,7 @@ class HomeFragment : Fragment() {
             } else {
                 textView.visibility = View.GONE
             }
-        }
+        }*/
 
 
         return binding.root
@@ -91,6 +93,23 @@ class HomeFragment : Fragment() {
                     if (body != null) {
                         groupList.clear()
                         groupList.addAll(body.result)
+
+                        val familyGroupName = groupList.mapNotNull { it.familyGroup.familyName }.distinct()
+                        val familyTextViews = listOf(
+                            binding.itemHomeUserprofile.family1,
+                            binding.itemHomeUserprofile.family2,
+                            binding.itemHomeUserprofile.family3,
+                            binding.itemHomeUserprofile.family4
+                        )
+                        familyTextViews.forEachIndexed { index, textView ->
+                            if (index < familyGroupName.size) {
+                                textView.text = "#${familyGroupName[index]}"
+                                textView.visibility = View.VISIBLE
+                            } else {
+                                textView.visibility = View.GONE
+                            }
+                        }
+
                         onComplete() // 데이터 받아온 후 콜백 호출
                     } else {
                         Log.e("ToolbarUtils", "서버 응답 실패")

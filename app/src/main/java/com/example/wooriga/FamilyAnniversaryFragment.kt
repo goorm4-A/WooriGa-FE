@@ -23,10 +23,8 @@ import com.example.wooriga.databinding.BottomSheetDetailAnniversaryBinding
 import com.example.wooriga.databinding.FragmentFamilyAnniversaryBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.example.wooriga.model.Anniversary
-import com.example.wooriga.model.FamilyGroupResponse
 import com.example.wooriga.utils.ToolbarUtils
 import com.example.wooriga.utils.ToolbarUtils.currentGroup
-import com.example.wooriga.utils.ToolbarUtils.setupFamilyGroupIcon
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.format.ArrayWeekDayFormatter
 import kotlinx.coroutines.launch
@@ -43,7 +41,7 @@ class FamilyAnniversaryFragment : Fragment() {
     private val allAnnivList = mutableListOf<Anniversary>()
 
     private var selectedDate: String = ""
-    val selected = currentGroup?.familyGroup
+    var selected = currentGroup?.familyGroup
 
     // 페이징 관련 변수
     private var lastAnniversaryId: Long? = null
@@ -71,18 +69,21 @@ class FamilyAnniversaryFragment : Fragment() {
         if (selected == null) {
             Toast.makeText(requireContext(), "가족 그룹을 선택해주세요.", Toast.LENGTH_SHORT).show()
         } else {
-            Log.d("FamilyAnniversaryFragment", "Selected group: ${selected.familyName}")
+            Log.d("FamilyAnniversaryFragment", "Selected group: ${selected!!.familyName}")
         }
 
 
         // 기념일 목록 조회 (서버에서 기념일 목록 받아오기)
         lifecycleScope.launch {
+            val pageable = mapOf(
+                "page" to "0",
+                "size" to "6",
+                "sort" to "date,desc"
+            )
             val result = AnniversaryRepository.fetchAnniversariesFromApi(
                 type = selectedTag, // null이면 전체
                 lastId = lastAnniversaryId,
-                page = 0,           // 최초 페이지
-                size = 6,
-                sort = listOf("date,desc")
+                pageable = pageable
             )
             if (result != null) {
                 allAnnivList.clear()
@@ -110,7 +111,8 @@ class FamilyAnniversaryFragment : Fragment() {
 
         // 상단바 가족 선택 아이콘 클릭 -> 가족 선택
         ToolbarUtils.setupFamilyGroupIcon(binding.customToolbar.iconSelectFamily, requireContext()) { selectedGroup ->
-            Toast.makeText(requireContext(), "$selectedGroup 선택됨", Toast.LENGTH_SHORT).show()
+            selected = selectedGroup.familyGroup
+
         }
 
         // 리사이클러뷰 스크롤
@@ -189,6 +191,8 @@ class FamilyAnniversaryFragment : Fragment() {
             val inputLocation = locationInput.text.toString().trim()
             val inputMemo = memoInput.text.toString().trim()
 
+            Log.d("AnnivDebug", "입력값22 - id: ${currentGroup?.familyGroup?.familyGroupId} title: $inputTitle, tag: $inputTag, location: $inputLocation, memo: $inputMemo")
+
             if (inputTitle.isEmpty() || inputTag == "태그") {
                 Toast.makeText(requireContext(), "제목과 태그를 선택해주세요.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -219,7 +223,14 @@ class FamilyAnniversaryFragment : Fragment() {
                             memo = inputMemo
                         )
                     }
-                    val success = newAnniv?.let { it1 -> repository.addToApi(it1) }
+                    Log.d("AnnivDebug", "생성된 기념일 객체: $newAnniv")
+
+                    val success = newAnniv?.let { it1 ->
+                        Log.d("AnnivDebug", "서버로 전송 시작: $it1")
+                        repository.addToApi(it1)
+                    }
+                    Log.d("AnnivDebug", "서버 전송 결과 success=$success")
+
                     if (success == true) {
                         Toast.makeText(requireContext(), "등록 성공!", Toast.LENGTH_SHORT).show()
 
@@ -338,12 +349,15 @@ class FamilyAnniversaryFragment : Fragment() {
         if (isLoading || !hasNextPage) return
         isLoading = true
 
+        val pageable = mapOf(
+            "page" to "0",
+            "size" to "6",
+            "sort" to "date,desc"
+        )
         val result = AnniversaryRepository.fetchAnniversariesFromApi(
             type = selectedTag, // null이면 전체
             lastId = lastAnniversaryId,
-            page = 0,           // 최초 페이지
-            size = 6,
-            sort = listOf("date,desc")
+            pageable = pageable
         )
 
         if (result != null) {
@@ -362,13 +376,16 @@ class FamilyAnniversaryFragment : Fragment() {
     private fun loadInitialAnniversaries() {
         lifecycleScope.launch {
             isLoading = true
-
+            val pageable = mapOf(
+                "page" to "0",
+                "size" to "6",
+                "sort" to "date,desc"
+            )
             val result = AnniversaryRepository.fetchAnniversariesFromApi(
                 type = selectedTag,
                 lastId = lastAnniversaryId,
-                page = 0,           // 최초 페이지
-                size = 6,
-                sort = listOf("date,desc")            )
+                pageable = pageable
+            )
 
             if (result != null) {
                 allAnnivList.clear()

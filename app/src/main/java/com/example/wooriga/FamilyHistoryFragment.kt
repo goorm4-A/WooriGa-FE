@@ -11,7 +11,6 @@ import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -28,7 +27,6 @@ import java.util.*
 import com.example.wooriga.model.History
 import com.example.wooriga.utils.ToolbarUtils
 import com.example.wooriga.utils.ToolbarUtils.currentGroup
-import com.example.wooriga.utils.ToolbarUtils.setupFamilyGroupIcon
 
 class FamilyHistoryFragment : Fragment() {
 
@@ -48,9 +46,7 @@ class FamilyHistoryFragment : Fragment() {
     private var selectedLocalDate: LocalDate? = null  // 선택된 날짜 저장용
     private var dialogView: View? = null
 
-    val selected = currentGroup?.familyGroup
-
-
+    private var selected = currentGroup?.familyGroup
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -82,7 +78,8 @@ class FamilyHistoryFragment : Fragment() {
         // 상단바 가족 선택 아이콘 클릭 -> 가족 선택
         ToolbarUtils.setupFamilyGroupIcon(binding.toolbarHistory.iconSelectFamily, requireContext()) { selectedGroup ->
             // 선택된 가족 그룹에 대한 처리
-            Toast.makeText(requireContext(), "${selected?.familyName} 선택됨", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "${selectedGroup.familyGroup.familyName} 선택됨", Toast.LENGTH_SHORT).show()
+
         }
 
 
