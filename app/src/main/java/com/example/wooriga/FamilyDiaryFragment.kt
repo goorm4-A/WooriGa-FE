@@ -9,6 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.wooriga.databinding.FragmentFamilyDiaryBinding
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.StyleSpan
+import android.graphics.Typeface
 
 class FamilyDiaryFragment : Fragment() {
 
@@ -29,6 +33,19 @@ class FamilyDiaryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val savedUser = UserManager.loadUserInfo()
+        // 사용자 이름을 가져와서 추억 제목에 적용
+        val name = savedUser?.name ?: "이름 없음"
+        val message = "${name}님의 추억들을\n관리해보세요!"
+
+        val spannable = SpannableString(message)
+        spannable.setSpan(
+            StyleSpan(Typeface.BOLD),
+            0, name.length,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        binding.diaryTitle.text = spannable
 
         viewModel.loadFamilies()
 
