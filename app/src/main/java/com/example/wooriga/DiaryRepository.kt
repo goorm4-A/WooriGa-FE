@@ -2,6 +2,7 @@ package com.example.wooriga
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import com.example.wooriga.RetrofitClient.diaryApi
 import com.google.gson.Gson
 import okhttp3.MediaType.Companion.toMediaType
@@ -84,6 +85,22 @@ class DiaryRepository {
         }
     }
 
+    // 대댓글 조회
+    suspend fun fetchReComments(parentCommentId: Long, page: Int = 0, size: Int = 10): List<DiaryComment>? {
+        return try {
+            val response = api.getReComments(
+                commentId = parentCommentId,
+                page = page,
+                size = size
+            )
+            if (response.isSuccessful) {
+                response.body()?.result?.comments
+            } else null
+        } catch (e: Exception) {
+            null
+        }
+    }
+
     // 일기 등록
     suspend fun uploadDiary(
         dto: FamilyDiaryDto,
@@ -92,17 +109,34 @@ class DiaryRepository {
     ): Boolean {
         val gson = Gson()
         val json = gson.toJson(dto)
+        Log.d("DiaryUpload", "요청 DTO: $json")
+
         val dtoBody = json.toRequestBody("application/json; charset=utf-8".toMediaType())
 
         val imagePart = imageUri?.let {
             val file = it.toFile(context)
             val requestFile = file.asRequestBody("image/*".toMediaType())
-            MultipartBody.Part.createFormData("image", file.name, requestFile)
+            val multipart = MultipartBody.Part.createFormData("image", file.name, requestFile)
+            Log.d("DiaryUpload", "이미지 파일명: ${file.name}")
+            multipart
         }
 
-        val response = api.postFamilyDiary(dtoBody, imagePart?.let { listOf(it) })
-        return response.isSuccessful && response.body()?.isSuccess == true
+        try {
+            val response = api.postFamilyDiary(dtoBody, imagePart?.let { listOf(it) })
+
+            Log.d("DiaryUpload", "isSuccessful: ${response.isSuccessful}")
+            Log.d("DiaryUpload", "response.code: ${response.code()}")
+            Log.d("DiaryUpload", "response.message: ${response.message()}")
+            Log.d("DiaryUpload", "response.body: ${response.body()?.message}")
+            Log.d("DiaryUpload", "response.errorBody: ${response.errorBody()?.string()}")
+
+            return response.isSuccessful && response.body()?.isSuccess == true
+        } catch (e: Exception) {
+            Log.e("DiaryUpload", "예외 발생: ${e.message}", e)
+            return false
+        }
     }
+
 
     fun Uri.toFile(context: Context): File {
         val inputStream = context.contentResolver.openInputStream(this)!!

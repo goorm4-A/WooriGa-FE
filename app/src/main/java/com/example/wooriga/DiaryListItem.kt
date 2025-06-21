@@ -1,9 +1,12 @@
 package com.example.wooriga
 
 data class DiaryListItem(
+    val username: String,
+    val profile: String,
     val id: Long,
     val imgUrl: String,
-    val title: String
+    val title: String,
+    val familyId: Long
 )
 
 data class DiaryListResponse(

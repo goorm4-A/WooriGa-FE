@@ -52,6 +52,14 @@ interface DiaryApi {
         @Query("commentId") commentId: Long
     ): Response<CommonResponse>
 
+    // 대댓글 조회
+    @GET("/family-diary/re-comment")
+    suspend fun getReComments(
+        @Query("commentId") commentId: Long,
+        @Query("page") page: Int,
+        @Query("size") size: Int
+    ): Response<CommentResponse>
+
     // 일기 등록
     @Multipart
     @POST("family-diary")

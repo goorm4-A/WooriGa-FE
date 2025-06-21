@@ -1,6 +1,10 @@
 package com.example.wooriga
 
+import android.graphics.Typeface
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,6 +34,19 @@ class FamilyDiaryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val savedUser = UserManager.loadUserInfo()
+        // 사용자 이름을 가져와서 추억 제목에 적용
+        val name = savedUser?.name ?: "이름 없음"
+        val message = "${name}님의 추억들을\n관리해보세요!"
+
+        val spannable = SpannableString(message)
+        spannable.setSpan(
+            StyleSpan(Typeface.BOLD),
+            0, name.length,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        binding.diaryTitle.text = spannable
+
         viewModel.loadFamilies()
 
         // 가족 선택
@@ -38,7 +55,7 @@ class FamilyDiaryFragment : Fragment() {
             val popupMenu = PopupMenu(requireContext(), binding.customToolbar.iconSelectFamily)
 
             families.forEachIndexed { index, family ->
-                popupMenu.menu.add(0, index, 0, family.name)
+                popupMenu.menu.add(0, index, index, family.name.toString())
             }
 
             popupMenu.setOnMenuItemClickListener { menuItem ->
@@ -49,8 +66,15 @@ class FamilyDiaryFragment : Fragment() {
 
             popupMenu.show()
         }
+        // 상단바 가족 선택 버튼
+//        binding.customToolbar.iconSelectFamily.setOnClickListener {
+//            setupFamilyGroupIcon(it, requireContext(), ToolbarUtils.groupList) { selectedGroup ->
+//                // 선택된 가족 그룹에 대한 처리
+//                Toast.makeText(requireContext(), "${selectedGroup.title} 선택됨", Toast.LENGTH_SHORT).show()
+//            }
+//        }
 
-        // 검색
+        // 상단바 검색 버튼
         binding.customToolbar.iconSearch.setOnClickListener {
             // 일기 검색 프래그먼트로 이동
             parentFragmentManager.beginTransaction()

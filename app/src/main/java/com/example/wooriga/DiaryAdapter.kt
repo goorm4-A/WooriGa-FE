@@ -17,11 +17,21 @@ class DiaryAdapter(
 
         fun bind(item: DiaryListItem) {
             binding.tvTitle.text = item.title
-            Glide.with(binding.imageDiary)
-                .load(item.imgUrl)
-                .into(binding.imageDiary)
 
-            binding.root.setOnClickListener { onItemClick(item) }
+            Glide.with(binding.ivProfile)
+                .load(item.profile)
+                .placeholder(R.drawable.ic_user_default)
+                .error(R.drawable.ic_user_default)
+                .circleCrop()
+                .into(binding.ivProfile)
+
+            Glide.with(binding.ivDiary)
+                .load(item.imgUrl)
+                .into(binding.ivDiary)
+
+            binding.root.setOnClickListener {
+                onItemClick(item)
+            }
         }
     }
 
