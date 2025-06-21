@@ -29,6 +29,8 @@ class DiaryDetailFragment : Fragment() {
 
     // 일기 샘플
     val dummyDiaryDetail = DiaryDetailItem(
+        username = "손예림",
+        profile = "",
         diaryId = -1L,
         title = "테스트 일기입니다.",
         location = "강원도 평창",

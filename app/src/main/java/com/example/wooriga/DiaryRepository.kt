@@ -2,6 +2,7 @@ package com.example.wooriga
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import com.example.wooriga.RetrofitClient.diaryApi
 import com.google.gson.Gson
 import okhttp3.MediaType.Companion.toMediaType
@@ -108,17 +109,34 @@ class DiaryRepository {
     ): Boolean {
         val gson = Gson()
         val json = gson.toJson(dto)
+        Log.d("DiaryUpload", "요청 DTO: $json")
+
         val dtoBody = json.toRequestBody("application/json; charset=utf-8".toMediaType())
 
         val imagePart = imageUri?.let {
             val file = it.toFile(context)
             val requestFile = file.asRequestBody("image/*".toMediaType())
-            MultipartBody.Part.createFormData("image", file.name, requestFile)
+            val multipart = MultipartBody.Part.createFormData("image", file.name, requestFile)
+            Log.d("DiaryUpload", "이미지 파일명: ${file.name}")
+            multipart
         }
 
-        val response = api.postFamilyDiary(dtoBody, imagePart?.let { listOf(it) })
-        return response.isSuccessful && response.body()?.isSuccess == true
+        try {
+            val response = api.postFamilyDiary(dtoBody, imagePart?.let { listOf(it) })
+
+            Log.d("DiaryUpload", "isSuccessful: ${response.isSuccessful}")
+            Log.d("DiaryUpload", "response.code: ${response.code()}")
+            Log.d("DiaryUpload", "response.message: ${response.message()}")
+            Log.d("DiaryUpload", "response.body: ${response.body()?.message}")
+            Log.d("DiaryUpload", "response.errorBody: ${response.errorBody()?.string()}")
+
+            return response.isSuccessful && response.body()?.isSuccess == true
+        } catch (e: Exception) {
+            Log.e("DiaryUpload", "예외 발생: ${e.message}", e)
+            return false
+        }
     }
+
 
     fun Uri.toFile(context: Context): File {
         val inputStream = context.contentResolver.openInputStream(this)!!

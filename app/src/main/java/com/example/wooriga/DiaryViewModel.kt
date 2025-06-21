@@ -2,6 +2,7 @@ package com.example.wooriga
 
 import android.content.Context
 import android.net.Uri
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -26,11 +27,16 @@ class DiaryViewModel : ViewModel() {
     private val _searchResult = MutableLiveData<List<DiaryListItem>>()
     val searchResult: LiveData<List<DiaryListItem>> get() = _searchResult
 
+    // 현재 로그인된 사용자 정보
+    val savedUser = UserManager.loadUserInfo()
+    val currentUserName = savedUser?.name ?: "이름 없음"
+    val currentUserProfile = savedUser?.image ?: ""
+
     fun loadFamilies() {
         val dummy = listOf(
-            Family(1, "A가족"),
-            Family(2, "B가족"),
-            Family(3, "C가족")
+            Family(1L, "A가족"),
+            Family(2L, "B가족"),
+            Family(3L, "C가족")
         )
         _familyList.value = dummy
         _selectedFamilyId.value = dummy.first().familyId
@@ -42,6 +48,34 @@ class DiaryViewModel : ViewModel() {
         _selectedFamilyId.value = familyId
         loadDiaries(familyId)
     }
+
+    private val dummyDiaryMap = mapOf(
+        1L to DiaryListItem(
+            username = "A가족 대표",
+            profile = "",
+            id = -1L,
+            imgUrl = "https://ik.imagekit.io/tvlk/blog/2024/10/img_a.jpg",
+            title = "A가족 테스트 일기",
+            familyId = 1L
+        ),
+        2L to DiaryListItem(
+            username = "B가족 대표",
+            profile = "",
+            id = -2L,
+            imgUrl = "https://ik.imagekit.io/tvlk/blog/2024/10/img_b.jpg",
+            title = "B가족 테스트 일기",
+            familyId = 2L
+        ),
+        3L to DiaryListItem(
+            username = "C가족 대표",
+            profile = "",
+            id = -3L,
+            imgUrl = "https://ik.imagekit.io/tvlk/blog/2024/10/img_c.jpg",
+            title = "C가족 테스트 일기",
+            familyId = 3L
+        )
+    )
+
 
     // 일기 목록 조회
 
@@ -61,16 +95,11 @@ class DiaryViewModel : ViewModel() {
                 familyId = familyId
             ) ?: emptyList()
 
-            // 리스트 맨 위에 더미 추가
-            val dummy = DiaryListItem(
-                id = -1L,
-                imgUrl = "https://ik.imagekit.io/tvlk/blog/2024/10/shutterstock_2479862045.jpg?tr=q-70,c-at_max,w-500,h-250,dpr-2",
-                title = "테스트 일기입니다."
-            )
-
-            _diaryList.value = listOf(dummy) + items
+            val dummy = dummyDiaryMap[familyId]
+            _diaryList.value = if (dummy != null) listOf(dummy) + items else items
         }
     }
+
 
     // 댓글 조회
     fun loadComments(diaryId: Long) {
@@ -91,6 +120,9 @@ class DiaryViewModel : ViewModel() {
     ) {
         viewModelScope.launch {
             val dto = FamilyDiaryDto(
+                familyId = _selectedFamilyId.value ?: error("선택된 가족 그룹 없음"),
+                username = currentUserName,
+                profile = currentUserProfile,
                 title = title,
                 location = location,
                 description = description,
@@ -102,7 +134,7 @@ class DiaryViewModel : ViewModel() {
             if (success) {
                 loadDiaries() // 등록 후 목록 다시 불러오기
             } else {
-                // 실패 처리
+                Toast.makeText(context, "일기 등록 실패", Toast.LENGTH_SHORT).show()
             }
         }
     }

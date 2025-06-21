@@ -1,6 +1,9 @@
 package com.example.wooriga
 
 data class FamilyDiaryDto(
+    val familyId: Long,
+    val username: String,
+    val profile: String,
     val title: String,
     val location: String,
     val description: String,

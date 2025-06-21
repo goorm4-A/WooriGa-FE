@@ -6,6 +6,8 @@ data class DiaryDetailItem(
     val location: String,
     val description: String,
     val contentType: String,
+    val username: String,
+    val profile: String,
     val diaryTags: List<DiaryTag>,
     val participantIds: List<Long>,
     val imgUrls: List<String>

@@ -78,7 +78,7 @@ class DiaryAddFragment : Fragment() {
         }
 
         val calendar = Calendar.getInstance()
-        val formatter = SimpleDateFormat("M월 d일 E요일", Locale.KOREAN)
+        val formatter = SimpleDateFormat("MM/dd E요일", Locale.KOREAN)
         binding.tvDate.text = formatter.format(calendar.time)
 
         binding.btnAddImage.setOnClickListener {
