@@ -17,7 +17,10 @@ class MottoEditBottomSheet(
     private var _binding: BottomSheetEditMottoBinding? = null
     private val binding get() = _binding!!
 
-    private val familyOptions = listOf("A가족", "B가족", "C가족") // 예시 태그
+    private val familyOptions = listOf("A가족", "B가족", "C가족") // TODO: 서버에서 불러오기
+
+    val savedUser = UserManager.loadUserInfo()
+    val userId = savedUser?.userId
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,8 +52,10 @@ class MottoEditBottomSheet(
             val newFamily = binding.spinnerTag.selectedItem.toString()
 
             if (newTitle.isNotBlank()) {
-                viewModel.editMotto(motto.id, newFamily, newTitle)
-                dismiss()
+                userId?.let {
+                    viewModel.editMotto(motto.id, it, newFamily, newTitle)
+                    dismiss()
+                } ?: Toast.makeText(context, "로그인 필요", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(context, "가훈을 입력해주세요", Toast.LENGTH_SHORT).show()
             }

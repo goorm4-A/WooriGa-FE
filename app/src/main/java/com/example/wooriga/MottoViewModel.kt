@@ -83,14 +83,23 @@ class MottoViewModel : ViewModel() {
         }
     }
 
-    fun editMotto(mottoId: Long, newFamily: String, newTitle: String) {
-        val currentList = mottos.value.orEmpty()
-        val updatedList = currentList.map {
-            if (it.id == mottoId) it.copy(title = newTitle, familyName = newFamily) else it
+    fun editMotto(mottoId: Long, userId: Long, familyName: String, motto: String) {
+        viewModelScope.launch {
+            try {
+                val response = repository.updateMotto(mottoId, userId, MottoRequest(familyName, motto))
+                if (response.isSuccessful && response.body()?.isSuccess == true) {
+                    val updated = response.body()!!.result
+                    mottos.value = mottos.value?.map {
+                        if (it.id == updated.id) updated else it
+                    }
+                    Log.d("MottoViewModel", "수정 성공: ${updated.title}")
+                } else {
+                    Log.e("MottoViewModel", "수정 실패: ${response.code()}")
+                }
+            } catch (e: Exception) {
+                Log.e("MottoViewModel", "수정 오류: ${e.localizedMessage}")
+            }
         }
-        mottos.value = updatedList
-
-        // api 사용
     }
 
 
