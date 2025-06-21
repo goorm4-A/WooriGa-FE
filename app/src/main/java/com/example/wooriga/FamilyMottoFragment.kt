@@ -60,9 +60,23 @@ class FamilyMottoFragment : Fragment() {
         }
 
         // RecyclerView 세팅
-        mottoAdapter = MottoAdapter { clickedMotto ->
-            MottoDetailBottomSheet(clickedMotto).show(parentFragmentManager, "MottoDetailBottomSheet")
-        }
+        mottoAdapter = MottoAdapter(
+            // 가훈 아이템 클릭
+            onItemClick = { clickedMotto ->
+                MottoDetailBottomSheet(clickedMotto).show(parentFragmentManager, "MottoDetail")
+            },
+            // 삭제 버튼 클릭
+            onDeleteClick = { motto ->
+                userId?.let {
+                    viewModel.deleteMotto(motto.id, it)
+                } ?: Toast.makeText(context, "로그인 필요", Toast.LENGTH_SHORT).show()
+            },
+            // 수정 버튼 클릭
+            onEditClick = { motto ->
+                MottoEditBottomSheet(motto, viewModel).show(parentFragmentManager, "MottoEdit")
+            }
+        )
+
         binding.recyclerFamilyMotto.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerFamilyMotto.adapter = mottoAdapter
 

@@ -66,6 +66,22 @@ class MottoViewModel : ViewModel() {
         }
     }
 
+    fun deleteMotto(mottoId: Long, userId: Long) {
+        viewModelScope.launch {
+            try {
+                val response = repository.deleteMotto(mottoId, userId)
+                if (response.isSuccessful && response.body()?.isSuccess == true) {
+                    // 삭제 성공 시 목록 갱신 또는 UI 업데이트
+                    mottos.value = mottos.value?.filter { it.id != mottoId }
+                    Log.d("MottoViewModel", "삭제 성공")
+                } else {
+                    Log.e("MottoViewModel", "삭제 실패: ${response.code()}")
+                }
+            } catch (e: Exception) {
+                Log.e("MottoViewModel", "네트워크 오류: ${e.localizedMessage}")
+            }
+        }
+    }
 
     fun editMotto(mottoId: Long, newFamily: String, newTitle: String) {
         val currentList = mottos.value.orEmpty()

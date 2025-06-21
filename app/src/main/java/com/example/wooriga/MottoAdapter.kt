@@ -3,14 +3,16 @@ package com.example.wooriga
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.PopupMenu
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.wooriga.databinding.ItemFamilyMottoBinding
 
-class MottoAdapter(private val onItemClick: (Motto) -> Unit) : ListAdapter<Motto, MottoAdapter.MottoViewHolder>(DIFF_CALLBACK) {
+class MottoAdapter(
+    private val onItemClick: (Motto) -> Unit,
+    private val onDeleteClick: (Motto) -> Unit,
+    private val onEditClick: (Motto) -> Unit
+) : ListAdapter<Motto, MottoAdapter.MottoViewHolder>(DIFF_CALLBACK) {
 
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Motto>() {
@@ -39,21 +41,17 @@ class MottoAdapter(private val onItemClick: (Motto) -> Unit) : ListAdapter<Motto
                 popup.setOnMenuItemClickListener { item ->
                     when (item.itemId) {
                         R.id.menu_edit -> {
-                            val fragmentManager =
-                                (view.context as AppCompatActivity).supportFragmentManager
-                            val bottomSheet = MottoEditBottomSheet(motto, MottoViewModel())
-                            bottomSheet.show(fragmentManager, "MottoEditBottomSheet")
+                            onEditClick(motto)
                             true
                         }
-
                         R.id.menu_delete -> {
-                            Toast.makeText(view.context, "삭제 클릭됨", Toast.LENGTH_SHORT).show()
+                            onDeleteClick(motto)
                             true
                         }
-
                         else -> false
                     }
                 }
+
                 popup.show()
             }
         }
