@@ -3,7 +3,6 @@ package com.example.wooriga
 import com.example.wooriga.model.Anniversary
 import com.example.wooriga.model.FamilyGroupResponse
 import com.example.wooriga.model.FamilyGroupWrapper
-import com.example.wooriga.model.PageableRequest
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -47,9 +46,7 @@ interface ApiService {
     suspend fun getAnniversaries(
         @Query("type") type: String?,
         @Query("lastAnniversaryId") lastId: Long?,
-        @Query("page") page: Int?,
-        @Query("size") size: Int?,
-        @Query("sort") sort: List<String>?
+        @QueryMap(encoded = true) pageable: Map<String, String>
     ): Response<CommonResponse2<AnniversaryResult>>
 
 

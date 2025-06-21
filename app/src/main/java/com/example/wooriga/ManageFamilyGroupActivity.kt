@@ -112,7 +112,6 @@ class ManageFamilyGroupActivity : AppCompatActivity() {
                                 val wrapper = FamilyGroupWrapper(result, null, null)
                                 groupList.add(wrapper)
                                 adapter.notifyItemInserted(groupList.size - 1)
-
                                 dialog.dismiss()
 
                             } else {
