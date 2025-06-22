@@ -32,50 +32,11 @@ class DiaryViewModel : ViewModel() {
     val currentUserName = savedUser?.name ?: "이름 없음"
     val currentUserProfile = savedUser?.image ?: ""
 
-    fun loadFamilies() {
-        val dummy = listOf(
-            Family(1L, "A가족"),
-            Family(2L, "B가족"),
-            Family(3L, "C가족")
-        )
-        _familyList.value = dummy
-        _selectedFamilyId.value = dummy.first().familyId
-        loadDiaries(dummy.first().familyId)
-    }
-
     // 가족 선택
     fun selectFamily(familyId: Long) {
         _selectedFamilyId.value = familyId
         loadDiaries(familyId)
     }
-
-    private val dummyDiaryMap = mapOf(
-        1L to DiaryListItem(
-            username = "A가족 대표",
-            profile = "",
-            id = -1L,
-            imgUrl = "https://ik.imagekit.io/tvlk/blog/2024/10/img_a.jpg",
-            title = "A가족 테스트 일기",
-            familyId = 1L
-        ),
-        2L to DiaryListItem(
-            username = "B가족 대표",
-            profile = "",
-            id = -2L,
-            imgUrl = "https://ik.imagekit.io/tvlk/blog/2024/10/img_b.jpg",
-            title = "B가족 테스트 일기",
-            familyId = 2L
-        ),
-        3L to DiaryListItem(
-            username = "C가족 대표",
-            profile = "",
-            id = -3L,
-            imgUrl = "https://ik.imagekit.io/tvlk/blog/2024/10/img_c.jpg",
-            title = "C가족 테스트 일기",
-            familyId = 3L
-        )
-    )
-
 
     // 일기 목록 조회
 
@@ -93,10 +54,17 @@ class DiaryViewModel : ViewModel() {
                 page = 0,
                 size = 20,
                 familyId = familyId
-            ) ?: emptyList()
+            )
 
-            val dummy = dummyDiaryMap[familyId]
-            _diaryList.value = if (dummy != null) listOf(dummy) + items else items
+            if (items != null) {
+                if (items.isEmpty()) {
+                    android.util.Log.d("DiaryViewModel", "✅ 일기 목록 불러오기 성공 (가족 ID: $familyId) - 항목 없음")
+                } else {
+                    android.util.Log.d("DiaryViewModel", "✅ 일기 목록 불러오기 성공 (가족 ID: $familyId), 개수: ${items.size}")
+                }
+            } else {
+                android.util.Log.e("DiaryViewModel", "❌ 일기 목록 불러오기 실패 (가족 ID: $familyId)")
+            }
         }
     }
 
