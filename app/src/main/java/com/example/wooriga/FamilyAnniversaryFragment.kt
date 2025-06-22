@@ -65,20 +65,6 @@ class FamilyAnniversaryFragment : Fragment() {
         binding.annivListRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.annivListRecyclerView.adapter = adapter
 
-        Log.d("Auth", "Token: ${UserManager.accessToken}")
-
-        ToolbarUtils.restoreCurrentGroup(requireContext()) {
-            selected = ToolbarUtils.currentGroup?.familyGroup
-            Log.d("FamilyAnniv", "복원된 그룹: ${selected?.familyName}")
-        }
-
-        // 현재 선택된 가족 그룹
-        if (selected == null) {
-            Toast.makeText(requireContext(), "가족 그룹을 선택해주세요.", Toast.LENGTH_SHORT).show()
-        } else {
-            binding.customToolbar.currentGroup.text = selected!!.familyName
-            Log.d("FamilyAnniversaryFragment", "Selected group: ${selected!!.familyName}")
-        }
 
         if (allAnnivList.isEmpty()) {
             loadInitialAnniversaries()
@@ -115,7 +101,6 @@ class FamilyAnniversaryFragment : Fragment() {
             }
         })
 
-
         return binding.root
     }
 
@@ -135,6 +120,17 @@ class FamilyAnniversaryFragment : Fragment() {
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
         binding.annivTitle.text = spannable
+
+        // 가족 그룹 정보
+        ToolbarUtils.restoreCurrentGroup(requireContext()) {
+            selected = ToolbarUtils.currentGroup?.familyGroup
+
+            selected?.let {
+                binding.customToolbar.currentGroup.text = it.familyName
+            } ?: run {
+                Toast.makeText(requireContext(), "가족 그룹을 선택해주세요.", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -179,8 +175,6 @@ class FamilyAnniversaryFragment : Fragment() {
             val inputTag = spinner.selectedItem.toString()
             val inputLocation = locationInput.text.toString().trim()
             val inputMemo = memoInput.text.toString().trim()
-
-            Log.d("AnnivDebug", "입력값22 - id: ${currentGroup?.familyGroup?.familyGroupId} title: $inputTitle, tag: $inputTag, location: $inputLocation, memo: $inputMemo")
 
             if (inputTitle.isEmpty() || inputTag == "태그") {
                 Toast.makeText(requireContext(), "제목과 태그를 선택해주세요.", Toast.LENGTH_SHORT).show()
@@ -229,16 +223,6 @@ class FamilyAnniversaryFragment : Fragment() {
                         Toast.makeText(context, "등록에 실패했습니다.", Toast.LENGTH_SHORT).show()
                     }
                 }
-
-/*                adapter.updateList(allAnnivList) // 추가 및 수정 후 반드시 갱신 호출
-                dialog.dismiss()
-                updateCalendarDecorators(binding.calendarAnniv.currentDate.month + 1) // 캘린더 업데이트
-                // 현재 월 리스트 갱신
-                filterRecyclerByMonth(
-                    binding.calendarAnniv.currentDate.year,
-                    binding.calendarAnniv.currentDate.month + 1
-                )*/
-
             }
         }
 
@@ -306,20 +290,6 @@ class FamilyAnniversaryFragment : Fragment() {
     }
 
 
-/*    // CalendarDecorators.eventDecorator를 통해 달력에 점 추가
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun updateCalendarDecorators(month: Int? = null) {
-        val eventSet = allAnnivList
-            .filter { it.date.substring(5,7).toInt() == (month ?: LocalDate.now().monthValue) }
-            .map { d ->
-                val (y, m, day) = d.date.split("-").map(String::toInt)
-                CalendarDay.from(y, m-1, day)
-            }.toSet()
-
-        binding.calendarAnniv.removeDecorators()
-        binding.calendarAnniv.addDecorator(CalendarDecorators.eventDecorator(requireContext(), eventSet))
-    }*/
-
     // RecyclerView 어댑터에 월 필터링 리스트만 업데이트
     private fun filterRecyclerByMonth(year: Int, month: Int) {
         val filtered = allAnnivList.filter {
@@ -347,22 +317,16 @@ class FamilyAnniversaryFragment : Fragment() {
 
         if (result != null) {
             val newItems = result.contents.filter { it.anniversaryId != null && it.anniversaryId !in loadedAnnivIds }
-            Log.d("AnnivDebug", "1 hasNextPage=$hasNextPage, lastAnniversaryId=$lastAnniversaryId, isLoading=$isLoading")
 
             if (newItems.isNotEmpty()) {
                 allAnnivList.addAll(newItems)
                 adapter.addToList(newItems)
                 loadedAnnivIds.addAll(newItems.mapNotNull { it.anniversaryId })
-                Log.d("AnnivDebug", "2 hasNextPage=$hasNextPage, lastAnniversaryId=$lastAnniversaryId, isLoading=$isLoading")
-
             }
 
-            // ✅ 항상 갱신
-            Log.d("AnnivDebug", "3 hasNextPage=$hasNextPage, lastAnniversaryId=$lastAnniversaryId, isLoading=$isLoading")
 
             lastAnniversaryId = result.contents.lastOrNull()?.anniversaryId?.toLong()
             hasNextPage = result.hasNext
-            Log.d("AnnivDebug", "4 hasNextPage=$hasNextPage, lastAnniversaryId=$lastAnniversaryId, isLoading=$isLoading")
 
         } else {
             Toast.makeText(requireContext(), "기념일 로드 실패", Toast.LENGTH_SHORT).show()
@@ -414,7 +378,7 @@ class FamilyAnniversaryFragment : Fragment() {
         }
     }
 
-    // 1. 색상 배열 (순서대로)
+    // 색상 배열
     private val colors = listOf(
         R.color.peach,
         R.color.mint,
@@ -426,17 +390,16 @@ class FamilyAnniversaryFragment : Fragment() {
         R.color.brown,
     )
 
-    // 2. 인덱스 기반 색상 반환 함수
+    // 인덱스 기반 색상 반환 함수
     private fun getColorByFamilyId(familyId: Int): Int {
         val index = ToolbarUtils.groupList.indexOfFirst { it.familyGroup.familyGroupId.toInt() == familyId }
         return if (index != -1 && index < colors.size) {
-            ContextCompat.getColor(requireContext(), colors[index])  // 이건 “color value”
+            ContextCompat.getColor(requireContext(), colors[index])
         } else {
             ContextCompat.getColor(requireContext(), R.color.green)
         }
     }
 
-    // 3. updateCalendarDecorators() 수정 예시
     @RequiresApi(Build.VERSION_CODES.O)
     private fun updateCalendarDecorators(month: Int? = null) {
         val filteredAnnivs = allAnnivList.filter {
@@ -456,8 +419,6 @@ class FamilyAnniversaryFragment : Fragment() {
         binding.calendarAnniv.removeDecorators()
         decorators.forEach { binding.calendarAnniv.addDecorator(it) }
 
-    //        binding.calendarAnniv.removeDecorators()
-//        binding.calendarAnniv.addDecorator(CalendarDecorators.eventDecorator(requireContext(), dateColorMap))
     }
 
 

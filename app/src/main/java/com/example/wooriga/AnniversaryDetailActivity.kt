@@ -3,7 +3,6 @@ package com.example.wooriga
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.wooriga.databinding.ActivityAnniversaryDetailBinding

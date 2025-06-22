@@ -42,12 +42,6 @@ object AnniversaryRepository {
             Log.d("AnnivAdd", "응답 code: ${response.code()}")
             Log.d("AnnivAdd", "응답 success?: ${response.isSuccessful}")
             Log.d("AnnivAdd", "응답 body: ${response.body()}")
-/*
-
-            if (response.isSuccessful) {
-                anniversaryList.add(anniv)
-            }
-*/
 
             response.isSuccessful
         } catch (e: Exception) {
