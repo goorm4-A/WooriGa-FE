@@ -41,28 +41,34 @@ class MoodViewModel : ViewModel() {
     }
 
 
+    fun postMood(familyId: Long, moodType: String, tags: List<String>, onSuccess: () -> Unit, onFailure: () -> Unit) {
+        viewModelScope.launch {
+            try {
+                val tagString = tags.joinToString(",") { "#$it" }
 
-//    init {
-//        loadDummyData()
-//    }
-//
-//    private fun loadDummyData() {
-//        val dummyList = listOf(
-//            Mood(1, "A가족", "행복", listOf("화목", "기쁨")),
-//            Mood(2, "A가족", "감동", listOf("감사", "따뜻함")),
-//            Mood(3, "A가족", "응원", listOf("자신감", "용기")),
-//            Mood(4, "A가족", "슬픔", listOf("위로", "공감")),
-//            Mood(5, "A가족", "화남", listOf("분노", "짜증"))
-//        )
-//        _moodList.value = dummyList
-//    }
+                // 여기에 디버깅 로그 추가
+                println("🔥 moodType: $moodType")
+                println("🔥 tagString: $tagString")
 
-    // 분위기 추가
-    fun addMood(mood: Mood) {
-        val updatedList = _moodList.value.orEmpty().toMutableList().apply {
-            add(0, mood) // 최근 등록 순
+
+                val request = MoodRequest(tags = tagString, moodType = moodType)
+
+                val response = RetrofitClient.moodApi.postFamilyMood(familyId, request)
+                if (response.isSuccess) {
+                    println("MoodViewModel: 분위기 등록 성공 → ID: ${response.result.id}")
+                    onSuccess()
+
+                    // 등록 후 목록 갱신
+                    loadFamilyMoods(familyId)
+                } else {
+                    println("MoodViewModel: 등록 실패 → ${response.code}, ${response.message}")
+                    onFailure()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onFailure()
+            }
         }
-        _moodList.value = updatedList
     }
 
 }

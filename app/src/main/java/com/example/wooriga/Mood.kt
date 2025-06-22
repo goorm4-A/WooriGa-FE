@@ -14,3 +14,9 @@ data class MoodResponse(
     val tags: List<String>,
     val moodType: String
 )
+
+// 요청 DTO
+data class MoodRequest(
+    val tags: String, // "#행복,#감사" 형식 문자열
+    val moodType: String // 예: "EMOTION"
+)

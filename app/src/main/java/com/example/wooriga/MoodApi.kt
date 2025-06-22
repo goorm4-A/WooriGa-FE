@@ -1,6 +1,8 @@
 package com.example.wooriga
 
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface MoodApi {
@@ -10,4 +12,11 @@ interface MoodApi {
     suspend fun getFamilyMoods(
         @Path("familyId") familyId: Long
     ): CommonResponse2<List<MoodResponse>>
+
+    // 분위기 등록
+    @POST("cultures/{familyId}/moods")
+    suspend fun postFamilyMood(
+        @Path("familyId") familyId: Long,
+        @Body request: MoodRequest
+    ): CommonResponse2<MoodResponse>
 }
