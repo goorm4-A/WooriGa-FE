@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import com.example.wooriga.databinding.BottomSheetAddRuleBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 class RuleAddBottomSheet(
@@ -36,8 +36,8 @@ class RuleAddBottomSheet(
         binding.spinnerType.adapter = ArrayAdapter(requireContext(), R.layout.simple_spinner_dropdown_item, typeList)
 
         // 날짜 표시
-        val formatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일 E요일", Locale.KOREA)
-        val today = LocalDate.now().format(formatter)
+        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA)
+        val today = formatter.format(Date())
         binding.dateText.text = today
 
         // 취소 버튼

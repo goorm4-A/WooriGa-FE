@@ -1,6 +1,7 @@
 package com.example.wooriga
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +26,12 @@ class FamilyRuleFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val savedUser = UserManager.loadUserInfo()
+        val userId = savedUser?.userId
+
+        // 인자로 받은 familyId 추출
+        val familyId = arguments?.getLong("familyId") ?: return
 
         // 툴바
         val toolbar = view.findViewById<View>(R.id.custom_toolbar)
@@ -54,6 +61,14 @@ class FamilyRuleFragment : Fragment() {
             }
             adapter.submitList(list)
         }
+
+        // 데이터 불러오기
+        if (userId != null) {
+            viewModel.loadRules(familyId = familyId, userId = userId)
+        } else {
+            Log.e("FamilyRuleFragment", "userId is null - 로그인 필요")
+        }
+
 
         binding.addFamilyRule.setOnClickListener {
             RuleAddBottomSheet { newRule ->
