@@ -9,13 +9,36 @@ import android.widget.PopupMenu
 import com.example.wooriga.ApiResponse
 import com.example.wooriga.R
 import com.example.wooriga.RetrofitClient2
-import com.example.wooriga.model.FamilyGroupResponse
 import com.example.wooriga.model.FamilyGroupWrapper
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 object ToolbarUtils {
+
+    private const val PREF_NAME = "toolbar_prefs"
+    private const val KEY_GROUP_ID = "current_group_id"
+
+    // 가족 선택 시 저장
+    fun saveCurrentGroup(context: Context, group: FamilyGroupWrapper) {
+        val prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        prefs.edit().putLong(KEY_GROUP_ID, group.familyGroup.familyGroupId).apply()
+    }
+    // 앱 실행 시 복원
+    fun restoreCurrentGroup(context: Context, onRestored: () -> Unit = {}) {
+        val prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        val savedId = prefs.getLong(KEY_GROUP_ID, -1)
+
+        if (savedId != -1L) {
+            fetchFamilyGroupsFromServer {
+                val restored = groupList.find { it.familyGroup.familyGroupId == savedId }
+                if (restored != null) {
+                    currentGroup = restored
+                    onRestored()
+                }
+            }
+        }
+    }
 
     val groupList = mutableListOf<FamilyGroupWrapper>()
 
@@ -75,7 +98,8 @@ object ToolbarUtils {
 
         popupMenu.setOnMenuItemClickListener { item ->
             val selectedGroup = groupList[item.itemId]
-            currentGroup = selectedGroup  // 전역 변수 갱신
+            currentGroup = selectedGroup  // 변수 갱신
+            saveCurrentGroup(context, selectedGroup) // SharedPreferences에 저장
             onSelected(selectedGroup)
             true
         }

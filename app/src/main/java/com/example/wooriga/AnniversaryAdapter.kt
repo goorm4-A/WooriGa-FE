@@ -29,15 +29,19 @@ class AnniversaryAdapter(
 
     fun updateList(newList: List<Anniversary>) {
         annivList = newList.toMutableList()
-        notifyDataSetChanged()
+        notifyDataSetChanged()  // 필터링 시만 사용
     }
 
     fun addToList(newItems: List<Anniversary>) {
         val start = annivList.size
         annivList.addAll(newItems)
-        notifyItemRangeInserted(start, newItems.size)
+        notifyItemRangeInserted(start, newItems.size) // 페이징 시 사용
     }
 
+    fun clearList() {
+        annivList.clear()
+        notifyDataSetChanged()
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.anniversary_item, parent, false)

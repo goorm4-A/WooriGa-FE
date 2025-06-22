@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.StyleSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -62,6 +63,13 @@ class FamilyHistoryFragment : Fragment() {
         timelineRecyclerView.adapter = adapter
         timelineRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+        // 가족 그룹 정보
+        ToolbarUtils.restoreCurrentGroup(requireContext()) {
+            selected = ToolbarUtils.currentGroup?.familyGroup
+            Log.d("FamilyAnniv", "복원된 그룹: ${selected?.familyName}")
+        }
+
+
         // "+" 버튼 클릭 -> 가족사 추가 (다이얼로그)
         val addHistoryButton = binding.addFamilyHistoryButton
         addHistoryButton.setOnClickListener {
@@ -78,8 +86,8 @@ class FamilyHistoryFragment : Fragment() {
         // 상단바 가족 선택 아이콘 클릭 -> 가족 선택
         ToolbarUtils.setupFamilyGroupIcon(binding.toolbarHistory.iconSelectFamily, requireContext()) { selectedGroup ->
             // 선택된 가족 그룹에 대한 처리
-            Toast.makeText(requireContext(), "${selectedGroup.familyGroup.familyName} 선택됨", Toast.LENGTH_SHORT).show()
-
+            selected = selectedGroup.familyGroup
+            ToolbarUtils.saveCurrentGroup(requireContext(), selectedGroup)
         }
 
 

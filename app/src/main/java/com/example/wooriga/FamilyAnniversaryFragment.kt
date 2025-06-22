@@ -39,6 +39,7 @@ class FamilyAnniversaryFragment : Fragment() {
     private lateinit var adapter: AnniversaryAdapter
     private val repository = AnniversaryRepository
     private val allAnnivList = mutableListOf<Anniversary>()
+    private val loadedAnnivIds = mutableSetOf<Long>()
 
     private var selectedDate: String = ""
     var selected = currentGroup?.familyGroup
@@ -65,6 +66,11 @@ class FamilyAnniversaryFragment : Fragment() {
 
         Log.d("Auth", "Token: ${UserManager.accessToken}")
 
+        ToolbarUtils.restoreCurrentGroup(requireContext()) {
+            selected = ToolbarUtils.currentGroup?.familyGroup
+            Log.d("FamilyAnniv", "복원된 그룹: ${selected?.familyName}")
+        }
+
         // 현재 선택된 가족 그룹
         if (selected == null) {
             Toast.makeText(requireContext(), "가족 그룹을 선택해주세요.", Toast.LENGTH_SHORT).show()
@@ -72,29 +78,8 @@ class FamilyAnniversaryFragment : Fragment() {
             Log.d("FamilyAnniversaryFragment", "Selected group: ${selected!!.familyName}")
         }
 
-
-        // 기념일 목록 조회 (서버에서 기념일 목록 받아오기)
-        lifecycleScope.launch {
-            val pageable = mapOf(
-                "page" to "0",
-                "size" to "6",
-                "sort" to "date,desc"
-            )
-            val result = AnniversaryRepository.fetchAnniversariesFromApi(
-                type = selectedTag, // null이면 전체
-                lastId = lastAnniversaryId,
-                pageable = pageable
-            )
-            if (result != null) {
-                allAnnivList.clear()
-                allAnnivList.addAll(result.contents)
-                adapter.addToList(result.contents)
-                updateCalendarDecorators()
-                val today = LocalDate.now()
-                filterRecyclerByMonth(today.year, today.monthValue)
-            } else {
-                Toast.makeText(context, "기념일을 불러오지 못했습니다.", Toast.LENGTH_SHORT).show()
-            }
+        if (allAnnivList.isEmpty()) {
+            loadInitialAnniversaries()
         }
 
         // 캘린더
@@ -112,6 +97,7 @@ class FamilyAnniversaryFragment : Fragment() {
         // 상단바 가족 선택 아이콘 클릭 -> 가족 선택
         ToolbarUtils.setupFamilyGroupIcon(binding.customToolbar.iconSelectFamily, requireContext()) { selectedGroup ->
             selected = selectedGroup.familyGroup
+            ToolbarUtils.saveCurrentGroup(requireContext(), selectedGroup)
 
         }
 
@@ -232,13 +218,9 @@ class FamilyAnniversaryFragment : Fragment() {
                     Log.d("AnnivDebug", "서버 전송 결과 success=$success")
 
                     if (success == true) {
+                        selectedTag = null  // 태그 초기화 (전체 보기)
+                        loadInitialAnniversaries()
                         Toast.makeText(requireContext(), "등록 성공!", Toast.LENGTH_SHORT).show()
-
-                        allAnnivList.add(newAnniv)
-                        adapter.updateList(allAnnivList) // 어댑터에 새 기념일 추가
-                        updateCalendarDecorators(binding.calendarAnniv.currentDate.month + 1)
-                        filterRecyclerByMonth(binding.calendarAnniv.currentDate.year, binding.calendarAnniv.currentDate.month + 1)
-
                         dialog.dismiss()
                     } else {
                         Toast.makeText(context, "등록에 실패했습니다.", Toast.LENGTH_SHORT).show()
@@ -344,7 +326,7 @@ class FamilyAnniversaryFragment : Fragment() {
         adapter.updateList(filtered)
     }
 
-    // 스크롤
+    // 추가 로딩
     private suspend fun loadMoreAnniversaries() {
         if (isLoading || !hasNextPage) return
         isLoading = true
@@ -355,16 +337,30 @@ class FamilyAnniversaryFragment : Fragment() {
             "sort" to "date,desc"
         )
         val result = AnniversaryRepository.fetchAnniversariesFromApi(
-            type = selectedTag, // null이면 전체
+            type = selectedTag,
             lastId = lastAnniversaryId,
             pageable = pageable
         )
 
         if (result != null) {
-            allAnnivList.addAll(result.contents)
-            adapter.updateList(result.contents)
+            val newItems = result.contents.filter { it.anniversaryId != null && it.anniversaryId !in loadedAnnivIds }
+            Log.d("AnnivDebug", "1 hasNextPage=$hasNextPage, lastAnniversaryId=$lastAnniversaryId, isLoading=$isLoading")
+
+            if (newItems.isNotEmpty()) {
+                allAnnivList.addAll(newItems)
+                adapter.addToList(newItems)
+                loadedAnnivIds.addAll(newItems.mapNotNull { it.anniversaryId })
+                Log.d("AnnivDebug", "2 hasNextPage=$hasNextPage, lastAnniversaryId=$lastAnniversaryId, isLoading=$isLoading")
+
+            }
+
+            // ✅ 항상 갱신
+            Log.d("AnnivDebug", "3 hasNextPage=$hasNextPage, lastAnniversaryId=$lastAnniversaryId, isLoading=$isLoading")
+
             lastAnniversaryId = result.contents.lastOrNull()?.anniversaryId?.toLong()
             hasNextPage = result.hasNext
+            Log.d("AnnivDebug", "4 hasNextPage=$hasNextPage, lastAnniversaryId=$lastAnniversaryId, isLoading=$isLoading")
+
         } else {
             Toast.makeText(requireContext(), "기념일 로드 실패", Toast.LENGTH_SHORT).show()
         }
@@ -372,38 +368,45 @@ class FamilyAnniversaryFragment : Fragment() {
         isLoading = false
     }
 
+
+
+    // 최초 목록 로딩
     @RequiresApi(Build.VERSION_CODES.O)
     private fun loadInitialAnniversaries() {
         lifecycleScope.launch {
             isLoading = true
+            hasNextPage = true
+            lastAnniversaryId = null
+            loadedAnnivIds.clear()
+            allAnnivList.clear()
+            adapter.clearList()
+
             val pageable = mapOf(
                 "page" to "0",
-                "size" to "6",
-                "sort" to "date,desc"
+                "sort" to listOf("date,desc").joinToString(",") // 혹은 그냥 "date,desc"
             )
             val result = AnniversaryRepository.fetchAnniversariesFromApi(
                 type = selectedTag,
                 lastId = lastAnniversaryId,
                 pageable = pageable
             )
+            if (result != null) {
+                Log.d("AnnivDebug", "result: ${result.contents}, hasNext: ${result.hasNext}, result: $result")
+            }
 
             if (result != null) {
-                allAnnivList.clear()
-                allAnnivList.addAll(result.contents)
-                adapter.updateList(result.contents)
-
-                lastAnniversaryId = result.contents.lastOrNull()?.anniversaryId?.toLong()
+                val newItems = result.contents.filter { it.anniversaryId !in loadedAnnivIds }
+                allAnnivList.addAll(newItems)
+                adapter.updateList(newItems)
+                loadedAnnivIds.addAll(newItems.mapNotNull { it.anniversaryId?.toLong() })
+                lastAnniversaryId = newItems.lastOrNull()?.anniversaryId?.toLong()
                 hasNextPage = result.hasNext
 
                 updateCalendarDecorators(binding.calendarAnniv.currentDate.month + 1)
-                filterRecyclerByMonth(
-                    binding.calendarAnniv.currentDate.year,
-                    binding.calendarAnniv.currentDate.month + 1
-                )
+                filterRecyclerByMonth(binding.calendarAnniv.currentDate.year, binding.calendarAnniv.currentDate.month + 1)
             } else {
-                Toast.makeText(requireContext(), "기념일 새로고침 실패", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "기념일을 불러오지 못했습니다.", Toast.LENGTH_SHORT).show()
             }
-
             isLoading = false
         }
     }

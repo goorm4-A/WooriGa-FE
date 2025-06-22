@@ -3,7 +3,7 @@ package com.example.wooriga.model
 import com.google.gson.annotations.SerializedName
 
 data class Anniversary(
-    val anniversaryId: Int? = null,
+    val anniversaryId: Long? = null,
     val familyId: Int,
 
     val date: String,
