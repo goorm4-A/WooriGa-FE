@@ -22,8 +22,6 @@ class FamilyMottoFragment : Fragment() {
     private val viewModel: MottoViewModel by viewModels()
 
     private var familyId: Long = -1L
-    val savedUser = UserManager.loadUserInfo()
-    val userId = savedUser?.userId
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,12 +35,14 @@ class FamilyMottoFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentFamilyMottoBinding.inflate(inflater, container, false)
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val savedUser = UserManager.loadUserInfo()
+        val userId = savedUser?.userId
 
         // 확인용 로그
         Log.d("FamilyMottoFragment", "선택된 familyId: $familyId")
