@@ -16,6 +16,11 @@
         android:layout_marginBottom="40dp"/>
 
     <!-- 분류 -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="분류"/>
+
     <EditText
         android:id="@+id/etCategory"
         android:layout_width="match_parent"
@@ -25,13 +30,24 @@
         android:layout_marginBottom="20dp"/>
 
     <!-- 태그 -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="태그"/>
+
     <EditText
         android:id="@+id/etTag"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:hint="태그를 입력하세요. (예: #화목, #기쁨)"
+        android:hint="태그를 입력하세요."
         android:background="@drawable/edit_text_box"
-        android:layout_marginBottom="20dp"/>
+        android:layout_marginBottom="4dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="입력 형식: #화목, #기쁨"
+        android:textColor="@color/dark_gray"/>
 
     <!-- 버튼 -->
     <LinearLayout

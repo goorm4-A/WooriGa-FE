@@ -28,6 +28,15 @@ object RetrofitClient {
             .create(DiaryApi::class.java)
     }
 
+    val moodApi: MoodApi by lazy {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(MoodApi::class.java)
+    }
+
     val apiService: ApiService by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)

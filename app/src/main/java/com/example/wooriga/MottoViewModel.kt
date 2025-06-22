@@ -36,19 +36,19 @@ class MottoViewModel : ViewModel() {
         }
     }
 
-    fun addMotto(userId: Long, familyName: String, motto: String) {
+    fun addMotto(userId: Long, familyId: Long, familyName: String, motto: String) {
 
         // test
-        val currentList = mottos.value.orEmpty()
-        val newId = (currentList.maxOfOrNull { it.id } ?: 0L) + 1
-        val newMotto = Motto(
-            id = newId,
-            title = motto,
-            familyId = -1L,
-            familyName = familyName,
-            createdAt = getToday()
-        )
-        mottos.value = currentList + newMotto
+//        val currentList = mottos.value.orEmpty()
+//        val newId = (currentList.maxOfOrNull { it.id } ?: 0L) + 1
+//        val newMotto = Motto(
+//            id = newId,
+//            title = motto,
+//            familyId = familyId,
+//            familyName = familyName,
+//            createdAt = getToday()
+//        )
+//        mottos.value = currentList + newMotto
 
         viewModelScope.launch {
             try {
@@ -56,7 +56,7 @@ class MottoViewModel : ViewModel() {
                 if (response.isSuccessful && response.body()?.isSuccess == true) {
                     Log.d("MottoViewModel", "가훈 등록 성공")
                     // 등록 후 새로 불러오기
-                    loadMottos(familyId = 1L, userId = userId) // TODO: 실제 familyId로 교체
+                    loadMottos(familyId = familyId, userId = userId)
                 } else {
                     Log.e("MottoViewModel", "가훈 등록 실패: ${response.code()}")
                 }

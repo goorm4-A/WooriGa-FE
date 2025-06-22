@@ -12,7 +12,7 @@ import retrofit2.http.Query
 interface MottoApi {
 
     // 가훈 전체 조회
-    @GET("/culture/motto")
+    @GET("/cultures/motto")
     suspend fun getMottos(
         @Query("familyId") familyId: Long,
         @Query("userId") userId: Long,
@@ -20,21 +20,21 @@ interface MottoApi {
     ): Response<MottoListResponse>
 
     // 가훈 등록
-    @POST("/culture/motto")
+    @POST("/cultures/motto")
     suspend fun addMotto(
         @Query("userId") userId: Long,
         @Body body: MottoRequest
     ): Response<BasicResponse>
 
     // 가훈 삭제
-    @DELETE("/culture/motto/{mottoId}")
+    @DELETE("/cultures/motto/{mottoId}")
     suspend fun deleteMotto(
         @Path("mottoId") mottoId: Long,
         @Query("userId") userId: Long
     ): Response<BasicResponse>
 
     // 가훈 수정
-    @PATCH("/culture/motto/{mottoId}")
+    @PATCH("/cultures/motto/{mottoId}")
     suspend fun updateMotto(
         @Path("mottoId") mottoId: Long,
         @Query("userId") userId: Long,
