@@ -76,6 +76,7 @@ class FamilyAnniversaryFragment : Fragment() {
         if (selected == null) {
             Toast.makeText(requireContext(), "가족 그룹을 선택해주세요.", Toast.LENGTH_SHORT).show()
         } else {
+            binding.customToolbar.currentGroup.text = selected!!.familyName
             Log.d("FamilyAnniversaryFragment", "Selected group: ${selected!!.familyName}")
         }
 
@@ -99,6 +100,7 @@ class FamilyAnniversaryFragment : Fragment() {
         ToolbarUtils.setupFamilyGroupIcon(binding.customToolbar.iconSelectFamily, requireContext()) { selectedGroup ->
             selected = selectedGroup.familyGroup
             ToolbarUtils.saveCurrentGroup(requireContext(), selectedGroup)
+            binding.customToolbar.currentGroup.text = selected!!.familyName
 
         }
 

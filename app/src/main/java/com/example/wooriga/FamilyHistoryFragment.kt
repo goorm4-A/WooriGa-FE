@@ -68,6 +68,12 @@ class FamilyHistoryFragment : Fragment() {
             selected = ToolbarUtils.currentGroup?.familyGroup
             Log.d("FamilyAnniv", "복원된 그룹: ${selected?.familyName}")
         }
+        // 현재 선택된 가족 그룹
+        if (selected == null) {
+            Toast.makeText(requireContext(), "가족 그룹을 선택해주세요.", Toast.LENGTH_SHORT).show()
+        } else {
+            binding.toolbarHistory.currentGroup.text = selected!!.familyName
+        }
 
 
         // "+" 버튼 클릭 -> 가족사 추가 (다이얼로그)
@@ -88,6 +94,7 @@ class FamilyHistoryFragment : Fragment() {
             // 선택된 가족 그룹에 대한 처리
             selected = selectedGroup.familyGroup
             ToolbarUtils.saveCurrentGroup(requireContext(), selectedGroup)
+            binding.toolbarHistory.currentGroup.text = selected!!.familyName
         }
 
 
