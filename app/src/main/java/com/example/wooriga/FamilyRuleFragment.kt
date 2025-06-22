@@ -26,6 +26,12 @@ class FamilyRuleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val savedUser = UserManager.loadUserInfo()
+        val userId = savedUser?.userId
+
+        // 인자로 받은 familyId 추출
+        val familyId = arguments?.getLong("familyId") ?: return
+
         // 툴바
         val toolbar = view.findViewById<View>(R.id.custom_toolbar)
         val title = toolbar.findViewById<TextView>(R.id.tv_toolbar_title)
