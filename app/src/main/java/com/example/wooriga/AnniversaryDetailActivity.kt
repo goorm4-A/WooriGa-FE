@@ -57,7 +57,7 @@ class AnniversaryDetailActivity : AppCompatActivity() {
     }
 
     private fun initRecyclerView() {
-        adapter = AnniversaryAdapter(mutableListOf()) { anniv ->
+        adapter = AnniversaryAdapter(this, mutableListOf()) { anniv ->
             // 아이템 클릭 시 필요한 동작 구현
         }
         binding.annivListRecyclerView.layoutManager = LinearLayoutManager(this)

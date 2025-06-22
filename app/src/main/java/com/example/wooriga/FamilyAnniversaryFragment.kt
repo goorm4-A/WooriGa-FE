@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -60,7 +61,7 @@ class FamilyAnniversaryFragment : Fragment() {
         _binding = FragmentFamilyAnniversaryBinding.inflate(inflater, container, false)
 
         // RecyclerView 설정
-        adapter = AnniversaryAdapter(allAnnivList, ::onAnnivItemClicked)
+        adapter = AnniversaryAdapter(requireContext(),allAnnivList, ::onAnnivItemClicked)
         binding.annivListRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.annivListRecyclerView.adapter = adapter
 
@@ -303,7 +304,7 @@ class FamilyAnniversaryFragment : Fragment() {
     }
 
 
-    // CalendarDecorators.eventDecorator를 통해 달력에 점 추가
+/*    // CalendarDecorators.eventDecorator를 통해 달력에 점 추가
     @RequiresApi(Build.VERSION_CODES.O)
     private fun updateCalendarDecorators(month: Int? = null) {
         val eventSet = allAnnivList
@@ -315,7 +316,7 @@ class FamilyAnniversaryFragment : Fragment() {
 
         binding.calendarAnniv.removeDecorators()
         binding.calendarAnniv.addDecorator(CalendarDecorators.eventDecorator(requireContext(), eventSet))
-    }
+    }*/
 
     // RecyclerView 어댑터에 월 필터링 리스트만 업데이트
     private fun filterRecyclerByMonth(year: Int, month: Int) {
@@ -411,6 +412,51 @@ class FamilyAnniversaryFragment : Fragment() {
         }
     }
 
+    // 1. 색상 배열 (순서대로)
+    private val colors = listOf(
+        R.color.peach,
+        R.color.mint,
+        R.color.yellow,
+        R.color.red,
+        R.color.blue,
+        R.color.purple,
+        R.color.orange,
+        R.color.brown,
+    )
+
+    // 2. 인덱스 기반 색상 반환 함수
+    private fun getColorByFamilyId(familyId: Int): Int {
+        val index = ToolbarUtils.groupList.indexOfFirst { it.familyGroup.familyGroupId.toInt() == familyId }
+        return if (index != -1 && index < colors.size) {
+            ContextCompat.getColor(requireContext(), colors[index])  // 이건 “color value”
+        } else {
+            ContextCompat.getColor(requireContext(), R.color.green)
+        }
+    }
+
+    // 3. updateCalendarDecorators() 수정 예시
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun updateCalendarDecorators(month: Int? = null) {
+        val filteredAnnivs = allAnnivList.filter {
+            it.date.substring(5,7).toInt() == (month ?: LocalDate.now().monthValue)
+        }
+
+        val dateColorMap = mutableMapOf<CalendarDay, Int>()
+
+        filteredAnnivs.forEach { anniv ->
+            val (y, m, d) = anniv.date.split("-").map { it.toInt() }
+            val date = CalendarDay.from(y, m - 1, d)
+            val color = getColorByFamilyId(anniv.familyId)
+            dateColorMap[date] = color
+        }
+
+        val decorators = CalendarDecorators.buildEventDecorators(requireContext(), dateColorMap)
+        binding.calendarAnniv.removeDecorators()
+        decorators.forEach { binding.calendarAnniv.addDecorator(it) }
+
+    //        binding.calendarAnniv.removeDecorators()
+//        binding.calendarAnniv.addDecorator(CalendarDecorators.eventDecorator(requireContext(), dateColorMap))
+    }
 
 
 

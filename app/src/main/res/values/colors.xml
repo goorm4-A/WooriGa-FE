@@ -16,6 +16,13 @@
 
     <color name="peach">#EDAE8D</color>
     <color name="mint">#88A79F</color>
+    <color name="yellow">#E0CA88</color>
+    <color name="red">#F46161</color>
+    <color name="blue">#33C3FF</color>
+    <color name="purple">#7F4BFF</color>
+    <color name="orange">#F2A16B</color>
+    <color name="brown">#4B2D1F</color>
+
     <color name="Charcoal">#66665E</color>
     <color name="dark_gray">#A6A6A6</color>
     <color name="gray">#ECEDEC</color>
