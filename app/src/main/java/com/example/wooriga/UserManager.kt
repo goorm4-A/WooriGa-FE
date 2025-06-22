@@ -2,11 +2,13 @@ package com.example.wooriga
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.example.wooriga.model.FamilyGroupWrapper
 import com.google.gson.Gson
 
 object UserManager {
     private const val PREFS_NAME = "USER_PREFS"
     private lateinit var prefs: SharedPreferences
+
 
 
     fun init(context: Context) {

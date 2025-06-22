@@ -32,6 +32,16 @@
                 android:maxHeight="40dp"
                 android:layout_marginEnd="8dp" />
 
+            <TextView
+                android:id="@+id/currentGroup"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:gravity="end"
+                android:text="선택된 가족" />
+
         </LinearLayout>
 
         <!-- 우측 아이콘 영역 -->

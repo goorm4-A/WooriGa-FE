@@ -1,10 +1,13 @@
 package com.example.wooriga
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.wooriga.databinding.ActivityAnniversaryDetailBinding
 import com.example.wooriga.model.Anniversary
+import kotlinx.coroutines.launch
 
 class AnniversaryDetailActivity : AppCompatActivity() {
 
@@ -14,13 +17,18 @@ class AnniversaryDetailActivity : AppCompatActivity() {
     private val repository = AnniversaryRepository  // Repository 사용
     private var filteredAnnivList = mutableListOf<Anniversary>()
 
+    lateinit var annivList: List<Anniversary>
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAnniversaryDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         initRecyclerView()
-        initData()
+        lifecycleScope.launch {
+            initData()
+        }
         initFilterButtons()
 
         // 뒤로가기 (이전 화면으로 이동)
@@ -48,7 +56,7 @@ class AnniversaryDetailActivity : AppCompatActivity() {
     }
 
     private fun initRecyclerView() {
-        adapter = AnniversaryAdapter(mutableListOf()) { anniv ->
+        adapter = AnniversaryAdapter(this, mutableListOf()) { anniv ->
             // 아이템 클릭 시 필요한 동작 구현
         }
         binding.annivListRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -58,9 +66,29 @@ class AnniversaryDetailActivity : AppCompatActivity() {
         binding.annivListRecyclerView.isNestedScrollingEnabled = false
     }
 
-    private fun initData() {
-        repository.getAll()  // 샘플 데이터 불러오기
-        filterByTag("") // 전체 보기
+    private suspend fun initData() {
+
+        val pageable = mapOf(
+            "page" to "0",
+            "sort" to "date,desc"
+        )
+
+        val result = AnniversaryRepository.fetchAnniversariesFromApi(
+            type = null, // 전체 조회 시 null 또는 ""
+            lastId = null, // 첫 페이지니까 null
+            pageable = pageable
+        )
+
+
+        if (result != null) {
+            annivList = result.contents
+            repository.setAll(annivList)
+            // 리사이클러뷰에 데이터 반영
+            adapter.updateList(annivList)
+        } else {
+            Log.e("AnniversaryDetailActivity", "Failed to fetch anniversaries from API")
+        }
+
 
     }
 
@@ -90,6 +118,7 @@ class AnniversaryDetailActivity : AppCompatActivity() {
         }
         adapter.updateList(filteredAnnivList)
     }
+
 
 
 }

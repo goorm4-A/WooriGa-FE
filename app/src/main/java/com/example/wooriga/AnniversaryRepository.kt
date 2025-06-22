@@ -5,7 +5,7 @@ import com.example.wooriga.model.Anniversary
 
 object AnniversaryRepository {
 
-    private val anniversaryList = mutableListOf<Anniversary>()
+    private var anniversaryList = mutableListOf<Anniversary>()
 
     // API 연동
 
@@ -15,22 +15,22 @@ object AnniversaryRepository {
         lastId: Long?,
         pageable: Map<String, String>
     ): AnniversaryResult? {
-        val pageable = mapOf(
-            "page" to "0",
-            "size" to "6",
-            "sort" to "date,desc"
-        )
+        val params = pageable.toMutableMap()
+        params.remove("size")
+
         val response = RetrofitClient2.annivApi.getAnniversaries(
-            type = null,
-            lastId = null,
-            pageable = pageable
+            type = type,
+            lastId = lastId,
+            pageable = params
         )
         Log.d("AnnivAPI", "code=${response.code()}, body=${response.body()}, error=${response.errorBody()?.string()}")
 
-        return if (response.isSuccessful && response.body()?.isSuccess == true) {
-            response.body()?.result
+        if (response.isSuccessful && response.body()?.isSuccess == true) {
+            val resultList = response.body()?.result?.contents?.toMutableList() ?: mutableListOf()
+            anniversaryList = resultList
+            return response.body()?.result
         } else {
-            null
+            return null
         }
     }
 
@@ -39,14 +39,9 @@ object AnniversaryRepository {
         return try {
             val response = RetrofitClient2.annivApi.addAnniversary(anniv)
 
-            Log.d("AnnivAdd", "응답 코드: ${response.code()}")
-            Log.d("AnnivAdd", "응답 성공 여부: ${response.isSuccessful}")
-            Log.d("AnnivAdd", "응답 바디: ${response.body()}")
-            Log.d("AnnivAdd", "응답 에러: ${response.errorBody()?.string()}")
-
-            if (response.isSuccessful) {
-                anniversaryList.add(anniv)
-            }
+            Log.d("AnnivAdd", "응답 code: ${response.code()}")
+            Log.d("AnnivAdd", "응답 success?: ${response.isSuccessful}")
+            Log.d("AnnivAdd", "응답 body: ${response.body()}")
 
             response.isSuccessful
         } catch (e: Exception) {
@@ -70,6 +65,11 @@ object AnniversaryRepository {
     // 항목 추가
     fun addAnniversary(anniv: Anniversary) {
         anniversaryList.add(anniv)
+    }
+
+    fun setAll(list: List<Anniversary>) {
+        anniversaryList.clear()
+        anniversaryList.addAll(list)
     }
 
 /*    // 항목 수정
