@@ -8,3 +8,23 @@ data class Rule(
     val date: String
 )
 
+data class RuleResponse(
+    val isSuccess: Boolean,
+    val code: String,
+    val message: String,
+    val result: RuleResult?
+)
+
+data class RuleResult(
+    val rules: List<RuleDto>,
+    val hasNext: Boolean,
+    val nextCursor: String?
+)
+
+data class RuleDto(
+    val id: Long,
+    val title: String,
+    val familyName: String,
+    val ruleType: String, // REQUIRED / RECOMMENDED / PROHIBITED
+    val createdAt: String
+)

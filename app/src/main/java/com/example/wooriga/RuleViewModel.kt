@@ -1,8 +1,11 @@
 package com.example.wooriga
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 
 class RuleViewModel : ViewModel() {
     private val _ruleList = MutableLiveData<List<Rule>>()
@@ -16,6 +19,30 @@ class RuleViewModel : ViewModel() {
             Rule("B가족", "금기 사항", "욕하지 않기", "존중하는 말 사용", "2025년 4월 11일 금요일")
         )
     }
+
+    fun loadRules(familyId: Long, userId: Long) {
+        viewModelScope.launch {
+            try {
+                Log.d("RuleViewModel", "요청: familyId=$familyId, userId=$userId")
+
+                val response = RetrofitClient.ruleApi.getRules(familyId, userId)
+
+                Log.d("RuleViewModel", "응답 성공 여부: ${response.isSuccess}, 코드: ${response.code}")
+
+                if (response.isSuccess) {
+                    val rules = response.result?.rules.orEmpty()
+                        .map { it.toUiModel() }
+
+                    _ruleList.value = rules
+                } else {
+                    Log.e("RuleViewModel", "응답 실패: ${response.message}")
+                }
+            } catch (e: Exception) {
+                Log.e("RuleViewModel", "서버 오류: ${e.message}", e)
+            }
+        }
+    }
+
 
     fun addRule(rule: Rule) {
         _ruleList.value = _ruleList.value.orEmpty() + rule
