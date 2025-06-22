@@ -30,6 +30,12 @@ class FamilyMoodFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // 인자로 받은 familyId 추출
+        val familyId = arguments?.getLong("familyId") ?: return
+
+        // API 호출
+        viewModel.loadFamilyMoods(familyId)
+
         // 툴바
         val toolbar = view.findViewById<View>(R.id.custom_toolbar)
         val title = toolbar.findViewById<TextView>(R.id.tv_toolbar_title)
@@ -59,8 +65,8 @@ class FamilyMoodFragment : Fragment() {
             MoodAddBottomSheet { category, tags ->
                 val newMood = Mood(
                     id = System.currentTimeMillis(),
-                    family = "test",
-                    category = category,
+                    familyId = familyId,
+                    moodType = category,
                     tags = tags
                 )
                 viewModel.addMood(newMood)

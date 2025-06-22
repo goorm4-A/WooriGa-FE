@@ -61,10 +61,10 @@ class FamilyCultureFragment : Fragment() {
     }
 
     private fun navigateToFragment(fragment: Fragment, vararg args: Pair<String, Long>) {
-//        if (selectedFamilyId == -1L) {
-//            Toast.makeText(requireContext(), "가족을 선택해주세요.", Toast.LENGTH_SHORT).show()
-//            return
-//        }
+        if (selectedFamilyId == -1L) {
+            Toast.makeText(requireContext(), "가족을 선택해주세요.", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         requireActivity().findViewById<View>(R.id.bottomNavigation).visibility = View.GONE
 
