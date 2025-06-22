@@ -8,11 +8,11 @@ import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.wooriga.databinding.FragmentFamilyDiaryBinding
+import com.example.wooriga.utils.ToolbarUtils
 
 class FamilyDiaryFragment : Fragment() {
 
@@ -21,7 +21,6 @@ class FamilyDiaryFragment : Fragment() {
 
     private val viewModel: DiaryViewModel by activityViewModels()
     private lateinit var diaryAdapter: DiaryAdapter
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,29 +49,12 @@ class FamilyDiaryFragment : Fragment() {
         viewModel.loadFamilies()
 
         // 가족 선택
-        binding.customToolbar.iconSelectFamily.setOnClickListener {
-            val families = viewModel.familyList.value ?: return@setOnClickListener
-            val popupMenu = PopupMenu(requireContext(), binding.customToolbar.iconSelectFamily)
+        ToolbarUtils.setupFamilyGroupIcon(binding.customToolbar.iconSelectFamily, requireContext()) { selectedGroup ->
+            val familyId = selectedGroup.familyGroup.familyGroupId
+            val familyName = selectedGroup.familyGroup.familyName
 
-            families.forEachIndexed { index, family ->
-                popupMenu.menu.add(0, index, index, family.name.toString())
-            }
-
-            popupMenu.setOnMenuItemClickListener { menuItem ->
-                val selectedFamily = families[menuItem.itemId]
-                viewModel.selectFamily(selectedFamily.familyId)
-                true
-            }
-
-            popupMenu.show()
+            viewModel.selectFamily(familyId)
         }
-        // 상단바 가족 선택 버튼
-//        binding.customToolbar.iconSelectFamily.setOnClickListener {
-//            setupFamilyGroupIcon(it, requireContext(), ToolbarUtils.groupList) { selectedGroup ->
-//                // 선택된 가족 그룹에 대한 처리
-//                Toast.makeText(requireContext(), "${selectedGroup.title} 선택됨", Toast.LENGTH_SHORT).show()
-//            }
-//        }
 
         // 상단바 검색 버튼
         binding.customToolbar.iconSearch.setOnClickListener {
@@ -87,7 +69,10 @@ class FamilyDiaryFragment : Fragment() {
         observeViewModel()
         setupListeners()
 
-        viewModel.loadDiaries()
+        // 최초 로딩 시 현재 선택된 가족이 있으면 불러오기
+        ToolbarUtils.currentGroup?.let {
+            viewModel.selectFamily(it.familyGroup.familyGroupId)
+        }
     }
 
     private fun setupRecyclerView() {
