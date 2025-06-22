@@ -46,8 +46,6 @@ class FamilyDiaryFragment : Fragment() {
         )
         binding.diaryTitle.text = spannable
 
-        viewModel.loadFamilies()
-
         // 가족 선택
         ToolbarUtils.setupFamilyGroupIcon(binding.customToolbar.iconSelectFamily, requireContext()) { selectedGroup ->
             val familyId = selectedGroup.familyGroup.familyGroupId
