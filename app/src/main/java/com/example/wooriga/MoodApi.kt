@@ -1,6 +1,7 @@
 package com.example.wooriga
 
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -19,4 +20,12 @@ interface MoodApi {
         @Path("familyId") familyId: Long,
         @Body request: MoodRequest
     ): CommonResponse2<MoodResponse>
+
+    // 분위기 삭제
+    @DELETE("cultures/{familyId}/moods/{moodId}")
+    suspend fun deleteMood(
+        @Path("familyId") familyId: Long,
+        @Path("moodId") moodId: Long
+    ): CommonResponse2<String>
+
 }

@@ -40,7 +40,7 @@ class MoodViewModel : ViewModel() {
         }
     }
 
-
+    // 분위기 등록
     fun postMood(familyId: Long, moodType: String, tags: List<String>, onSuccess: () -> Unit, onFailure: () -> Unit) {
         viewModelScope.launch {
             try {
@@ -70,5 +70,26 @@ class MoodViewModel : ViewModel() {
             }
         }
     }
+
+    // 분위기 삭제
+    fun deleteMood(familyId: Long, moodId: Long, onSuccess: () -> Unit, onFailure: () -> Unit) {
+        viewModelScope.launch {
+            try {
+                val response = RetrofitClient.moodApi.deleteMood(familyId, moodId)
+                if (response.isSuccess) {
+                    println("MoodViewModel: 분위기 삭제 성공 → ID: $moodId")
+                    onSuccess()
+                    loadFamilyMoods(familyId) // 목록 갱신
+                } else {
+                    println("MoodViewModel: 삭제 실패 → ${response.code}, ${response.message}")
+                    onFailure()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onFailure()
+            }
+        }
+    }
+
 
 }
