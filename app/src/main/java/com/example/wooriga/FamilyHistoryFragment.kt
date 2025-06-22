@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.StyleSpan
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +16,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.wooriga.databinding.BottomSheetAddHistoryBinding
@@ -26,6 +26,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 import com.example.wooriga.model.History
+import com.example.wooriga.model.HistoryRequest
 import com.example.wooriga.utils.ToolbarUtils
 import com.example.wooriga.utils.ToolbarUtils.currentGroup
 
@@ -33,7 +34,10 @@ class FamilyHistoryFragment : Fragment() {
 
     private lateinit var timelineRecyclerView: RecyclerView
     private lateinit var adapter: TimelineAdapter
-    private val events = mutableListOf<History>()
+
+    private val viewModel: HistoryViewModel by viewModels {
+        HistoryViewModelFactory(HistoryRepository(RetrofitClient2.historyApi))
+    }
 
     private var _binding: FragmentFamilyHistoryBinding? = null
     private val binding get() = _binding!!
@@ -59,10 +63,9 @@ class FamilyHistoryFragment : Fragment() {
         _binding = FragmentFamilyHistoryBinding.inflate(inflater, container, false)
 
         timelineRecyclerView = binding.timelineRecyclerView
-        adapter = TimelineAdapter(events)
+        adapter = TimelineAdapter(emptyList())
         timelineRecyclerView.adapter = adapter
         timelineRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-
 
         // "+" 버튼 클릭 -> 가족사 추가 (다이얼로그)
         val addHistoryButton = binding.addFamilyHistoryButton
@@ -83,6 +86,11 @@ class FamilyHistoryFragment : Fragment() {
             selected = selectedGroup.familyGroup
             ToolbarUtils.saveCurrentGroup(requireContext(), selectedGroup)
             binding.toolbarHistory.currentGroup.text = selected!!.familyName
+
+            // 가족이 선택되면 ViewModel을 통해 해당 가족의 이벤트 불러오기
+            selected?.familyGroupId?.let { familyId ->
+                viewModel.getEvents(familyId)
+            }
         }
 
 
@@ -111,25 +119,43 @@ class FamilyHistoryFragment : Fragment() {
         // 가족 그룹 정보
         ToolbarUtils.restoreCurrentGroup(requireContext()) {
             selected = ToolbarUtils.currentGroup?.familyGroup
-
             selected?.let {
                 binding.toolbarHistory.currentGroup.text = it.familyName
+                viewModel.getEvents(it.familyGroupId) // ← 이걸 여기서 확실하게 호출
             } ?: run {
                 Toast.makeText(requireContext(), "가족 그룹을 선택해주세요.", Toast.LENGTH_SHORT).show()
             }
         }
+
+
+
+        // 선택된 가족 그룹 있을 때
+        viewModel.historyList.observe(viewLifecycleOwner) { list ->
+            adapter.updateData(list)
+        }
+
+        // 초기 로딩 시 현재 가족의 이벤트 불러오기
+        selected?.familyGroupId?.let { familyId ->
+            viewModel.getEvents(familyId)
+        }
+
     }
 
+    override fun onResume() {
+        super.onResume()
+        selected?.familyGroupId?.let {
+            viewModel.getEvents(it)
+        }
+    }
 
-
+    /*
     // 타임라인 항목 추가 함수
     private fun addTimelineEvent(event: History) {
-        events.add(event)
-        sortEventsByDate()
+        // sortEventsByDate()
         adapter.notifyDataSetChanged()
         timelineRecyclerView.scrollToPosition(events.size - 1)
     }
-
+*/
     // 가족사 등록 다이얼로그
     @RequiresApi(Build.VERSION_CODES.O)
     private fun showHistoryBottomSheetDialog() {
@@ -154,7 +180,7 @@ class FamilyHistoryFragment : Fragment() {
                 requireContext(),
                 { _, year, month, dayOfMonth ->
                     selectedLocalDate = LocalDate.of(year, month + 1, dayOfMonth)
-                    val formattedDate = selectedLocalDate!!.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+                    val formattedDate = selectedLocalDate!!.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                     dateOutput.text = formattedDate
                 },
                 calendar.get(Calendar.YEAR),
@@ -173,20 +199,32 @@ class FamilyHistoryFragment : Fragment() {
         addButton.setOnClickListener {
             val title = titleInput.text.toString()
             val dateString = dateOutput.text.toString()
+            val familyName = selected?.familyName ?: "기본 가족"
+
 
             if (title.isNotBlank() && selectedAddress.isNotBlank() && selectedLocalDate != null) {
-                val event = History(
-                    family = "A 가족", // 임시, 실제로는 선택된 가족 이름으로 변경 필요
+                val request = HistoryRequest(
+                    family = familyName,
                     dateString = dateString,
-                    dateObject = selectedLocalDate!!,
                     title = title,
                     locationName = selectedAddress,
                     latitude = selectedLatitude,
                     longitude = selectedLongitude
 
                 )
-                addTimelineEvent(event) // 추가된 가족사 전달
-
+                viewModel.createEvent(
+                    request,
+                    onSuccess = {
+                        selected?.familyGroupId?.let { familyId ->
+                            viewModel.getEvents(familyId) // 서버에서 다시 받아서 업데이트
+                        }
+                        Toast.makeText(requireContext(), "가족사 등록 완료!", Toast.LENGTH_SHORT).show()
+                        dialog.dismiss()
+                    },
+                    onError = {
+                        Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                    }
+                )
 
                 dialog.dismiss()
             } else {
@@ -213,10 +251,10 @@ class FamilyHistoryFragment : Fragment() {
 
     
     // 날짜 별로 정렬
-    private fun sortEventsByDate() {
+/*    private fun sortEventsByDate() {
         events.sortWith(compareBy { it.dateObject })
         adapter.notifyDataSetChanged()
-    }
+    }*/
 
     //지도 위치 선택 관련
     private val locationPickerLauncher = registerForActivityResult(
