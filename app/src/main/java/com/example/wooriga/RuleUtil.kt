@@ -10,10 +10,11 @@ fun RuleDto.toUiModel(): Rule {
     }
 
     return Rule(
+        id = id,
         family = familyName,
         type = type,
         title = title,
-        description = "", // 현재 API 응답엔 없음
+        description = description ?: "",
         date = DateUtils.formatIsoDate(createdAt)
     )
 }

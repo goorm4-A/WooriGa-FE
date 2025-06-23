@@ -8,4 +8,8 @@ class RuleRepository {
 
     suspend fun addRule(request: RuleRequest) =
         api.addRule(request)
+
+    suspend fun getRuleDetail(ruleId: Long) =
+        RetrofitClient.ruleApi.getRuleDetail(ruleId)
+
 }

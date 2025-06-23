@@ -48,8 +48,9 @@ class FamilyRuleFragment : Fragment() {
         }
 
         adapter = RuleListAdapter { rule ->
-            RuleDetailBottomSheet(rule).show(parentFragmentManager, "RuleDetailBottomSheet")
+            RuleDetailBottomSheet(rule.id).show(parentFragmentManager, "RuleDetailBottomSheet")
         }
+
 
         binding.recyclerFamilyRule.adapter = adapter
         binding.recyclerFamilyRule.layoutManager = LinearLayoutManager(requireContext())

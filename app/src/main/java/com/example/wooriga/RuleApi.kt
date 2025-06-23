@@ -22,5 +22,11 @@ interface RuleApi {
         @Body body: RuleRequest
     ): BasicResponse
 
+    // 규칙 상세
+    @GET("cultures/rule/{ruleId}")
+    suspend fun getRuleDetail(
+        @Path("ruleId") ruleId: Long
+    ): RuleDetailResponse
+
 }
 
