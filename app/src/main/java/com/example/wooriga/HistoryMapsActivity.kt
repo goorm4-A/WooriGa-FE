@@ -5,8 +5,9 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.ViewModelProvider
+import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -16,6 +17,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.example.wooriga.databinding.ActivityHistoryMapsBinding
 import com.example.wooriga.databinding.BottomSheetHistoryMapBinding
 import com.example.wooriga.model.History
+import com.example.wooriga.model.HistoryWithFamilyId
 import com.example.wooriga.utils.ToolbarUtils
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -29,7 +31,9 @@ class HistoryMapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivityHistoryMapsBinding
     private lateinit var geocoder: Geocoder
 
-    private lateinit var viewModel: HistoryViewModel
+    private val viewModel: HistoryViewModel by viewModels {
+        HistoryViewModelFactory(HistoryRepository(RetrofitClient2.historyApi))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +41,6 @@ class HistoryMapsActivity : AppCompatActivity(), OnMapReadyCallback {
         binding = ActivityHistoryMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(this, ViewModelFactory())[HistoryViewModel::class.java]
 
         // 상단바의 < 뒤로가기 버튼 클릭 시 이전 액티비티로 이동
         binding.historyMapToolbar.backButton.setOnClickListener {
@@ -46,7 +49,7 @@ class HistoryMapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         geocoder = Geocoder(this, Locale.getDefault())
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        // 지도 준비
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.historyMapFragment) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -56,37 +59,21 @@ class HistoryMapsActivity : AppCompatActivity(), OnMapReadyCallback {
         viewModel.getAllFamilyMapEvents(groups)
 
 
-        // LiveData 관찰 - 지도 준비 전에 미리 해두기
-        viewModel.historyList.observe(this) { historyList ->
-            // 구글맵 준비됐으면 마커 찍기
-            viewModel.allMapEvents.observe(this) { list ->
-                for (item in list) {
-                    val lat = item.history.latitude ?: continue
-                    val lng = item.history.longitude ?: continue
-                    val position = LatLng(lat, lng)
-
-                    val marker = mMap.addMarker(
-                        MarkerOptions()
-                            .position(position)
-                            .title(item.history.title)
-                            .icon(
-                                BitmapDescriptorFactory.defaultMarker(
-                                    getHueFromColor(getColorByFamilyId(item.familyId.toInt()))
-                                )
-                            )
-                    )
-                    marker?.tag = item.history
-                }
-            }
+        // LiveData 옵저버
+        viewModel.allMapEvents.observe(this) { list ->
+            drawAllMarkersIfReady()
         }
+
     }
 
 
 
+    private var isMapReady = false
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        isMapReady = true
 
         // 초기 위치: 한국 중심
         val koreaCenter = LatLng(36.5, 127.5)
@@ -94,17 +81,42 @@ class HistoryMapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // 마커 클릭 이벤트
         mMap.setOnMarkerClickListener { marker ->
-            val history = marker.tag as? History
-            history?.let {
-                showHistoryBottomSheet(it)
+            val historyWithFamily = marker.tag as? HistoryWithFamilyId
+            historyWithFamily?.let {
+                showHistoryBottomSheet(it.history, it.familyId)
             }
             true
         }
 
+        drawAllMarkersIfReady()
+
+    }
+
+    private fun drawAllMarkersIfReady() {
+        if (!isMapReady) return
+
+        mMap.clear()
+        viewModel.allMapEvents.value?.forEach { item ->
+            val latitude = item.history.latitude ?: return@forEach
+            val longitude = item.history.longitude ?: return@forEach
+            val position = LatLng(latitude, longitude)
+
+            val marker = mMap.addMarker(
+                MarkerOptions()
+                    .position(position)
+                    .title(item.history.title)
+                    .icon(
+                        BitmapDescriptorFactory.defaultMarker(
+                            getHueFromColor(getColorByFamilyId(item.familyId.toInt()))
+                        )
+                    )
+            )
+            marker?.tag = item
+        }
     }
 
 
-    private fun showHistoryBottomSheet(history: History) {
+    private fun showHistoryBottomSheet(history: History, familyId: Long) {
         val dialog = BottomSheetDialog(this)
         val bottomSheetBinding = BottomSheetHistoryMapBinding.inflate(LayoutInflater.from(this))
 
@@ -112,6 +124,10 @@ class HistoryMapsActivity : AppCompatActivity(), OnMapReadyCallback {
         bottomSheetBinding.textViewDate.text = history.dateString
         bottomSheetBinding.textViewLocation.text = history.locationName
         bottomSheetBinding.textViewFamily.text = history.family
+
+        // familycolor 이미지뷰에 familyId에 맞는 색 입히기
+        val color = getColorByFamilyId(familyId.toInt())
+        bottomSheetBinding.familycolor.setColorFilter(color)
 
         dialog.setContentView(bottomSheetBinding.root)
         dialog.show()
@@ -129,18 +145,18 @@ class HistoryMapsActivity : AppCompatActivity(), OnMapReadyCallback {
             R.color.orange,
             R.color.brown,
         )
-        return if (index != -1 && index < colors.size) {
-            this.getColor(colors[index])
+        val colorRes = if (index != -1 && index < colors.size) {
+            colors[index]
         } else {
-            this.getColor(R.color.green)
+            R.color.green
         }
+        return ContextCompat.getColor(this, colorRes)
     }
 
-    private fun getHueFromColor(colorRes: Int): Float {
-        val color = getColor(colorRes)
+    private fun getHueFromColor(color: Int): Float {
         val hsv = FloatArray(3)
         android.graphics.Color.colorToHSV(color, hsv)
-        return hsv[0] // Hue 값만 추출
+        return hsv[0]
     }
 }
 

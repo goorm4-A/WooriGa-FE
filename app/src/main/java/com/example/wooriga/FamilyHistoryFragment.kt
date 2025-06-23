@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.StyleSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,7 +26,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
-import com.example.wooriga.model.History
 import com.example.wooriga.model.HistoryRequest
 import com.example.wooriga.utils.ToolbarUtils
 import com.example.wooriga.utils.ToolbarUtils.currentGroup
@@ -148,14 +148,7 @@ class FamilyHistoryFragment : Fragment() {
         }
     }
 
-    /*
-    // 타임라인 항목 추가 함수
-    private fun addTimelineEvent(event: History) {
-        // sortEventsByDate()
-        adapter.notifyDataSetChanged()
-        timelineRecyclerView.scrollToPosition(events.size - 1)
-    }
-*/
+
     // 가족사 등록 다이얼로그
     @RequiresApi(Build.VERSION_CODES.O)
     private fun showHistoryBottomSheetDialog() {
@@ -167,7 +160,6 @@ class FamilyHistoryFragment : Fragment() {
         val dateOutput = bottomSheetBinding.dateOutput
         val titleInput = bottomSheetBinding.titleInput
         val locationInput = bottomSheetBinding.locationInput
-        // val locationOutput = bottomSheetBinding.locationOutput
 
         val cancelButton = bottomSheetBinding.cancelButton
         val addButton = bottomSheetBinding.submitButton
@@ -212,12 +204,11 @@ class FamilyHistoryFragment : Fragment() {
                     longitude = selectedLongitude
 
                 )
+                Log.d("map", "add request : $selectedLatitude, $selectedLongitude")
+
                 viewModel.createEvent(
-                    request,
+                    request = request,
                     onSuccess = {
-                        selected?.familyGroupId?.let { familyId ->
-                            viewModel.getEvents(familyId) // 서버에서 다시 받아서 업데이트
-                        }
                         Toast.makeText(requireContext(), "가족사 등록 완료!", Toast.LENGTH_SHORT).show()
                         dialog.dismiss()
                     },
@@ -249,12 +240,6 @@ class FamilyHistoryFragment : Fragment() {
         _binding = null
     }
 
-    
-    // 날짜 별로 정렬
-/*    private fun sortEventsByDate() {
-        events.sortWith(compareBy { it.dateObject })
-        adapter.notifyDataSetChanged()
-    }*/
 
     //지도 위치 선택 관련
     private val locationPickerLauncher = registerForActivityResult(
@@ -265,13 +250,12 @@ class FamilyHistoryFragment : Fragment() {
             selectedAddress = data?.getStringExtra("address") ?: ""
             selectedLatitude = data?.getDoubleExtra("latitude", 0.0) ?: 0.0
             selectedLongitude = data?.getDoubleExtra("longitude", 0.0) ?: 0.0
+
+            Log.d("map", " request : $selectedLatitude, $selectedLongitude")
+
             // 선택된 주소를 다이얼로그에 반영
             bottomSheetBinding.locationOutput.text = selectedAddress
         }
     }
-
-
-
-
 
 }

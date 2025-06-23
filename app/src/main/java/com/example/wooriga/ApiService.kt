@@ -80,12 +80,12 @@ interface ApiService {
     ): Response<CommonResponse2<History>>
 
     @GET("/events")
-    fun getEvents(
+    suspend fun getEvents(
         @Query("familyId") familyId: Long
     ): Response<CommonResponse2<List<History>>>
 
     @GET("/events/map")
-    fun getEventsMap(
+    suspend fun getEventsMap(
         @Query("familyId") familyId: Long
     ): Response<CommonResponse2<List<History>>>
 

@@ -9,6 +9,7 @@ import com.example.wooriga.model.FamilyGroupResponse
 import com.example.wooriga.model.History
 import com.example.wooriga.model.HistoryRequest
 import com.example.wooriga.model.HistoryWithFamilyId
+import com.example.wooriga.utils.ToolbarUtils
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
@@ -34,6 +35,11 @@ class HistoryViewModel(private val repository: HistoryRepository) : ViewModel() 
             val result = repository.createEvent(request)
             result.onSuccess {
                 onSuccess(it)
+
+                // 💡 가족사 재조회 (예: 등록한 가족의 id를 알고 있어야 함)
+                val familyId = getFamilyIdFromFamilyName(it.family)  // 이 함수 필요!
+                getEvents(familyId)     // 타임라인용
+                getEventsMap(familyId)  // 지도용
             }.onFailure {
                 onError(it.message ?: "오류 발생")
             }
@@ -57,50 +63,45 @@ class HistoryViewModel(private val repository: HistoryRepository) : ViewModel() 
     fun getEventsMap(familyId: Long) {
         viewModelScope.launch {
             val result = repository.getEventsMap(familyId)
-            result.onSuccess { list ->
-                _historyList.value = list
-            }.onFailure { error ->
-                Log.e("HistoryViewModel", "가족사 조회 실패: ${error.message}")
+            result.onFailure {
+                Log.e("HistoryViewModel", "지도용 가족사 조회 실패: ${it.message}")
             }
         }
     }
 
-    //
+    private fun getFamilyIdFromFamilyName(name: String): Long {
+        return ToolbarUtils.groupList.find {
+            it.familyGroup.familyName == name
+        }?.familyGroup?.familyGroupId ?: -1L
+    }
+
     fun getAllFamilyMapEvents(groupList: List<FamilyGroupResponse>) {
+        Log.d("지도", "getAllFamilyMapEvents 호출됨 - 그룹 수: ${groupList.size}")
         viewModelScope.launch {
             val deferreds = groupList.map { group ->
+
                 async {
-                    val result = repository.getEventsMap(group.familyGroupId)
-                    result.map { list ->
-                        list.map { HistoryWithFamilyId(it, group.familyGroupId) }
-                    }.getOrElse { emptyList() }
+                    try {
+                        val result = repository.getEventsMap(group.familyGroupId)
+                        Log.d("지도", "API 호출 후 결과: $result")
+
+                        result.map { list ->
+                            Log.d("지도", "familyId: ${group.familyGroupId}, 이벤트 수: ${list.size}")
+                            list.map { HistoryWithFamilyId(it, group.familyGroupId) }
+                        }.getOrElse {
+                            Log.e("지도", "실패: ${it.message}")
+                            emptyList()
+                        }
+                    } catch (e: Exception) {
+                        Log.e("지도", "예외 발생: ${e.message}")
+                        emptyList()
+                    }
                 }
             }
+
             val results = deferreds.awaitAll().flatten()
             _allMapEvents.value = results
         }
     }
-    /*
-    fun getAllFamilyMapEvents(groupList: List<FamilyGroupResponse>) {
-        viewModelScope.launch {
-            val allEvents = mutableListOf<HistoryWithFamilyId>()
-
-            for (group in groupList) {
-                val result = repository.getEventsMap(group.familyGroupId)
-                result.onSuccess { list ->
-                    val mapped = list.map { history ->
-                        HistoryWithFamilyId(history, group.familyGroupId)
-                    }
-                    allEvents.addAll(mapped)
-                }.onFailure {
-                    Log.e("ViewModel", "가족사 조회 실패: ${it.message}")
-                }
-            }
-
-            _allMapEvents.value = allEvents
-        }
-    }
-
-     */
 
 }
