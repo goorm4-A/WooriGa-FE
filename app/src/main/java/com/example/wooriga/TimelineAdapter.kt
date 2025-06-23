@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.wooriga.model.History
 
-class TimelineAdapter(private val events: MutableList<History>) :
+class TimelineAdapter(private var events: List<History>) :
     RecyclerView.Adapter<TimelineAdapter.TimelineViewHolder>() {
 
     inner class TimelineViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -23,6 +23,11 @@ class TimelineAdapter(private val events: MutableList<History>) :
         val titleTextRight: TextView = itemView.findViewById(R.id.titleTextRight)
         val locationTextRight: TextView = itemView.findViewById(R.id.locationTextRight)
         val dateTextRight: TextView = itemView.findViewById(R.id.dateTextRight)
+
+    }
+    fun updateData(newEvents: List<History>) {
+        events = newEvents
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TimelineViewHolder {

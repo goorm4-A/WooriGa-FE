@@ -31,7 +31,7 @@ class FamilyGroupAdapter(private val groups: List<FamilyGroupWrapper>) :
         if (!imageUrl.isNullOrEmpty()) {
             Glide.with(holder.itemView.context)
                 .load(imageUrl)
-                .placeholder(R.drawable.ic_history)  // 로딩 중 표시할 이미지
+                .placeholder(R.drawable.ic_family)  // 로딩 중 표시할 이미지
                 .error(R.drawable.ic_cross)              // 에러 시 표시할 이미지
                 .into(holder.binding.familyImage)
         } else {

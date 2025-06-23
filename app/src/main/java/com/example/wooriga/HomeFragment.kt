@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.bumptech.glide.Glide
 import com.example.wooriga.databinding.FragmentHomeBinding
 import com.example.wooriga.model.FamilyGroupWrapper
 import retrofit2.Call
@@ -53,23 +54,25 @@ class HomeFragment : Fragment() {
         // 이름
         binding.itemHomeUserprofile.userName.text = savedUser?.name ?: "이름 없음"
 
-/*        // 프로필 가족 그룹 태그
-        val familyTextViews = listOf(
-            binding.itemHomeUserprofile.family1,
-            binding.itemHomeUserprofile.family2,
-            binding.itemHomeUserprofile.family3,
-            binding.itemHomeUserprofile.family4
-        )
+        // 프로필 사진
+        val profileUrl = savedUser?.image
+        Log.e("HomeFragment", "Profile URL: $profileUrl")
 
-        val familyGroupName = groupList.mapNotNull { it.familyGroup.familyName }.distinct()
-        familyTextViews.forEachIndexed { index, textView ->
-            if (index < familyGroupName.size) {
-                textView.text = "#${familyGroupName[index]}"
-                textView.visibility = View.VISIBLE
-            } else {
-                textView.visibility = View.GONE
-            }
-        }*/
+        // 카카오 프로필이 기본이라면 앱 기본 프로필 사용
+        val isDefaultProfile = profileUrl.isNullOrBlank() || profileUrl.contains("default_profile.jpeg")
+
+        if (isDefaultProfile) {
+            // 기본 이미지면 없는 걸로 처리 → 앱 기본 프로필 사용
+            binding.itemHomeUserprofile.userProfile.setImageResource(R.drawable.ic_profile)
+        } else {
+            // 사용자가 설정한 카카오 프로필 사진
+            Glide.with(requireContext())
+                .load(profileUrl)
+                .placeholder(R.drawable.ic_profile)
+                .error(R.drawable.ic_profile)
+                .circleCrop()
+                .into(binding.itemHomeUserprofile.userProfile)
+        }
 
 
         return binding.root

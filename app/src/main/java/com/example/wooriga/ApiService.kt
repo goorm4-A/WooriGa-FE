@@ -3,6 +3,8 @@ package com.example.wooriga
 import com.example.wooriga.model.Anniversary
 import com.example.wooriga.model.FamilyGroupResponse
 import com.example.wooriga.model.FamilyGroupWrapper
+import com.example.wooriga.model.History
+import com.example.wooriga.model.HistoryRequest
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -67,5 +69,24 @@ interface ApiService {
     // 가족 그룹 목록 조회
     @GET("/groups")
     fun getGroups(): Call<ApiResponse<List<FamilyGroupWrapper>>>
+
+
+    // 가족사
+    // 가족사 등록, 조회
+    @POST("/events")
+    suspend fun createEvent(
+        @Body history: HistoryRequest
+    ): Response<CommonResponse2<History>>
+
+    @GET("/events")
+    suspend fun getEvents(
+        @Query("familyId") familyId: Long
+    ): Response<CommonResponse2<List<History>>>
+
+    @GET("/events/map")
+    suspend fun getEventsMap(
+        @Query("familyId") familyId: Long
+    ): Response<CommonResponse2<List<History>>>
+
 
 }

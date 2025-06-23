@@ -22,7 +22,7 @@
             android:layout_height="150dp"
             android:background="@drawable/rounded_background_gray"
             android:contentDescription="가족 그룹 이미지"
-            android:scaleType="centerCrop" />
+            android:scaleType="fitCenter" />
 
         <TextView
             android:id="@+id/family_title"

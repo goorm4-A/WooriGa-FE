@@ -38,6 +38,9 @@ class LocationPickerActivity : AppCompatActivity(), OnMapReadyCallback {
                     putExtra("address", selectedAddress)
                 }
                 setResult(RESULT_OK, resultIntent)
+
+                Toast.makeText(this, "선택된 좌표: ${it.latitude}, ${it.longitude}", Toast.LENGTH_SHORT).show()
+
                 finish()
             } ?: Toast.makeText(this, "위치를 먼저 선택해주세요", Toast.LENGTH_SHORT).show()
         }
@@ -58,8 +61,10 @@ class LocationPickerActivity : AppCompatActivity(), OnMapReadyCallback {
                 val addressList = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
                 selectedAddress = addressList?.firstOrNull()?.getAddressLine(0) ?: "주소 정보 없음"
             } catch (e: Exception) {
+                e.printStackTrace()
                 selectedAddress = "주소 변환 실패"
             }
+
         }
     }
 

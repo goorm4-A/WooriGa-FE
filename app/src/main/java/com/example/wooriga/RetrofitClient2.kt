@@ -20,6 +20,8 @@ object RetrofitClient2 {
     val annivApi: ApiService = retrofit.create(ApiService::class.java)
     // 가족 그룹
     val familyGroupApi: ApiService = retrofit.create(ApiService::class.java)
+    // 가족사
+    val historyApi: ApiService = retrofit.create(ApiService::class.java)
 
 
     private val retrofit2 = Retrofit.Builder()
