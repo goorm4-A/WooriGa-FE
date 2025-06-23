@@ -17,6 +17,7 @@ sealed class RuleListItem {
 
 class RuleListAdapter(
     private val onItemClick: (Rule) -> Unit,
+    private val onDeleteClick: (Rule) -> Unit
 ) : ListAdapter<RuleListItem, RecyclerView.ViewHolder>(DiffCallback) {
 
     companion object {
@@ -88,7 +89,7 @@ class RuleListAdapter(
                             true
                         }
                         R.id.menu_delete -> {
-                            Toast.makeText(context, "삭제 클릭됨", Toast.LENGTH_SHORT).show()
+                            onDeleteClick(item.rule)
                             true
                         }
                         else -> false

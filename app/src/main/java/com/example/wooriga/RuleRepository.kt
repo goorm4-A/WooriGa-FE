@@ -10,6 +10,9 @@ class RuleRepository {
         api.addRule(request)
 
     suspend fun getRuleDetail(ruleId: Long) =
-        RetrofitClient.ruleApi.getRuleDetail(ruleId)
+        api.getRuleDetail(ruleId)
+
+    suspend fun deleteRule(ruleId: Long) =
+        api.deleteRule(ruleId)
 
 }

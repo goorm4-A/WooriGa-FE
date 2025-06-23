@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -47,10 +48,22 @@ class FamilyRuleFragment : Fragment() {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
-        adapter = RuleListAdapter { rule ->
-            RuleDetailBottomSheet(rule.id).show(parentFragmentManager, "RuleDetailBottomSheet")
-        }
-
+        // 어뎁터 설정
+        adapter = RuleListAdapter(
+            onItemClick = { rule ->
+                RuleDetailBottomSheet(rule.id).show(parentFragmentManager, "RuleDetailBottomSheet")
+            },
+            onDeleteClick = { rule ->
+                AlertDialog.Builder(requireContext())
+                    .setTitle("규칙 삭제")
+                    .setMessage("이 규칙을 삭제하시겠습니까?")
+                    .setPositiveButton("삭제") { _, _ ->
+                        viewModel.deleteRule(rule.id) // 실제 삭제 호출
+                    }
+                    .setNegativeButton("취소", null)
+                    .show()
+            }
+        )
 
         binding.recyclerFamilyRule.adapter = adapter
         binding.recyclerFamilyRule.layoutManager = LinearLayoutManager(requireContext())

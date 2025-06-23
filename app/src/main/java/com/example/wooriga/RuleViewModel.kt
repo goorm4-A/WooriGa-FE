@@ -15,6 +15,10 @@ class RuleViewModel : ViewModel() {
 
     private val repository = RuleRepository()
 
+    val savedUser = UserManager.loadUserInfo()
+    val userId = savedUser?.userId
+    val familyId = currentGroup?.familyGroup?.familyGroupId
+
     fun loadRules(familyId: Long, userId: Long) {
         viewModelScope.launch {
             try {
@@ -47,15 +51,32 @@ class RuleViewModel : ViewModel() {
 
                     // 서버 응답 후 목록 새로고침
                     // 필요한 정보: familyId, userId
-                    val savedUser = UserManager.loadUserInfo()
-                    val userId = savedUser?.userId
-                    val familyId = currentGroup?.familyGroup?.familyGroupId
 
                     if (userId != null && familyId != null) {
                         loadRules(familyId, userId)
                     }
                 } else {
                     Log.e("RuleViewModel", "약속 생성 실패: ${response.message}")
+                }
+            } catch (e: Exception) {
+                Log.e("RuleViewModel", "서버 오류: ${e.message}")
+            }
+        }
+    }
+
+    fun deleteRule(ruleId: Long) {
+        viewModelScope.launch {
+            try {
+                val response = repository.deleteRule(ruleId)
+                if (response.isSuccess) {
+                    Log.d("RuleViewModel", "삭제 성공: ruleId=$ruleId")
+
+                    // 목록 갱신
+                    if (userId != null && familyId != null) {
+                        loadRules(familyId, userId)
+                    }
+                } else {
+                    Log.e("RuleViewModel", "삭제 실패: ${response.message}")
                 }
             } catch (e: Exception) {
                 Log.e("RuleViewModel", "서버 오류: ${e.message}")

@@ -58,7 +58,7 @@ class FamilyMoodFragment : Fragment() {
             onDeleteClick = { mood ->
                 AlertDialog.Builder(requireContext())
                     .setTitle("분위기 삭제")
-                    .setMessage("이 분위기를 삭제할까요?")
+                    .setMessage("이 분위기를 삭제하시겠습니까?")
                     .setPositiveButton("삭제") { _, _ ->
                         viewModel.deleteMood(
                             familyId = familyId,
