@@ -5,7 +5,6 @@ import com.example.wooriga.model.FamilyGroupResponse
 import com.example.wooriga.model.FamilyGroupWrapper
 import com.example.wooriga.model.History
 import com.example.wooriga.model.HistoryRequest
-import com.example.wooriga.model.HistoryTimeline
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call

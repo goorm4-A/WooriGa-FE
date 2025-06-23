@@ -23,7 +23,6 @@ class HistoryViewModel(private val repository: HistoryRepository) : ViewModel() 
     val allMapEvents: LiveData<List<HistoryWithFamilyId>> get() = _allMapEvents
 
     private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> get() = _isLoading
 
     // 가족사 등록
     fun createEvent(

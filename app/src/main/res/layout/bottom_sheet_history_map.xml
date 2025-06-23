@@ -18,6 +18,7 @@
             android:layout_height="25dp"
             android:src="@drawable/ic_heart"
             android:background="@color/transparent"
+            android:contentDescription="Family Color"
             android:layout_marginRight="8dp"/>
 
         <TextView
