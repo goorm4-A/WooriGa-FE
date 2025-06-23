@@ -54,7 +54,7 @@ class DiaryAddFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 임시로 가족 ID 아무거나 넣어 호출 (예: 25)
+        // TODO: 임시로 가족 ID 아무거나 넣어 호출
         viewModel.loadFamilyMembers(familyId = 25)
 
         // 가족 구성원 체크박스 어댑터 초기화

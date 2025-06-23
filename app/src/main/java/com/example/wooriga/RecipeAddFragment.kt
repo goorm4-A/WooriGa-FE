@@ -1,6 +1,7 @@
 package com.example.wooriga
 
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -12,6 +13,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -24,6 +26,15 @@ class RecipeAddFragment : Fragment() {
 
     private val viewModel: RecipeViewModel by activityViewModels()
 
+    private var selectedImageUri: Uri? = null
+    // 이미지 선택 런처 등록
+    private val imagePickerLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        if (uri != null) {
+            selectedImageUri = uri
+            binding.imagePreview.setImageURI(uri)
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -34,6 +45,10 @@ class RecipeAddFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // 사용자
+        val savedUser = UserManager.loadUserInfo()
+        val name = savedUser?.name ?: "이름 없음"
 
         // 툴바 설정
         val toolbar = view.findViewById<View>(R.id.custom_toolbar)
@@ -65,7 +80,7 @@ class RecipeAddFragment : Fragment() {
             val newRecipe = Recipe(
                 id = System.currentTimeMillis().toString(),
                 title = titleInput,
-                author = "테스트사용자",
+                author = name,
                 description = descInput,
                 cookTimeMinutes = cookTime,
                 coverImageUrl = null,
@@ -79,8 +94,12 @@ class RecipeAddFragment : Fragment() {
             parentFragmentManager.popBackStack()
         }
 
+        // 대표 이미지 추가 버튼
+        binding.btnAddImage.setOnClickListener {
+            imagePickerLauncher.launch("image/*")
+        }
 
-    // 재료 추가 버튼
+        // 재료 추가 버튼
         binding.btnAddIngredient.setOnClickListener {
             addIngredientItem()
         }

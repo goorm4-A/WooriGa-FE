@@ -46,6 +46,15 @@ object RetrofitClient {
             .create(RuleApi::class.java)
     }
 
+    val recipeApi: RecipeApi by lazy {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(RecipeApi::class.java)
+    }
+
     val apiService: ApiService by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
