@@ -59,3 +59,37 @@ data class RecipeStepRequest(
     val description: String,
     val imageIndexes: Int? = null // 지금은 null 가능
 )
+
+data class RecipeDetailResponse(
+    val userName: String,
+    val title: String,
+    val description: String,
+    val cookingTime: Int,
+    val coverImages: List<String>,
+    val ingredients: List<String>,
+    val steps: List<RecipeStepDetail>
+)
+
+data class RecipeStepDetail(
+    val description: String,
+    val imageUrl: String?
+)
+
+fun RecipeDetailResponse.toUiModel(id: Long): Recipe {
+    return Recipe(
+        id = id.toString(),
+        title = title,
+        author = userName,
+        description = description,
+        cookTimeMinutes = cookingTime,
+        coverImageUrl = coverImages.firstOrNull(),
+        ingredients = ingredients,
+        steps = steps.mapIndexed { index, step ->
+            CookingStep(
+                stepNumber = index + 1,
+                description = step.description,
+                imageUrl = step.imageUrl
+            )
+        }
+    )
+}

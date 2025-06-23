@@ -121,7 +121,29 @@ class RecipeViewModel : ViewModel() {
         )
     }
 
+    // 요리법 상세
+    fun loadRecipeDetail(
+        familyId: Long,
+        recipeId: Long,
+        onSuccess: (Recipe) -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        viewModelScope.launch {
+            try {
+                val response = RetrofitClient.recipeApi.getRecipeDetail(familyId, recipeId)
+                if (response.isSuccess) {
+                    val detail = response.result.toUiModel(recipeId)
+                    onSuccess(detail)
+                } else {
+                    onFailure(response.message ?: "불러오기 실패")
+                }
+            } catch (e: Exception) {
+                onFailure("네트워크 오류: ${e.message}")
+            }
+        }
+    }
 
+    // 로컬 업로드
     fun addRecipe(recipe: Recipe) {
         addedRecipeList.add(recipe)
 
@@ -131,4 +153,3 @@ class RecipeViewModel : ViewModel() {
     }
 
 }
-

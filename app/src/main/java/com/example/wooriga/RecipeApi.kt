@@ -29,6 +29,12 @@ interface RecipeApi {
         @Part stepImages: List<MultipartBody.Part>? // 조리 이미지 (지금은 null)
     ): CommonResponse2<Any>
 
+    // 요리법 상세
+    @GET("/cultures/{familyId}/recipes/{recipeId}")
+    suspend fun getRecipeDetail(
+        @Path("familyId") familyId: Long,
+        @Path("recipeId") recipeId: Long
+    ): CommonResponse2<RecipeDetailResponse>
 
 
 }
