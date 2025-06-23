@@ -84,5 +84,25 @@ class RuleViewModel : ViewModel() {
         }
     }
 
+    fun updateRule(ruleId: Long, request: RuleRequest, onSuccess: () -> Unit, onFailure: () -> Unit) {
+        viewModelScope.launch {
+            try {
+                val response = repository.updateRule(ruleId, request)
+                if (response.isSuccess) {
+                    onSuccess()
+                    // 수정 후 리스트 갱신
+                    if (userId != null && familyId != null) {
+                        loadRules(familyId, userId)
+                    }
+                } else {
+                    onFailure()
+                }
+            } catch (e: Exception) {
+                Log.e("RuleViewModel", "규칙 수정 실패: ${e.message}", e)
+                onFailure()
+            }
+        }
+    }
+
 
 }

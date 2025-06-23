@@ -15,4 +15,8 @@ class RuleRepository {
     suspend fun deleteRule(ruleId: Long) =
         api.deleteRule(ruleId)
 
+    suspend fun updateRule(ruleId: Long, request: RuleRequest): CommonResponse2<RuleResponse> {
+        return api.updateRule(ruleId, request)
+    }
+
 }

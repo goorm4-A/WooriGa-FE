@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -50,9 +51,11 @@ class FamilyRuleFragment : Fragment() {
 
         // 어뎁터 설정
         adapter = RuleListAdapter(
+            // 아이템 클릭
             onItemClick = { rule ->
-                RuleDetailBottomSheet(rule.id).show(parentFragmentManager, "RuleDetailBottomSheet")
+                RuleDetailBottomSheet(rule.id).show(parentFragmentManager, "RuleDetail")
             },
+            // 삭제 버튼 클릭
             onDeleteClick = { rule ->
                 AlertDialog.Builder(requireContext())
                     .setTitle("규칙 삭제")
@@ -62,7 +65,23 @@ class FamilyRuleFragment : Fragment() {
                     }
                     .setNegativeButton("취소", null)
                     .show()
+            },
+            // 수정 버튼 클릭
+            onEditClick = { rule ->
+                RuleEditBottomSheet(rule) { ruleId, request ->
+                    viewModel.updateRule(
+                        ruleId = ruleId,
+                        request = request,
+                        onSuccess = {
+                            Toast.makeText(requireContext(), "수정 완료", Toast.LENGTH_SHORT).show()
+                        },
+                        onFailure = {
+                            Toast.makeText(requireContext(), "수정 실패", Toast.LENGTH_SHORT).show()
+                        }
+                    )
+                }.show(parentFragmentManager, "RuleEdit")
             }
+
         )
 
         binding.recyclerFamilyRule.adapter = adapter

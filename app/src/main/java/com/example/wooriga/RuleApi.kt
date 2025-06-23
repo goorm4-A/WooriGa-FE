@@ -3,6 +3,7 @@ package com.example.wooriga
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -32,6 +33,13 @@ interface RuleApi {
     // 규칙 삭제
     @DELETE("cultures/rule/{ruleId}")
     suspend fun deleteRule(@Path("ruleId") ruleId: Long): BasicResponse
+
+    // 규칙 수정
+    @PATCH("/cultures/rule/{ruleId}")
+    suspend fun updateRule(
+        @Path("ruleId") ruleId: Long,
+        @Body request: RuleRequest
+    ): CommonResponse2<RuleResponse>
 
 }
 
