@@ -2,6 +2,7 @@ package com.example.wooriga
 
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -36,5 +37,11 @@ interface RecipeApi {
         @Path("recipeId") recipeId: Long
     ): CommonResponse2<RecipeDetailResponse>
 
+    // 요리법 삭제
+    @DELETE("/cultures/{familyId}/recipes/{recipeId}")
+    suspend fun deleteRecipe(
+        @Path("familyId") familyId: Long,
+        @Path("recipeId") recipeId: Long
+    ): CommonResponse
 
 }

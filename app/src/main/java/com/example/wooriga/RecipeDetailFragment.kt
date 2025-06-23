@@ -13,6 +13,7 @@ import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.wooriga.databinding.FragmentRecipeDetailBinding
+import androidx.appcompat.app.AlertDialog
 
 class RecipeDetailFragment : Fragment() {
 
@@ -52,8 +53,26 @@ class RecipeDetailFragment : Fragment() {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
         btnMore.setOnClickListener {
-            Toast.makeText(requireContext(), "더보기 버튼 클릭됨", Toast.LENGTH_SHORT).show()
+            AlertDialog.Builder(requireContext())
+                .setTitle("요리법 삭제")
+                .setMessage("이 요리법을 삭제하시겠습니까?")
+                .setPositiveButton("삭제") { _, _ ->
+                    viewModel.deleteRecipe(
+                        familyId = familyId,
+                        recipeId = recipeId,
+                        onSuccess = {
+                            Toast.makeText(requireContext(), "삭제 완료", Toast.LENGTH_SHORT).show()
+                            requireActivity().onBackPressedDispatcher.onBackPressed()
+                        },
+                        onFailure = {
+                            Toast.makeText(requireContext(), "삭제 실패: $it", Toast.LENGTH_SHORT).show()
+                        }
+                    )
+                }
+                .setNegativeButton("취소", null)
+                .show()
         }
+
 
         // 서버에서 요리법 상세 조회
         viewModel.loadRecipeDetail(
