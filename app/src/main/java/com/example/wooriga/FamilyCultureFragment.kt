@@ -41,35 +41,37 @@ class FamilyCultureFragment : Fragment() {
 
         // 가훈 화면으로 이동
         binding.itemCultureMotto.buttonMotto.setOnClickListener {
-            navigateToFragment(FamilyMottoFragment(), "familyId" to selectedFamilyId)
+            navigateToFragment(FamilyMottoFragment())
         }
 
         // 분위기 화면으로 이동
         binding.itemCultureMood.buttonMood.setOnClickListener {
-            navigateToFragment(FamilyMoodFragment(), "familyId" to selectedFamilyId)
+            navigateToFragment(FamilyMoodFragment())
         }
 
         // 규칙 화면으로 이동
         binding.itemCultureRule.buttonRule.setOnClickListener {
-            navigateToFragment(FamilyRuleFragment(), "familyId" to selectedFamilyId)
+            navigateToFragment(FamilyRuleFragment())
         }
+
 
         // 요리법 화면으로 이동
         binding.itemCultureRecipe.buttonRecipe.setOnClickListener {
-            navigateToFragment(RecipeFragment(), "familyId" to selectedFamilyId)
+            navigateToFragment(RecipeFragment())
         }
     }
 
-    private fun navigateToFragment(fragment: Fragment, vararg args: Pair<String, Long>) {
-//        if (selectedFamilyId == -1L) {
-//            Toast.makeText(requireContext(), "가족을 선택해주세요.", Toast.LENGTH_SHORT).show()
-//            return
-//        }
+    private fun navigateToFragment(fragment: Fragment) {
+        if (selectedFamilyId == -1L) {
+            Toast.makeText(requireContext(), "가족을 선택해주세요.", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         requireActivity().findViewById<View>(R.id.bottomNavigation).visibility = View.GONE
 
         fragment.arguments = Bundle().apply {
-            args.forEach { putLong(it.first, it.second) }
+            putLong("familyId", selectedFamilyId)
+            putString("familyName", selectedFamilyName)
         }
 
         parentFragmentManager.beginTransaction()

@@ -12,30 +12,31 @@ import retrofit2.http.Query
 interface MottoApi {
 
     // 가훈 전체 조회
-    @GET("/culture/motto")
+    @GET("/cultures/motto/{familyId}")
     suspend fun getMottos(
-        @Query("familyId") familyId: Long,
+        @Path("familyId") familyId: Long,
         @Query("userId") userId: Long,
         @Query("cursor") cursor: String? = null
     ): Response<MottoListResponse>
 
     // 가훈 등록
-    @POST("/culture/motto")
+    @POST("/cultures/motto/{familyId}")
     suspend fun addMotto(
-        @Query("userId") userId: Long,
+        @Path("familyId") familyId: Long,
         @Body body: MottoRequest
     ): Response<BasicResponse>
 
     // 가훈 삭제
-    @DELETE("/culture/motto/{mottoId}")
+    @DELETE("/cultures/motto/{mottoId}")
     suspend fun deleteMotto(
         @Path("mottoId") mottoId: Long,
         @Query("userId") userId: Long
     ): Response<BasicResponse>
 
     // 가훈 수정
-    @PATCH("/culture/motto/{mottoId}")
+    @PATCH("/cultures/motto/{familyId}/{mottoId}")
     suspend fun updateMotto(
+        @Path("familyId") familyId: Long,
         @Path("mottoId") mottoId: Long,
         @Query("userId") userId: Long,
         @Body body: MottoRequest

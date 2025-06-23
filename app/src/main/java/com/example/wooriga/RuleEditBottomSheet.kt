@@ -7,22 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.fragment.app.activityViewModels
 import com.example.wooriga.databinding.BottomSheetAddRuleBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
-class RuleAddBottomSheet(
-    private val familyName: String,
-    private val onSubmit: (RuleRequest) -> Unit
+class RuleEditBottomSheet(
+    private val rule: Rule,
+    private val onUpdate: (ruleId: Long, RuleRequest) -> Unit
 ) : BottomSheetDialogFragment() {
 
     private var _binding: BottomSheetAddRuleBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: RuleViewModel by activityViewModels()
+    private val typeList = listOf("필수 규칙", "권장 사항", "금기 사항")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,41 +29,41 @@ class RuleAddBottomSheet(
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // Spinner 초기화 예시 (수동 목록)
-        val typeList = listOf("필수 규칙", "권장 사항", "금기 사항")
+        // 스피너 초기화
+        val spinnerAdapter = ArrayAdapter(requireContext(), R.layout.simple_spinner_dropdown_item, typeList)
+        binding.spinnerType.adapter = spinnerAdapter
+        binding.spinnerType.setSelection(typeList.indexOf(rule.type))
 
-        binding.spinnerType.adapter = ArrayAdapter(requireContext(), R.layout.simple_spinner_dropdown_item, typeList)
+        // 기존 내용 세팅
+        binding.tvTitle.text = "규칙 수정"
+        binding.etRule.setText(rule.title)
+        binding.etDescription.setText(rule.description)
+        binding.dateText.text = rule.date
+        binding.btnSubmit.text = "수정"
 
-        // 날짜 표시
-        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA)
-        val today = formatter.format(Date())
-        binding.dateText.text = today
-
-        // 취소 버튼
         binding.btnCancel.setOnClickListener { dismiss() }
 
-        // 제출 버튼
         binding.btnSubmit.setOnClickListener {
-            val ruleTypeKor = binding.spinnerType.selectedItem.toString()
+            val selectedType = binding.spinnerType.selectedItem.toString()
             val title = binding.etRule.text.toString()
-            val description = binding.etDescription.text.toString()
+            val desc = binding.etDescription.text.toString()
 
             if (title.isNotBlank()) {
                 val request = RuleRequest(
-                    familyName = familyName,
-                    ruleType = when (ruleTypeKor) {
+                    familyName = rule.family,
+                    ruleType = when (selectedType) {
                         "필수 규칙" -> "REQUIRED"
                         "권장 사항" -> "RECOMMENDED"
                         "금기 사항" -> "PROHIBITED"
-                        else -> "REQUIRED"
+                        else -> "RECOMMENDED"
                     },
                     title = title,
-                    description = description
+                    description = desc
                 )
-                onSubmit(request)
+                onUpdate(rule.id, request)
                 dismiss()
             } else {
-                Toast.makeText(context, "약속 내용을 입력해주세요", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "제목을 입력하세요", Toast.LENGTH_SHORT).show()
             }
         }
     }

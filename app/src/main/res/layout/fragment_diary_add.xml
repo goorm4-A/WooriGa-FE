@@ -117,6 +117,7 @@
                     android:layout_margin="8dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_add" />
+
             </FrameLayout>
 
             <!-- 태그 -->
@@ -146,13 +147,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <EditText
-                android:id="@+id/et_member"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerMembers"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:hint="참여자를 입력하세요. (예: @김숙명, @천송이)"
-                android:background="@drawable/edit_text_box"
-                android:layout_marginBottom="20dp"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp" />
 
         </LinearLayout>
     </ScrollView>

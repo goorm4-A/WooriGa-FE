@@ -5,14 +5,17 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.StyleSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.wooriga.databinding.FragmentFamilyDiaryBinding
 import com.example.wooriga.utils.ToolbarUtils
+import com.example.wooriga.utils.ToolbarUtils.currentGroup
 
 class FamilyDiaryFragment : Fragment() {
 
@@ -21,6 +24,8 @@ class FamilyDiaryFragment : Fragment() {
 
     private val viewModel: DiaryViewModel by activityViewModels()
     private lateinit var diaryAdapter: DiaryAdapter
+
+    var selected = currentGroup?.familyGroup
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,6 +37,13 @@ class FamilyDiaryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // 현재 선택된 가족 그룹
+        if (selected == null) {
+            Toast.makeText(requireContext(), "가족 그룹을 선택해주세요.", Toast.LENGTH_SHORT).show()
+        } else {
+            Log.d("FamilyAnniversaryFragment", "Selected group: ${selected!!.familyName}")
+        }
 
         val savedUser = UserManager.loadUserInfo()
         // 사용자 이름을 가져와서 추억 제목에 적용
@@ -45,8 +57,6 @@ class FamilyDiaryFragment : Fragment() {
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
         binding.diaryTitle.text = spannable
-
-        viewModel.loadFamilies()
 
         // 가족 선택
         ToolbarUtils.setupFamilyGroupIcon(binding.customToolbar.iconSelectFamily, requireContext()) { selectedGroup ->

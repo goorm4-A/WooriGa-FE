@@ -6,12 +6,13 @@ class MottoRepository {
     suspend fun getMottos(familyId: Long, userId: Long, cursor: String? = null) =
         api.getMottos(familyId, userId, cursor)
 
-    suspend fun addMotto(userId: Long, body: MottoRequest) =
-        api.addMotto(userId, body)
+    suspend fun addMotto(familyId: Long, mottoRequest: MottoRequest) =
+        api.addMotto(familyId, mottoRequest)
 
     suspend fun deleteMotto(mottoId: Long, userId: Long) =
         api.deleteMotto(mottoId, userId)
 
-    suspend fun updateMotto(mottoId: Long, userId: Long, body: MottoRequest) =
-        api.updateMotto(mottoId, userId, body)
+    suspend fun updateMotto(familyId: Long, mottoId: Long, userId: Long, body: MottoRequest) =
+        api.updateMotto(familyId, mottoId, userId, body)
+
 }

@@ -3,6 +3,10 @@ package com.example.wooriga
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.widget.Button
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.wooriga.databinding.ActivityManageFamilyGroupBinding
@@ -40,7 +44,6 @@ class ManageFamilyGroupActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
-
         // RecyclerView 설정
         adapter = FamilyGroupAdapter(groupList)
         binding.familyGroupRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -60,9 +63,31 @@ class ManageFamilyGroupActivity : AppCompatActivity() {
             showFamilyGroupBottomSheetDialog()
         }
 
+        // "+ 초대 코드 입력하기" 버튼 클릭 시 다이얼로그
+        binding.addInviteCode.setOnClickListener() {
+            val inviteDialogView =
+                LayoutInflater.from(this).inflate(R.layout.invite_code_dialog, null)
+            val inviteDialog = AlertDialog.Builder(this)
+                .setView(inviteDialogView)
+                .create()
+
+            inviteDialogView.findViewById<Button>(R.id.submitButton).setOnClickListener {
+                val code =
+                    inviteDialogView.findViewById<EditText>(R.id.inviteCodeInput).text.toString()
+                // TODO: 서버에 초대코드로 그룹 참여 요청
+
+                inviteDialog.dismiss() // 다이얼로그 닫기
+            }
+            inviteDialogView.findViewById<Button>(R.id.cancelButton).setOnClickListener {
+                inviteDialog.dismiss()
+            }
+
+            inviteDialog.show()
+        }
         // 그룹 아이템 클릭 -> 가족 트리 페이지로 이동
 
     }
+
 
     override fun onResume() {
         super.onResume()

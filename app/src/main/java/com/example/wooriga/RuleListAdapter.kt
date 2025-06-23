@@ -3,11 +3,11 @@ package com.example.wooriga
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.ListAdapter
-
+import androidx.recyclerview.widget.RecyclerView
 
 sealed class RuleListItem {
     data class Header(val type: String) : RuleListItem()
@@ -15,7 +15,9 @@ sealed class RuleListItem {
 }
 
 class RuleListAdapter(
-    private val onItemClick: (Rule) -> Unit
+    private val onItemClick: (Rule) -> Unit,
+    private val onDeleteClick: (Rule) -> Unit,
+    private val onEditClick: (Rule) -> Unit
 ) : ListAdapter<RuleListItem, RecyclerView.ViewHolder>(DiffCallback) {
 
     companion object {
@@ -72,7 +74,29 @@ class RuleListAdapter(
         fun bind(item: RuleListItem.Content) {
             itemView.findViewById<TextView>(R.id.text_motto).text = item.rule.title
             itemView.findViewById<TextView>(R.id.text_date).text = item.rule.date
+
             itemView.setOnClickListener { onItemClick(item.rule) }
+
+            val context = itemView.context
+            val btnMore = itemView.findViewById<View>(R.id.btn_more)
+            btnMore.setOnClickListener {
+                val popup = PopupMenu(context, btnMore)
+                popup.menuInflater.inflate(R.menu.menu_motto_options, popup.menu)
+                popup.setOnMenuItemClickListener { menuItem ->
+                    when (menuItem.itemId) {
+                        R.id.menu_edit -> {
+                            onEditClick(item.rule)
+                            true
+                        }
+                        R.id.menu_delete -> {
+                            onDeleteClick(item.rule)
+                            true
+                        }
+                        else -> false
+                    }
+                }
+                popup.show()
+            }
         }
     }
 }

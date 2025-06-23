@@ -66,7 +66,7 @@ interface DiaryApi {
     suspend fun postFamilyDiary(
         @Part("familyDiaryDto") familyDiaryDto: RequestBody,
         @Part images: List<MultipartBody.Part>?
-    ): Response<DiaryDetailResponse>
+    ): Response<CommonResponse>
 
     // 일기 삭제
     @DELETE("family-diary")
