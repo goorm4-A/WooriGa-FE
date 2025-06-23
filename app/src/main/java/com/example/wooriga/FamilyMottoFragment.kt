@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -67,9 +68,16 @@ class FamilyMottoFragment : Fragment() {
             },
             // 삭제 버튼 클릭
             onDeleteClick = { motto ->
-                userId?.let {
-                    viewModel.deleteMotto(motto.id, it)
-                } ?: Toast.makeText(context, "로그인 필요", Toast.LENGTH_SHORT).show()
+                AlertDialog.Builder(requireContext())
+                    .setTitle("가훈 삭제")
+                    .setMessage("이 가훈을 삭제하시겠습니까?")
+                    .setPositiveButton("삭제") { _, _ ->
+                        userId?.let {
+                            viewModel.deleteMotto(motto.id, it)
+                        } ?: Toast.makeText(context, "로그인 필요", Toast.LENGTH_SHORT).show()
+                    }
+                    .setNegativeButton("취소", null)
+                    .show()
             },
             // 수정 버튼 클릭
             onEditClick = { motto ->
@@ -95,13 +103,12 @@ class FamilyMottoFragment : Fragment() {
 
         // 가훈 추가 버튼 클릭
         binding.addFamilyMotto.setOnClickListener {
-            MottoAddBottomSheet { familyName, motto ->
+            MottoAddBottomSheet { familyId, familyName, motto ->
                 userId?.let {
-                    viewModel.addMotto(userId = it, familyName = familyName, motto = motto)
+                    viewModel.addMotto(userId = it, familyId = familyId, familyName = familyName, motto = motto)
                 } ?: Toast.makeText(requireContext(), "로그인 필요", Toast.LENGTH_SHORT).show()
             }.show(parentFragmentManager, "AddMottoBottomSheet")
         }
-
 
     }
 

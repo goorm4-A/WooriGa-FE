@@ -5,20 +5,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.wooriga.utils.ToolbarUtils.currentGroup
 import kotlinx.coroutines.launch
 
 class RuleViewModel : ViewModel() {
+
     private val _ruleList = MutableLiveData<List<Rule>>()
     val ruleList: LiveData<List<Rule>> = _ruleList
 
-    init {
-        _ruleList.value = listOf(
-            Rule("A가족", "필수 규칙", "착하게 살자", "서로 예의를 지키자", "2025-04-12"),
-            Rule("A가족", "권장 사항", "일찍 일어나기", "건강한 생활 습관", "2025-04-13"),
-            Rule("A가족", "권장 사항", "아침밥 챙겨먹기", "건강한 생활 습관", "2025-04-14"),
-            Rule("B가족", "금기 사항", "욕하지 않기", "존중하는 말 사용", "2025-04-11")
-        )
-    }
+    private val repository = RuleRepository()
+
+    val savedUser = UserManager.loadUserInfo()
+    val userId = savedUser?.userId
+    val familyId = currentGroup?.familyGroup?.familyGroupId
 
     fun loadRules(familyId: Long, userId: Long) {
         viewModelScope.launch {
@@ -43,8 +42,67 @@ class RuleViewModel : ViewModel() {
         }
     }
 
+    fun addRuleRemote(request: RuleRequest) {
+        viewModelScope.launch {
+            try {
+                val response = repository.addRule(request)
+                if (response.isSuccess) {
+                    Log.d("RuleViewModel", "약속 생성 성공")
 
-    fun addRule(rule: Rule) {
-        _ruleList.value = _ruleList.value.orEmpty() + rule
+                    // 서버 응답 후 목록 새로고침
+                    // 필요한 정보: familyId, userId
+
+                    if (userId != null && familyId != null) {
+                        loadRules(familyId, userId)
+                    }
+                } else {
+                    Log.e("RuleViewModel", "약속 생성 실패: ${response.message}")
+                }
+            } catch (e: Exception) {
+                Log.e("RuleViewModel", "서버 오류: ${e.message}")
+            }
+        }
     }
+
+    fun deleteRule(ruleId: Long) {
+        viewModelScope.launch {
+            try {
+                val response = repository.deleteRule(ruleId)
+                if (response.isSuccess) {
+                    Log.d("RuleViewModel", "삭제 성공: ruleId=$ruleId")
+
+                    // 목록 갱신
+                    if (userId != null && familyId != null) {
+                        loadRules(familyId, userId)
+                    }
+                } else {
+                    Log.e("RuleViewModel", "삭제 실패: ${response.message}")
+                }
+            } catch (e: Exception) {
+                Log.e("RuleViewModel", "서버 오류: ${e.message}")
+            }
+        }
+    }
+
+    fun updateRule(ruleId: Long, request: RuleRequest, onSuccess: () -> Unit, onFailure: () -> Unit) {
+        viewModelScope.launch {
+            try {
+                val response = repository.updateRule(ruleId, request)
+                if (response.isSuccess) {
+                    onSuccess()
+                    // 수정 후 리스트 갱신
+                    if (userId != null && familyId != null) {
+                        loadRules(familyId, userId)
+                    }
+                } else {
+                    onFailure()
+                }
+            } catch (e: Exception) {
+                Log.e("RuleViewModel", "규칙 수정 실패: ${e.message}", e)
+                onFailure()
+            }
+        }
+    }
+
+
 }

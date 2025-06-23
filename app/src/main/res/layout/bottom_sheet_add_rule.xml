@@ -8,6 +8,7 @@
     android:padding="24dp">
 
     <TextView
+        android:id="@+id/tv_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="규칙 등록"
@@ -15,14 +16,13 @@
         android:textStyle="bold"
         android:layout_marginBottom="40dp"/>
 
-    <!-- 가족 선택 -->
-    <Spinner
-        android:id="@+id/spinnerFamily"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginBottom="10dp" />
-
     <!-- 규칙 종류 선택 -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="규칙 종류"
+        android:layout_marginBottom="5dp"/>
+
     <Spinner
         android:id="@+id/spinnerType"
         android:layout_width="match_parent"
@@ -30,22 +30,34 @@
         android:layout_marginBottom="10dp" />
 
     <!-- 규칙 -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="규칙"
+        android:layout_marginBottom="5dp"/>
+
     <EditText
         android:id="@+id/etRule"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:hint="규칙을 입력하세요."
         android:background="@drawable/edit_text_box"
-        android:layout_marginBottom="20dp"/>
+        android:layout_marginBottom="10dp"/>
 
     <!-- 설명 -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="설명"
+        android:layout_marginBottom="5dp"/>
+
     <EditText
         android:id="@+id/etDescription"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:hint="설명을 입력하세요."
         android:background="@drawable/edit_text_box"
-        android:layout_marginBottom="20dp"/>
+        android:layout_marginBottom="10dp"/>
 
     <TextView
         android:id="@+id/dateText"

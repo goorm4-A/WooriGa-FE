@@ -1,5 +1,6 @@
 package com.example.wooriga
 
+import com.example.wooriga.DateUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.PopupMenu
@@ -26,7 +27,7 @@ class MottoAdapter(
 
         fun bind(motto: Motto) {
             binding.textMotto.text = motto.title
-            binding.textDate.text = motto.createdAt
+            binding.textDate.text = DateUtils.formatIsoDate(motto.createdAt)
 
             // 아이템 클릭 시 상세 하단시트
             binding.root.setOnClickListener {

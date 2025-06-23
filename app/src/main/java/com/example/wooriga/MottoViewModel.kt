@@ -5,9 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 
 class MottoViewModel : ViewModel() {
@@ -31,31 +28,17 @@ class MottoViewModel : ViewModel() {
             if (response.isSuccessful) {
                 mottos.value = response.body()?.result?.mottos ?: emptyList()
             } else {
-                Log.e("MottoViewModel", "API 실패: ${response.code()}")
+                Log.e("MottoViewModel", "API 실패: ${response.code()}, ${response.errorBody()?.string()}")
             }
         }
     }
 
     fun addMotto(userId: Long, familyId: Long, familyName: String, motto: String) {
-
-        // test
-//        val currentList = mottos.value.orEmpty()
-//        val newId = (currentList.maxOfOrNull { it.id } ?: 0L) + 1
-//        val newMotto = Motto(
-//            id = newId,
-//            title = motto,
-//            familyId = familyId,
-//            familyName = familyName,
-//            createdAt = getToday()
-//        )
-//        mottos.value = currentList + newMotto
-
         viewModelScope.launch {
             try {
-                val response = repository.addMotto(userId, MottoRequest(familyName, motto))
+                val response = repository.addMotto(familyId, MottoRequest(familyName, motto)) // ✅ 수정
                 if (response.isSuccessful && response.body()?.isSuccess == true) {
                     Log.d("MottoViewModel", "가훈 등록 성공")
-                    // 등록 후 새로 불러오기
                     loadMottos(familyId = familyId, userId = userId)
                 } else {
                     Log.e("MottoViewModel", "가훈 등록 실패: ${response.code()}")
@@ -65,6 +48,7 @@ class MottoViewModel : ViewModel() {
             }
         }
     }
+
 
     fun deleteMotto(mottoId: Long, userId: Long) {
         viewModelScope.launch {
@@ -83,10 +67,10 @@ class MottoViewModel : ViewModel() {
         }
     }
 
-    fun editMotto(mottoId: Long, userId: Long, familyName: String, motto: String) {
+    fun editMotto(familyId: Long, mottoId: Long, userId: Long, familyName: String, motto: String) {
         viewModelScope.launch {
             try {
-                val response = repository.updateMotto(mottoId, userId, MottoRequest(familyName, motto))
+                val response = repository.updateMotto(familyId, mottoId, userId, MottoRequest(familyName, motto))
                 if (response.isSuccessful && response.body()?.isSuccess == true) {
                     val updated = response.body()!!.result
                     mottos.value = mottos.value?.map {
@@ -100,13 +84,6 @@ class MottoViewModel : ViewModel() {
                 Log.e("MottoViewModel", "수정 오류: ${e.localizedMessage}")
             }
         }
-    }
-
-
-    // 오늘 날짜 불러오는 함수
-    private fun getToday(): String {
-        val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        return format.format(Date())
     }
 
 }

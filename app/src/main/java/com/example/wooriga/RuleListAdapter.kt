@@ -5,7 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +16,8 @@ sealed class RuleListItem {
 
 class RuleListAdapter(
     private val onItemClick: (Rule) -> Unit,
+    private val onDeleteClick: (Rule) -> Unit,
+    private val onEditClick: (Rule) -> Unit
 ) : ListAdapter<RuleListItem, RecyclerView.ViewHolder>(DiffCallback) {
 
     companion object {
@@ -84,11 +85,11 @@ class RuleListAdapter(
                 popup.setOnMenuItemClickListener { menuItem ->
                     when (menuItem.itemId) {
                         R.id.menu_edit -> {
-                            Toast.makeText(context, "수정 클릭됨", Toast.LENGTH_SHORT).show()
+                            onEditClick(item.rule)
                             true
                         }
                         R.id.menu_delete -> {
-                            Toast.makeText(context, "삭제 클릭됨", Toast.LENGTH_SHORT).show()
+                            onDeleteClick(item.rule)
                             true
                         }
                         else -> false

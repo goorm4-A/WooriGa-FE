@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.example.wooriga.databinding.BottomSheetEditMottoBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -16,8 +15,6 @@ class MottoEditBottomSheet(
 
     private var _binding: BottomSheetEditMottoBinding? = null
     private val binding get() = _binding!!
-
-    private val familyOptions = listOf("A가족", "B가족", "C가족") // TODO: 서버에서 불러오기
 
     val savedUser = UserManager.loadUserInfo()
     val userId = savedUser?.userId
@@ -34,26 +31,24 @@ class MottoEditBottomSheet(
         super.onViewCreated(view, savedInstanceState)
 
         // 날짜 표시
-        binding.dateText.text = motto.createdAt
+        binding.dateText.text = DateUtils.formatIsoDate(motto.createdAt)
 
         // EditText 초기값
         binding.titleInput.setText(motto.title)
 
-        // Spinner 설정
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, familyOptions)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spinnerTag.adapter = adapter
-        val position = familyOptions.indexOf(motto.familyName)
-        if (position >= 0) binding.spinnerTag.setSelection(position)
-
         // 확인 버튼
         binding.btnSubmit.setOnClickListener {
             val newTitle = binding.titleInput.text.toString()
-            val newFamily = binding.spinnerTag.selectedItem.toString()
 
             if (newTitle.isNotBlank()) {
                 userId?.let {
-                    viewModel.editMotto(motto.id, it, newFamily, newTitle)
+                    viewModel.editMotto(
+                        familyId = motto.familyId,
+                        mottoId = motto.id,
+                        userId = it,
+                        familyName = motto.familyName,
+                        motto = newTitle
+                    )
                     dismiss()
                 } ?: Toast.makeText(context, "로그인 필요", Toast.LENGTH_SHORT).show()
             } else {
