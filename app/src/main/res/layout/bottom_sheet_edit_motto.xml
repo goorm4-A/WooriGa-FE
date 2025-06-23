@@ -19,7 +19,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="가훈"/>
+        android:text="가훈"
+        android:layout_marginBottom="5dp"/>
 
     <EditText
         android:id="@+id/titleInput"
@@ -27,7 +28,7 @@
         android:layout_height="48dp"
         android:hint="가훈"
         android:background="@drawable/edit_text_box"
-        android:layout_marginBottom="20dp"/>
+        android:layout_marginBottom="10dp"/>
 
     <TextView
         android:id="@+id/dateText"
