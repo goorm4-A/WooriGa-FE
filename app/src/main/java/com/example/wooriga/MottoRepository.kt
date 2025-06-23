@@ -12,6 +12,7 @@ class MottoRepository {
     suspend fun deleteMotto(mottoId: Long, userId: Long) =
         api.deleteMotto(mottoId, userId)
 
-    suspend fun updateMotto(mottoId: Long, userId: Long, body: MottoRequest) =
-        api.updateMotto(mottoId, userId, body)
+    suspend fun updateMotto(familyId: Long, mottoId: Long, userId: Long, body: MottoRequest) =
+        api.updateMotto(familyId, mottoId, userId, body)
+
 }

@@ -34,8 +34,9 @@ interface MottoApi {
     ): Response<BasicResponse>
 
     // 가훈 수정
-    @PATCH("/cultures/motto/{mottoId}")
+    @PATCH("/cultures/motto/{familyId}/{mottoId}")
     suspend fun updateMotto(
+        @Path("familyId") familyId: Long,
         @Path("mottoId") mottoId: Long,
         @Query("userId") userId: Long,
         @Body body: MottoRequest
