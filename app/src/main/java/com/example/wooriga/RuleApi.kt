@@ -1,6 +1,8 @@
 package com.example.wooriga
 
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -13,6 +15,12 @@ interface RuleApi {
         @Query("userId") userId: Long,
         @Query("cursor") cursor: String? = null
     ): RuleResponse
+
+    // 규칙 등록
+    @POST("cultures/rule")
+    suspend fun addRule(
+        @Body body: RuleRequest
+    ): BasicResponse
 
 }
 

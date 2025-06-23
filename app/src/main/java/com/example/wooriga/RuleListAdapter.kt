@@ -1,5 +1,6 @@
 package com.example.wooriga
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -72,6 +73,8 @@ class RuleListAdapter(
     inner class ContentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(item: RuleListItem.Content) {
             itemView.findViewById<TextView>(R.id.text_motto).text = item.rule.title
+
+            Log.d("RuleAdapter", "날짜 원본: ${item.rule.date}")
             itemView.findViewById<TextView>(R.id.text_date).text = item.rule.date
 
             itemView.setOnClickListener { onItemClick(item.rule) }

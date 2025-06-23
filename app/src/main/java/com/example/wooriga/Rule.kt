@@ -28,3 +28,10 @@ data class RuleDto(
     val ruleType: String, // REQUIRED / RECOMMENDED / PROHIBITED
     val createdAt: String
 )
+
+data class RuleRequest(
+    val familyName: String,
+    val ruleType: String,
+    val title: String,
+    val description: String
+)

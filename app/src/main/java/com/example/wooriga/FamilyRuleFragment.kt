@@ -16,6 +16,7 @@ class FamilyRuleFragment : Fragment() {
 
     private var _binding: FragmentFamilyRuleBinding? = null
     private val binding get() = _binding!!
+
     private val viewModel: RuleViewModel by viewModels()
     private lateinit var adapter: RuleListAdapter
 
@@ -32,6 +33,7 @@ class FamilyRuleFragment : Fragment() {
 
         // 인자로 받은 familyId 추출
         val familyId = arguments?.getLong("familyId") ?: return
+        val familyName = arguments?.getString("familyName").orEmpty()
 
         // 툴바
         val toolbar = view.findViewById<View>(R.id.custom_toolbar)
@@ -69,12 +71,12 @@ class FamilyRuleFragment : Fragment() {
             Log.e("FamilyRuleFragment", "userId is null - 로그인 필요")
         }
 
-
         binding.addFamilyRule.setOnClickListener {
-            RuleAddBottomSheet { newRule ->
-                viewModel.addRule(newRule)
+            RuleAddBottomSheet(familyName) { request ->
+                viewModel.addRuleRemote(request)
             }.show(parentFragmentManager, "AddRuleBottomSheet")
         }
+
     }
 
     override fun onDestroyView() {
