@@ -31,31 +31,17 @@ class MottoViewModel : ViewModel() {
             if (response.isSuccessful) {
                 mottos.value = response.body()?.result?.mottos ?: emptyList()
             } else {
-                Log.e("MottoViewModel", "API 실패: ${response.code()}")
+                Log.e("MottoViewModel", "API 실패: ${response.code()}, ${response.errorBody()?.string()}")
             }
         }
     }
 
     fun addMotto(userId: Long, familyId: Long, familyName: String, motto: String) {
-
-        // test
-//        val currentList = mottos.value.orEmpty()
-//        val newId = (currentList.maxOfOrNull { it.id } ?: 0L) + 1
-//        val newMotto = Motto(
-//            id = newId,
-//            title = motto,
-//            familyId = familyId,
-//            familyName = familyName,
-//            createdAt = getToday()
-//        )
-//        mottos.value = currentList + newMotto
-
         viewModelScope.launch {
             try {
-                val response = repository.addMotto(userId, MottoRequest(familyName, motto))
+                val response = repository.addMotto(familyId, MottoRequest(familyName, motto)) // ✅ 수정
                 if (response.isSuccessful && response.body()?.isSuccess == true) {
                     Log.d("MottoViewModel", "가훈 등록 성공")
-                    // 등록 후 새로 불러오기
                     loadMottos(familyId = familyId, userId = userId)
                 } else {
                     Log.e("MottoViewModel", "가훈 등록 실패: ${response.code()}")
@@ -65,6 +51,7 @@ class MottoViewModel : ViewModel() {
             }
         }
     }
+
 
     fun deleteMotto(mottoId: Long, userId: Long) {
         viewModelScope.launch {

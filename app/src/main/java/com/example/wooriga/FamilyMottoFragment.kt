@@ -95,13 +95,12 @@ class FamilyMottoFragment : Fragment() {
 
         // 가훈 추가 버튼 클릭
         binding.addFamilyMotto.setOnClickListener {
-            MottoAddBottomSheet { familyName, motto ->
+            MottoAddBottomSheet { familyId, familyName, motto ->
                 userId?.let {
-                    viewModel.addMotto(userId = it, familyName = familyName, motto = motto)
+                    viewModel.addMotto(userId = it, familyId = familyId, familyName = familyName, motto = motto)
                 } ?: Toast.makeText(requireContext(), "로그인 필요", Toast.LENGTH_SHORT).show()
             }.show(parentFragmentManager, "AddMottoBottomSheet")
         }
-
 
     }
 

@@ -12,17 +12,17 @@ import retrofit2.http.Query
 interface MottoApi {
 
     // 가훈 전체 조회
-    @GET("/cultures/motto")
+    @GET("/cultures/motto/{familyId}")
     suspend fun getMottos(
-        @Query("familyId") familyId: Long,
+        @Path("familyId") familyId: Long,
         @Query("userId") userId: Long,
         @Query("cursor") cursor: String? = null
     ): Response<MottoListResponse>
 
     // 가훈 등록
-    @POST("/cultures/motto")
+    @POST("/cultures/motto/{familyId}")
     suspend fun addMotto(
-        @Query("userId") userId: Long,
+        @Path("familyId") familyId: Long,
         @Body body: MottoRequest
     ): Response<BasicResponse>
 
