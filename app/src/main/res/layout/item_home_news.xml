@@ -16,7 +16,7 @@
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="20sp" />
-
+<!--
     <ImageButton
         android:id="@+id/button_news"
         android:layout_width="wrap_content"
@@ -26,6 +26,8 @@
         android:src="@drawable/ic_arrow_forward"
         app:tint="@color/black" />
 
+-->
+
     <GridLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,37 +36,37 @@
         android:rowCount="2"
         android:orientation="horizontal">
         <ImageView
-            android:layout_width="0dp"
+            android:layout_width="0px"
             android:layout_height="125dp"
             android:layout_columnWeight="1"
             android:layout_margin="5dp"
             android:id="@+id/image_news_1"
             android:background="@drawable/rounded_background_gray"
-            android:scaleType="centerCrop" />
+            android:scaleType="fitCenter" />
         <ImageView
-            android:layout_width="0dp"
+            android:layout_width="0px"
             android:layout_height="125dp"
             android:layout_columnWeight="1"
             android:layout_margin="5dp"
             android:id="@+id/image_news_2"
             android:background="@drawable/rounded_background_gray"
-            android:scaleType="centerCrop" />
+            android:scaleType="fitCenter" />
         <ImageView
-            android:layout_width="0dp"
+            android:layout_width="0px"
             android:layout_height="125dp"
             android:layout_columnWeight="1"
             android:layout_margin="5dp"
             android:id="@+id/image_news_3"
             android:background="@drawable/rounded_background_gray"
-            android:scaleType="centerCrop" />
+            android:scaleType="fitCenter" />
         <ImageView
-            android:layout_width="0dp"
+            android:layout_width="0px"
             android:layout_height="125dp"
             android:layout_columnWeight="1"
             android:layout_margin="5dp"
             android:id="@+id/image_news_4"
             android:background="@drawable/rounded_background_gray"
-            android:scaleType="centerCrop" />
+            android:scaleType="fitCenter" />
 
 
     </GridLayout>

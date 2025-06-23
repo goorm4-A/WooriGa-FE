@@ -3,7 +3,13 @@ package com.example.wooriga
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.wooriga.databinding.ActivityManageFamilyGroupBinding
 import com.example.wooriga.databinding.BottomSheetAddFamilyGroupBinding
@@ -59,7 +65,36 @@ class ManageFamilyGroupActivity : AppCompatActivity() {
         binding.createFamilyGroupButton.setOnClickListener {
             showFamilyGroupBottomSheetDialog()
         }
+        // + 초대 코드 입력 버튼 클릭 시 다이얼로그
+        binding.addInviteCode.setOnClickListener() {
+            // 다이얼로그 뷰 inflate
+            val dialogView = LayoutInflater.from(this).inflate(R.layout.invite_code_dialog, null)
 
+            val inviteCodeInput = dialogView.findViewById<EditText>(R.id.inviteCodeInput)
+            val cancelButton = dialogView.findViewById<Button>(R.id.cancelButton)
+            val submitButton = dialogView.findViewById<Button>(R.id.submitButton)
+
+            val dialog = AlertDialog.Builder(this)
+                .setView(dialogView)
+                .create()
+
+            cancelButton.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            submitButton.setOnClickListener {
+                val code = inviteCodeInput.text.toString().trim()
+                if (code.isNotEmpty()) {
+                    // 여기에 코드 처리 로직 (예: 서버 전송 등)
+                    // 기능 추가 예정
+                    dialog.dismiss()
+                } else {
+                    Toast.makeText(this, "초대 코드를 입력해주세요", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            dialog.show()
+        }
         // 그룹 아이템 클릭 -> 가족 트리 페이지로 이동
 
     }

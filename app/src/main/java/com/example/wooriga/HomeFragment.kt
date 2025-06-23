@@ -74,6 +74,9 @@ class HomeFragment : Fragment() {
                 .into(binding.itemHomeUserprofile.userProfile)
         }
 
+        // 오늘의 소식
+        fetchTodayImages()
+
 
         return binding.root
     }
@@ -82,6 +85,13 @@ class HomeFragment : Fragment() {
         super.onResume()
         fetchFamilyGroupsFromServer()
     }
+
+    override fun onPause() {
+        super.onPause()
+        stopImageSwitcher()
+    }
+
+
 
     // 가족 그룹 리스트를 서버에서 받아오는 함수
     fun fetchFamilyGroupsFromServer(onComplete: () -> Unit = {}) {
@@ -96,6 +106,24 @@ class HomeFragment : Fragment() {
                     if (body != null) {
                         groupList.clear()
                         groupList.addAll(body.result)
+
+                        // 이미지 있는 그룹 필터링
+                        val imageGroups = groupList.filter {
+                            !it.familyGroup.familyImage.isNullOrEmpty()
+                        }
+
+                        // 이미지 목록 생성
+                        familyImages.clear()
+                        familyImages.addAll(imageGroups.mapNotNull { it.familyGroup.familyImage })
+
+                        if (familyImages.isNotEmpty()) {
+                            currentImageIndex = 0
+                            startImageSwitcher()
+                        } else {
+                            stopImageSwitcher()
+                            // 기본 이미지 표시
+                            binding.itemHomeFamily.imageFamilyGroup.setImageResource(R.drawable.ic_family)
+                        }
 
                         val familyGroupName = groupList.mapNotNull { it.familyGroup.familyName }.distinct()
                         val familyTextViews = listOf(
@@ -122,9 +150,100 @@ class HomeFragment : Fragment() {
                 }
             }
 
+
             override fun onFailure(call: Call<ApiResponse<List<FamilyGroupWrapper>>>, t: Throwable) {
                 Log.e("ToolbarUtils", "네트워크 오류", t)
             }
         })
     }
+
+    private val familyImages = mutableListOf<String>()
+    private var currentImageIndex = 0
+    private var imageSwitcherRunnable: Runnable? = null
+    private val imageSwitchInterval = 4000L // 4초
+
+    // 이미지 전환을 위한 핸들러 설정
+    private val imageSwitchHandler = android.os.Handler()
+
+    private fun startImageSwitcher() {
+        if (familyImages.isEmpty() || imageSwitcherRunnable != null) return
+
+        imageSwitcherRunnable = object : Runnable {
+            override fun run() {
+                val imageUrl = familyImages[currentImageIndex]
+                Glide.with(requireContext())
+                    .load(imageUrl)
+                    .placeholder(R.drawable.ic_family)
+                    .error(R.drawable.ic_cross)
+                    .into(binding.itemHomeFamily.imageFamilyGroup)
+
+                // 다음 인덱스 준비
+                currentImageIndex = (currentImageIndex + 1) % familyImages.size
+
+                // 다음 호출 예약
+                imageSwitchHandler.postDelayed(this, imageSwitchInterval)
+            }
+        }
+
+        imageSwitchHandler.post(imageSwitcherRunnable!!)
+    }
+
+    private fun stopImageSwitcher() {
+        imageSwitcherRunnable?.let {
+            imageSwitchHandler.removeCallbacks(it)
+            imageSwitcherRunnable = null // 초기화
+        }
+    }
+
+    private fun fetchTodayImages() {
+        RetrofitClient2.todayImagesApi.getTodayImages().enqueue(object : Callback<TodayImagesResponse> {
+            override fun onResponse(
+                call: Call<TodayImagesResponse>,
+                response: Response<TodayImagesResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val todayImages = response.body()?.result?.todayImages.orEmpty()
+
+                    val imageViews = listOf(
+                        binding.itemHomeNews.imageNews1,
+                        binding.itemHomeNews.imageNews2,
+                        binding.itemHomeNews.imageNews3,
+                        binding.itemHomeNews.imageNews4
+                    )
+
+                    // 최대 4개만 표시
+                    for (i in imageViews.indices) {
+                        if (i < todayImages.size) {
+                            imageViews[i].visibility = View.VISIBLE
+                            Glide.with(requireContext())
+                                .load(todayImages[i])
+                                .placeholder(R.drawable.rounded_background_gray)
+                                .error(R.drawable.ic_cross)
+                                .centerCrop()
+                                .into(imageViews[i])
+                        } else {
+                            imageViews[i].visibility = View.GONE
+                        }
+                    }
+                    Log.d("TodayImages", "imageView[0] is null? ${binding.itemHomeNews.imageNews1 == null}")
+
+
+                } else {
+                    Log.e("TodayImages", "서버 응답 오류: ${response.code()}")
+                }
+            }
+
+            override fun onFailure(call: Call<TodayImagesResponse>, t: Throwable) {
+                Log.e("TodayImages", "네트워크 오류", t)
+            }
+        })
+    }
+
+    override fun onDestroyView() {
+        stopImageSwitcher()
+        super.onDestroyView()
+        _binding = null
+    }
+
+
 }

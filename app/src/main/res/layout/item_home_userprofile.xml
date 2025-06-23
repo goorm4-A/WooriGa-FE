@@ -43,41 +43,41 @@
                 android:id="@+id/family_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
+                android:padding="3dp"
                 android:text="#A가족"
                 android:background="@drawable/rectangle_background"
-                android:layout_marginRight="10dp"
-                android:textSize="14sp"/>
+                android:layout_marginRight="8dp"
+                android:textSize="11sp"/>
 
             <TextView
                 android:id="@+id/family_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
+                android:padding="3dp"
                 android:text="#B가족"
                 android:background="@drawable/rectangle_background"
-                android:layout_marginRight="10dp"
-                android:textSize="14sp"/>
+                android:layout_marginRight="8dp"
+                android:textSize="11sp"/>
 
             <TextView
                 android:id="@+id/family_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
+                android:padding="3dp"
                 android:text="#C가족"
                 android:background="@drawable/rectangle_background"
-                android:layout_marginRight="10dp"
-                android:textSize="14sp"/>
+                android:layout_marginRight="8dp"
+                android:textSize="11sp"/>
 
             <TextView
                 android:id="@+id/family_4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
+                android:padding="3dp"
                 android:text="#D가족"
                 android:background="@drawable/rectangle_background"
-                android:layout_marginRight="10dp"
-                android:textSize="14sp"/>
+                android:layout_marginRight="8dp"
+                android:textSize="11sp"/>
 
         </LinearLayout>
 
