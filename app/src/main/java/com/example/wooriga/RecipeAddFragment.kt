@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.wooriga.databinding.FragmentRecipeAddBinding
+import com.example.wooriga.utils.ToolbarUtils
 
 class RecipeAddFragment : Fragment() {
 
@@ -74,25 +75,72 @@ class RecipeAddFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            val ingredientList = getIngredientList()
-            val stepList = getCookingSteps()
+            val ingredients = getIngredientList()
+            val steps = getCookingSteps().mapIndexed { index, step ->
+                RecipeStepRequest(
+                    description = step.description,
+                    imageIndexes = 0 // TODO: 임시
+                )
+            }
 
-            val newRecipe = Recipe(
-                id = System.currentTimeMillis().toString(),
+            val recipeRequest = RecipeRequest(
                 title = titleInput,
-                author = name,
                 description = descInput,
-                cookTimeMinutes = cookTime,
-                coverImageUrl = null,
-                ingredients = ingredientList,
-                steps = stepList
+                cookingTime = cookTime,
+                ingredients = ingredients,
+                steps = steps
             )
 
-            viewModel.addRecipe(newRecipe)
+            val familyId = ToolbarUtils.currentGroup?.familyGroup?.familyGroupId
+            if (familyId == null) {
+                Toast.makeText(requireContext(), "가족 선택이 필요합니다.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
-            Toast.makeText(requireContext(), "테스트용 레시피 저장 완료!", Toast.LENGTH_SHORT).show()
-            parentFragmentManager.popBackStack()
+            viewModel.createRecipe(
+                familyId = familyId,
+                recipeRequest = recipeRequest,
+                coverImageUri = selectedImageUri,
+                context = requireContext(),
+                onSuccess = {
+                    Toast.makeText(requireContext(), "요리법 등록 성공!", Toast.LENGTH_SHORT).show()
+                    parentFragmentManager.popBackStack()
+                },
+                onFailure = { error ->
+                    Toast.makeText(requireContext(), "실패: $error", Toast.LENGTH_SHORT).show()
+                }
+            )
         }
+
+//        btnDone.setOnClickListener {
+//            val titleInput = binding.etRecipeTitle.text.toString().trim()
+//            val descInput = binding.etRecipeDescription.text.toString().trim()
+//            val cookTime = binding.seekCookTime.progress
+//
+//            if (titleInput.isBlank() || descInput.isBlank()) {
+//                Toast.makeText(requireContext(), "제목과 설명을 입력해주세요.", Toast.LENGTH_SHORT).show()
+//                return@setOnClickListener
+//            }
+//
+//            val ingredientList = getIngredientList()
+//            val stepList = getCookingSteps()
+//
+//            val newRecipe = Recipe(
+//                id = System.currentTimeMillis().toString(),
+//                title = titleInput,
+//                author = name,
+//                description = descInput,
+//                cookTimeMinutes = cookTime,
+//                coverImageUrl = null,
+//                ingredients = ingredientList,
+//                steps = stepList
+//            )
+//
+//            viewModel.addRecipe(newRecipe)
+//
+//            Toast.makeText(requireContext(), "테스트용 레시피 저장 완료!", Toast.LENGTH_SHORT).show()
+//            parentFragmentManager.popBackStack()
+//        }
 
         // 대표 이미지 추가 버튼
         binding.btnAddImage.setOnClickListener {

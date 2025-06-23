@@ -43,31 +43,26 @@ class RecipeViewModel : ViewModel() {
 
     fun createRecipe(
         familyId: Long,
-        recipe: Recipe,
-        coverImages: List<Uri>?,
-        stepImages: List<Uri>?,
+        recipeRequest: RecipeRequest,
+        coverImageUri: Uri?, // 단일 대표 이미지
         context: Context,
         onSuccess: () -> Unit,
         onFailure: (String) -> Unit
     ) {
         viewModelScope.launch {
             try {
-                val recipeJson = Gson().toJson(recipe)
+                val recipeJson = Gson().toJson(recipeRequest)
                 val recipeBody = recipeJson.toRequestBody("application/json".toMediaType())
 
-                val coverParts = coverImages?.mapIndexed { i, uri ->
-                    uri.toMultipart("coverImages", "cover_$i.jpg", context)
-                }
-
-                val stepParts = stepImages?.mapIndexed { i, uri ->
-                    uri.toMultipart("stepImages", "step_$i.jpg", context)
+                val coverParts = coverImageUri?.let { uri ->
+                    listOf(uri.toMultipart("coverImages", "cover.jpg", context))
                 }
 
                 val response = RetrofitClient.recipeApi.createRecipe(
-                    familyId,
-                    recipeBody,
-                    coverParts,
-                    stepParts
+                    familyId = familyId,
+                    recipeJson = recipeBody,
+                    coverImages = coverParts,
+                    stepImages = null // 조리 이미지 추후 구현
                 )
 
                 if (response.isSuccess) {

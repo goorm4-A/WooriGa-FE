@@ -46,3 +46,16 @@ data class RecipeDto(
         steps = emptyList()
     )
 }
+
+data class RecipeRequest(
+    val title: String,
+    val description: String,
+    val cookingTime: Int,
+    val ingredients: List<String>,
+    val steps: List<RecipeStepRequest>
+)
+
+data class RecipeStepRequest(
+    val description: String,
+    val imageIndexes: Int? = null // 지금은 null 가능
+)

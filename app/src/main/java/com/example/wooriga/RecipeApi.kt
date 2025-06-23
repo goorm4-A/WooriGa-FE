@@ -25,9 +25,9 @@ interface RecipeApi {
     suspend fun createRecipe(
         @Path("familyId") familyId: Long,
         @Part("recipe") recipeJson: RequestBody,
-        @Part coverImages: List<MultipartBody.Part>?,
-        @Part stepImages: List<MultipartBody.Part>?
-    ): CommonResponse2<Unit>
+        @Part coverImages: List<MultipartBody.Part>?, // 대표 이미지
+        @Part stepImages: List<MultipartBody.Part>? // 조리 이미지 (지금은 null)
+    ): CommonResponse2<Any>
 
 
 
