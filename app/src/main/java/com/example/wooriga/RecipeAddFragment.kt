@@ -112,36 +112,6 @@ class RecipeAddFragment : Fragment() {
             )
         }
 
-//        btnDone.setOnClickListener {
-//            val titleInput = binding.etRecipeTitle.text.toString().trim()
-//            val descInput = binding.etRecipeDescription.text.toString().trim()
-//            val cookTime = binding.seekCookTime.progress
-//
-//            if (titleInput.isBlank() || descInput.isBlank()) {
-//                Toast.makeText(requireContext(), "제목과 설명을 입력해주세요.", Toast.LENGTH_SHORT).show()
-//                return@setOnClickListener
-//            }
-//
-//            val ingredientList = getIngredientList()
-//            val stepList = getCookingSteps()
-//
-//            val newRecipe = Recipe(
-//                id = System.currentTimeMillis().toString(),
-//                title = titleInput,
-//                author = name,
-//                description = descInput,
-//                cookTimeMinutes = cookTime,
-//                coverImageUrl = null,
-//                ingredients = ingredientList,
-//                steps = stepList
-//            )
-//
-//            viewModel.addRecipe(newRecipe)
-//
-//            Toast.makeText(requireContext(), "테스트용 레시피 저장 완료!", Toast.LENGTH_SHORT).show()
-//            parentFragmentManager.popBackStack()
-//        }
-
         // 대표 이미지 추가 버튼
         binding.btnAddImage.setOnClickListener {
             imagePickerLauncher.launch("image/*")
@@ -268,7 +238,6 @@ class RecipeAddFragment : Fragment() {
 
         binding.layoutSteps.addView(outerLayout)
     }
-
 
     private fun updateStepNumbers() {
         for (i in 0 until binding.layoutSteps.childCount) {
