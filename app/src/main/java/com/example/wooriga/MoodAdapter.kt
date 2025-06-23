@@ -19,7 +19,7 @@ class MoodAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(mood: Mood) {
-            binding.textEmotion.text = mood.moodType
+            binding.textEmotion.text = MoodTypeMapper.toKorean(mood.moodType)
 
             // 태그 렌더링 (FlexboxLayout에 동적으로 추가)
             binding.layoutTags.removeAllViews()

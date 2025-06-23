@@ -3,20 +3,12 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <!-- TODO: 데이터 연동 -->
-    <string-array name="tag_list">
-        <item>가족 여행</item>
-        <item>기념일</item>
-        <item>일상</item>
-        <item>특별한 날</item>
+    <string-array name="mood_type_korean">
+        <item>감정</item>
+        <item>성격</item>
+        <item>가치관</item>
     </string-array>
 
-    <!-- TODO: 데이터 연동 -->
-    <string-array name="member_list">
-        <item>김숙명</item>
-        <item>김송이</item>
-        <item>김눈송</item>
-    </string-array>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="title_activity_history_maps">HistoryMapsActivity</string>
 
