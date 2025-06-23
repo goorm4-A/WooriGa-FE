@@ -16,7 +16,6 @@ class RecipeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var recipeAdapter: RecipeAdapter
-    //private val viewModel: RecipeViewModel by viewModels()
     private val viewModel: RecipeViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,6 +37,16 @@ class RecipeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // 인자로 받은 familyId 추출
+        val familyId = arguments?.getLong("familyId") ?: return
+
+        val savedUser = UserManager.loadUserInfo()
+        val userId = savedUser?.userId
+
+        if (familyId != null) {
+            viewModel.loadRecipes(familyId)
+        }
+
         // 툴바
         val toolbar = view.findViewById<View>(R.id.custom_toolbar)
         val title = toolbar.findViewById<TextView>(R.id.tv_toolbar_title)
@@ -52,12 +61,14 @@ class RecipeFragment : Fragment() {
 
         // 어댑터 설정
         recipeAdapter = RecipeAdapter { selectedRecipe ->
-            val fragment = RecipeDetailFragment.newInstance(selectedRecipe)
+            val recipeId = selectedRecipe.id.toLong()
+            val detailFragment = RecipeDetailFragment.newInstance(familyId, recipeId)
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, fragment)
+                .replace(R.id.fragment_container, detailFragment)
                 .addToBackStack(null)
                 .commit()
         }
+
         binding.recyclerRecipe.adapter = recipeAdapter
 
         // LiveData 관찰

@@ -1,6 +1,7 @@
 package com.example.wooriga
 
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -12,10 +13,12 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.wooriga.databinding.FragmentRecipeAddBinding
+import com.example.wooriga.utils.ToolbarUtils
 
 class RecipeAddFragment : Fragment() {
 
@@ -23,6 +26,15 @@ class RecipeAddFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: RecipeViewModel by activityViewModels()
+
+    private var selectedImageUri: Uri? = null
+    // 이미지 선택 런처 등록
+    private val imagePickerLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        if (uri != null) {
+            selectedImageUri = uri
+            binding.imagePreview.setImageURI(uri)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,6 +46,10 @@ class RecipeAddFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // 사용자
+        val savedUser = UserManager.loadUserInfo()
+        val name = savedUser?.name ?: "이름 없음"
 
         // 툴바 설정
         val toolbar = view.findViewById<View>(R.id.custom_toolbar)
@@ -59,28 +75,49 @@ class RecipeAddFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            val ingredientList = getIngredientList()
-            val stepList = getCookingSteps()
+            val ingredients = getIngredientList()
+            val steps = getCookingSteps().mapIndexed { index, step ->
+                RecipeStepRequest(
+                    description = step.description,
+                    imageIndexes = 0 // TODO: 임시
+                )
+            }
 
-            val newRecipe = Recipe(
-                id = System.currentTimeMillis().toString(),
+            val recipeRequest = RecipeRequest(
                 title = titleInput,
-                author = "테스트사용자",
                 description = descInput,
-                cookTimeMinutes = cookTime,
-                coverImageUrl = null,
-                ingredients = ingredientList,
-                steps = stepList
+                cookingTime = cookTime,
+                ingredients = ingredients,
+                steps = steps
             )
 
-            viewModel.addRecipe(newRecipe)
+            val familyId = ToolbarUtils.currentGroup?.familyGroup?.familyGroupId
+            if (familyId == null) {
+                Toast.makeText(requireContext(), "가족 선택이 필요합니다.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
-            Toast.makeText(requireContext(), "테스트용 레시피 저장 완료!", Toast.LENGTH_SHORT).show()
-            parentFragmentManager.popBackStack()
+            viewModel.createRecipe(
+                familyId = familyId,
+                recipeRequest = recipeRequest,
+                coverImageUri = selectedImageUri,
+                context = requireContext(),
+                onSuccess = {
+                    Toast.makeText(requireContext(), "요리법 등록 성공!", Toast.LENGTH_SHORT).show()
+                    parentFragmentManager.popBackStack()
+                },
+                onFailure = { error ->
+                    Toast.makeText(requireContext(), "실패: $error", Toast.LENGTH_SHORT).show()
+                }
+            )
         }
 
+        // 대표 이미지 추가 버튼
+        binding.btnAddImage.setOnClickListener {
+            imagePickerLauncher.launch("image/*")
+        }
 
-    // 재료 추가 버튼
+        // 재료 추가 버튼
         binding.btnAddIngredient.setOnClickListener {
             addIngredientItem()
         }
@@ -201,7 +238,6 @@ class RecipeAddFragment : Fragment() {
 
         binding.layoutSteps.addView(outerLayout)
     }
-
 
     private fun updateStepNumbers() {
         for (i in 0 until binding.layoutSteps.childCount) {
