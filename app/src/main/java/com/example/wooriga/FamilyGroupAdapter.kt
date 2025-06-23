@@ -3,11 +3,15 @@ package com.example.wooriga
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.wooriga.databinding.ItemHomeGroupBinding
 import com.example.wooriga.model.FamilyGroupWrapper
 
+// 
 class FamilyGroupAdapter(private val groups: List<FamilyGroupWrapper>) :
     RecyclerView.Adapter<FamilyGroupAdapter.FamilyGroupViewHolder>() {
 
@@ -47,6 +51,25 @@ class FamilyGroupAdapter(private val groups: List<FamilyGroupWrapper>) :
                 putExtra("groupId", group.familyGroupId)
             }
             context.startActivity(intent)
+        }
+        // + 버튼 누르면 초대 코드 보이도록
+        holder.binding.addMemberButton.setOnClickListener() {
+            val context = holder.itemView.context
+            val dialogView = LayoutInflater.from(context).inflate(R.layout.invite_code_show_dialog, null)
+            val inviteCodeText = dialogView.findViewById<TextView>(R.id.inviteCode)
+            val okButton = dialogView.findViewById<Button>(R.id.submitButton)
+
+            inviteCodeText.text = group.inviteCode.toString()
+
+            val dialog = AlertDialog.Builder(context)
+                .setView(dialogView)
+                .create()
+
+            okButton.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            dialog.show()
         }
     }
 

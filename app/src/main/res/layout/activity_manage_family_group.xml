@@ -21,12 +21,22 @@
         android:padding="5dp"
         android:text="+ 그룹 만들기"
         android:textSize="20sp" />
+    <Button
+        android:id="@+id/addInviteCode"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:layout_marginBottom="70dp"
+        android:padding="5dp"
+        android:text="+ 초대 코드 입력하기"
+        android:textSize="20sp" />
+
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="60dp"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="130dp"
         android:fillViewport="true">
 
         <androidx.recyclerview.widget.RecyclerView
