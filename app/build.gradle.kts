@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -45,7 +46,6 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.play.services.maps)
@@ -59,6 +59,12 @@ dependencies {
     implementation(libs.flexbox)
     implementation("androidx.navigation:navigation-fragment-ktx:2.9.0")
     implementation("androidx.navigation:navigation-ui-ktx:2.9.0")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    implementation("com.kakao.sdk:v2-user:2.21.4") // 카카오 로그인 API 모듈
+
+    implementation("com.prolificinteractive:material-calendarview:1.4.3") // Material CalendarView
 
 }
 
@@ -67,9 +73,9 @@ secrets {
     // 1. If the secrets.properties file does not exist, create it in the same folder as the local.properties file.
     // 2. Add this line, where YOUR_API_KEY is your API key:
     //        MAPS_API_KEY=YOUR_API_KEY
-    propertiesFileName = "secrets.properties"
+    //propertiesFileName = "secrets.properties"
 
     // A properties file containing default secret values. This file can be
     // checked in version control.
-    defaultPropertiesFileName = "local.defaults.properties"
+    //defaultPropertiesFileName = "local.defaults.properties"
 }

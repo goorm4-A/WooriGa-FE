@@ -6,24 +6,15 @@
     android:background="#FFFFFF"
     android:elevation="4dp">
 
-    <!-- 핀 이미지 (상단에 겹쳐 보이도록) -->
-<!--    <ImageView-->
-<!--        android:id="@+id/image_pin"-->
-<!--        android:layout_width="24dp"-->
-<!--        android:layout_height="24dp"-->
-<!--        android:layout_centerHorizontal="true"-->
-<!--        android:layout_marginTop="-8dp"-->
-<!--        android:src="@drawable/ic_pin" />-->
-
     <!-- 사진 영역 -->
     <ImageView
-        android:id="@+id/imageDiary"
+        android:id="@+id/iv_diary"
         android:layout_width="160dp"
         android:layout_height="160dp"
         android:layout_marginTop="15dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:background="#DDDDDD"
+        android:background="@color/gray"
         android:scaleType="centerCrop" />
 
     <!-- 아이콘 + 텍스트 말풍선 -->
@@ -31,21 +22,20 @@
         android:id="@+id/label_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/imageDiary"
+        android:layout_below="@id/iv_diary"
         android:layout_centerHorizontal="true"
         android:orientation="horizontal"
         android:paddingHorizontal="6dp"
         android:paddingVertical="0dp">
 
         <ImageView
-            android:id="@+id/imageUser"
+            android:id="@+id/iv_profile"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_user_circle" />
+            android:layout_gravity="center_vertical" />
 
         <TextView
-            android:id="@+id/textTitle"
+            android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="0dp"

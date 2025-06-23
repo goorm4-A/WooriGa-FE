@@ -1,22 +1,53 @@
 package com.example.wooriga
 
+import android.util.Log
 import com.example.wooriga.model.Anniversary
 
 object AnniversaryRepository {
 
-    private val anniversaryList = mutableListOf<Anniversary>()
+    private var anniversaryList = mutableListOf<Anniversary>()
 
-    // 샘플 데이터 초기화
-    fun loadSampleData() {
-        anniversaryList.clear()
-        anniversaryList.addAll(
-            listOf(
-                Anniversary("2025-06-01", "엄마 생신", "생일", "집", "미역국 끓이기"),
-                Anniversary("2025-07-15", "친구 결혼식", "경조사", "웨딩홀", "축의금 챙기기"),
-                Anniversary("2025-08-20", "치과 예약", "약속", "치과", "충치 치료"),
-                Anniversary("2025-09-01", "기타 일정", "기타", "카페", "생각 정리")
-            )
+    // API 연동
+
+    // 서버에서 받아오기
+    suspend fun fetchAnniversariesFromApi(
+        type: String?,
+        lastId: Long?,
+        pageable: Map<String, String>
+    ): AnniversaryResult? {
+        val params = pageable.toMutableMap()
+        params.remove("size")
+
+        val response = RetrofitClient2.annivApi.getAnniversaries(
+            type = type,
+            lastId = lastId,
+            pageable = params
         )
+        Log.d("AnnivAPI", "code=${response.code()}, body=${response.body()}, error=${response.errorBody()?.string()}")
+
+        if (response.isSuccessful && response.body()?.isSuccess == true) {
+            val resultList = response.body()?.result?.contents?.toMutableList() ?: mutableListOf()
+            anniversaryList = resultList
+            return response.body()?.result
+        } else {
+            return null
+        }
+    }
+
+    // 서버에 등록
+    suspend fun addToApi(anniv: Anniversary): Boolean {
+        return try {
+            val response = RetrofitClient2.annivApi.addAnniversary(anniv)
+
+            Log.d("AnnivAdd", "응답 code: ${response.code()}")
+            Log.d("AnnivAdd", "응답 success?: ${response.isSuccessful}")
+            Log.d("AnnivAdd", "응답 body: ${response.body()}")
+
+            response.isSuccessful
+        } catch (e: Exception) {
+            Log.e("AnnivAdd", "기념일 등록 중 예외 발생", e)
+            false
+        }
     }
 
     // 태그 필터링된 리스트 반환 (tag가 ""이면 전체)
@@ -34,6 +65,11 @@ object AnniversaryRepository {
     // 항목 추가
     fun addAnniversary(anniv: Anniversary) {
         anniversaryList.add(anniv)
+    }
+
+    fun setAll(list: List<Anniversary>) {
+        anniversaryList.clear()
+        anniversaryList.addAll(list)
     }
 
 /*    // 항목 수정

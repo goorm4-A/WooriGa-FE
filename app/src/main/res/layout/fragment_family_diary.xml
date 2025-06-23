@@ -9,8 +9,8 @@
 
     <!-- 툴바 -->
     <include
-        android:id="@+id/toolbarDiary"
-        layout="@layout/toolbar_diary"
+        android:id="@+id/custom_toolbar"
+        layout="@layout/toolbar_anniversary"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
         app:layout_constraintTop_toTopOf="parent"
@@ -25,10 +25,10 @@
         android:text="송이님의 추억들을\n관리해보세요!"
         android:textSize="20sp"
         android:textColor="#000000"
-        app:layout_constraintTop_toBottomOf="@id/toolbarDiary"
+        app:layout_constraintTop_toBottomOf="@id/custom_toolbar"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp" />
+        android:layout_marginTop="11dp"
+        android:layout_marginStart="25dp" />
 
     <!-- 다이어리 목록 -->
     <androidx.recyclerview.widget.RecyclerView
@@ -40,7 +40,7 @@
         android:overScrollMode="never"
         tools:listitem="@layout/item_diary_card"
         app:layout_constraintTop_toBottomOf="@id/diaryTitle"
-        app:layout_constraintBottom_toTopOf="@id/addFamilyHistoryButton"
+        app:layout_constraintBottom_toTopOf="@id/addFamilyDiaryButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"
@@ -48,13 +48,15 @@
 
     <!-- FAB -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/addFamilyHistoryButton"
+        android:id="@+id/addFamilyDiaryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="가족일기 추가 버튼"
+        android:layout_margin="20dp"
         android:src="@drawable/ic_add"
+        app:tint="@android:color/white"
+        app:backgroundTint="@color/stormGrey"
+        android:contentDescription="가족일기 추가 버튼"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="16dp" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

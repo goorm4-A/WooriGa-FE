@@ -8,6 +8,7 @@
 
 
     <LinearLayout
+        android:id="@+id/family_group_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_background_stroke"
@@ -21,7 +22,7 @@
             android:layout_height="150dp"
             android:background="@drawable/rounded_background_gray"
             android:contentDescription="가족 그룹 이미지"
-            android:scaleType="centerCrop" />
+            android:scaleType="fitCenter" />
 
         <TextView
             android:id="@+id/family_title"
@@ -49,8 +50,9 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginVertical="5dp"
+        android:gravity="end"
         android:layout_marginHorizontal="30dp">
-
+<!--
         <ImageButton
             android:id="@+id/member_image_1"
             android:layout_width="50dp"
@@ -68,7 +70,7 @@
             android:src="@drawable/ic_user_circle"
             android:background="@color/transparent"
             android:layout_marginEnd="10dp" />
-
+-->
         <ImageButton
             android:id="@+id/add_member_button"
             android:layout_width="48dp"
@@ -77,8 +79,7 @@
             android:background="@drawable/circle_black"
             android:contentDescription="멤버 추가 버튼"
             android:layout_marginStart="2dp"
-            android:layout_marginEnd="10dp"
-            android:layout_gravity="center"/>
+            android:layout_marginEnd="10dp"/>
 
     </LinearLayout>
 
