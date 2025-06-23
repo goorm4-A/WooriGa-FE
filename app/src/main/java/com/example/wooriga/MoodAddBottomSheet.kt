@@ -15,6 +15,12 @@ class MoodAddBottomSheet(
     private var _binding: BottomSheetAddMoodBinding? = null
     private val binding get() = _binding!!
 
+    private val moodTypeMap = mapOf(
+        "감정" to "EMOTION",
+        "성격" to "TRAIT",
+        "가치관" to "VALUE"
+    )
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -28,20 +34,26 @@ class MoodAddBottomSheet(
 
         // 추가 버튼 클릭
         binding.btnSubmit.setOnClickListener {
-            val category = binding.etCategory.text.toString().trim()
-            val tagInput = binding.etTag.text.toString().trim()
+            val selectedKorean = binding.spinnerCategory.selectedItem.toString()
+            val moodType = moodTypeMap[selectedKorean]
 
-            if (category.isBlank()) {
-                Toast.makeText(requireContext(), "감정을 입력해주세요.", Toast.LENGTH_SHORT).show()
+            if (moodType == null) {
+                Toast.makeText(requireContext(), "분류를 선택해주세요.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
+            val tagInput = binding.etTag.text.toString().trim()
             val tags = tagInput
                 .split(",", " ", "#")
                 .map { it.trim() }
                 .filter { it.isNotEmpty() }
 
-            onSubmit(category, tags)
+            if (tags.isEmpty()) {
+                Toast.makeText(requireContext(), "태그를 입력해주세요.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            onSubmit(moodType, tags) // 영문 ENUM으로 전달
             dismiss()
         }
 
