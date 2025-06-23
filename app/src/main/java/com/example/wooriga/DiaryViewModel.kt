@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.wooriga.model.FamilyMember
 import kotlinx.coroutines.launch
 
 class DiaryViewModel : ViewModel() {
@@ -16,10 +17,43 @@ class DiaryViewModel : ViewModel() {
     private val _diaryList = MutableLiveData<List<DiaryListItem>>()
     val diaryList: LiveData<List<DiaryListItem>> get() = _diaryList
 
-    private val _familyList = MutableLiveData<List<Family>>()
-    val familyList: LiveData<List<Family>> get() = _familyList
-
     private val _selectedFamilyId = MutableLiveData<Long>()
+    val selectedFamilyId: LiveData<Long> get() = _selectedFamilyId
+
+    private val _memberList = MutableLiveData<List<FamilyMember>>()
+    val memberList: LiveData<List<FamilyMember>> get() = _memberList
+
+    private val selectedParticipantIds = mutableSetOf<Long>()
+
+    fun loadFamilyMembers(familyId: Long) {
+        // TODO: 추후 API 연동으로 교체
+        _memberList.value = listOf(
+            FamilyMember(
+                familyMemberId = 1,
+                familyMemberName = "엄마",
+                familyMemberImage = null,
+                relation = "어머니",
+                birthDate = "1970-01-01",
+                isUserAdded = true
+            ),
+            FamilyMember(
+                familyMemberId = 2,
+                familyMemberName = "아빠",
+                familyMemberImage = null,
+                relation = "아버지",
+                birthDate = "1970-01-01",
+                isUserAdded = true
+            ),
+            FamilyMember(
+                familyMemberId = 3,
+                familyMemberName = "나",
+                familyMemberImage = null,
+                relation = "자녀",
+                birthDate = "2000-01-01",
+                isUserAdded = true
+            )
+        )
+    }
 
     private val _comments = MutableLiveData<List<DiaryComment>>()
     val comments: LiveData<List<DiaryComment>> get() = _comments
@@ -84,7 +118,8 @@ class DiaryViewModel : ViewModel() {
         description: String,
         tags: List<String>,
         imageUri: Uri?,
-        context: Context
+        context: Context,
+        participantIds: List<Long>
     ) {
         viewModelScope.launch {
             val dto = FamilyDiaryDto(
@@ -95,7 +130,8 @@ class DiaryViewModel : ViewModel() {
                 location = location,
                 description = description,
                 diaryTags = tags,
-                participantIds = listOf(1L, 2L) // 참여자 ID: 추후 실제 값으로 교체
+                // TODO: 실제 가족 구성원 목록을 서버에서 받아온 뒤, 체크박스로 선택해 넘기는 구조로 구현
+                participantIds = selectedParticipantIds.toList()
             )
 
             val success = repository.uploadDiary(dto, imageUri, context)
