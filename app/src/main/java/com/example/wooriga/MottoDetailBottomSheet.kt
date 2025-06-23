@@ -26,16 +26,12 @@ class MottoDetailBottomSheet(
         super.onViewCreated(view, savedInstanceState)
 
         // 바인딩 데이터 설정
-        binding.familyOutput.text = motto.familyName
+        //binding.familyOutput.text = motto.familyName
         binding.mottoOutput.text = motto.title
-        binding.dateText.text = motto.createdAt
+        binding.dateText.text = DateUtils.formatIsoDate(motto.createdAt)
 
         binding.btnClose.setOnClickListener {
             dismiss()
-        }
-
-        binding.btnEdit.setOnClickListener {
-            dismiss()  // 기존 바텀시트 닫기 먼저
         }
 
     }
