@@ -60,3 +60,17 @@ object UserManager {
     }
 
 }
+data class TodayImagesResponse(
+    val isSuccess: Boolean,
+    val code: String,
+    val message: String,
+    val result: TodayImagesResult
+)
+
+data class TodayImagesResult(
+    val userName: String,
+    val userImage: String,
+    val familyNames: List<String>,
+    val latestFamilyImage: String,
+    val todayImages: List<String>
+)

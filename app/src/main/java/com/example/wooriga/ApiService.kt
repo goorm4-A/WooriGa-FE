@@ -88,5 +88,6 @@ interface ApiService {
         @Query("familyId") familyId: Long
     ): Response<CommonResponse2<List<History>>>
 
-
+    @GET("users/main")
+    fun getTodayImages(): Call<TodayImagesResponse>
 }

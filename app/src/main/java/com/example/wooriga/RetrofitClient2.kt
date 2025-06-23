@@ -22,6 +22,8 @@ object RetrofitClient2 {
     val familyGroupApi: ApiService = retrofit.create(ApiService::class.java)
     // 가족사
     val historyApi: ApiService = retrofit.create(ApiService::class.java)
+    // home 사진 불러오기
+    val todayImagesApi: ApiService = retrofit.create(ApiService::class.java)
 
 
     private val retrofit2 = Retrofit.Builder()
