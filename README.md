@@ -2,6 +2,8 @@
 
 <br />
 
+![우리가_포스터](https://github.com/user-attachments/assets/f518fe52-f7c4-44c9-a83a-34635edcd523)
+
 ## Commit 컨벤션
 
 **Commit 태그 종류**
