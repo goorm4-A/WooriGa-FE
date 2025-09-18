@@ -4,7 +4,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient2 {
-    private const val BASE_URL = "http://54.180.104.168:8081/"
+    private const val BASE_URL = "http://3.34.177.95/"
 
     private val client = okhttp3.OkHttpClient.Builder()
         .addInterceptor(AuthInterceptor()) // 자동으로 Authorization 헤더 추가
