@@ -35,8 +35,7 @@ class HistoryViewModel(private val repository: HistoryRepository) : ViewModel() 
             result.onSuccess {
                 onSuccess(it)
 
-                // 💡 가족사 재조회 (예: 등록한 가족의 id를 알고 있어야 함)
-                val familyId = getFamilyIdFromFamilyName(it.family)  // 이 함수 필요!
+                val familyId = getFamilyIdFromFamilyName(it.family)
                 getEvents(familyId)     // 타임라인용
                 getEventsMap(familyId)  // 지도용
             }.onFailure {

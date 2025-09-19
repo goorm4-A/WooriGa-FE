@@ -36,7 +36,7 @@ class FamilyHistoryFragment : Fragment() {
     private lateinit var adapter: TimelineAdapter
 
     private val viewModel: HistoryViewModel by viewModels {
-        HistoryViewModelFactory(HistoryRepository(RetrofitClient2.historyApi))
+        HistoryViewModelFactory(HistoryRepository(RetrofitClient2.apiService))
     }
 
     private var _binding: FragmentFamilyHistoryBinding? = null

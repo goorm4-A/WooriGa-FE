@@ -18,7 +18,7 @@ object AnniversaryRepository {
         val params = pageable.toMutableMap()
         params.remove("size")
 
-        val response = RetrofitClient2.annivApi.getAnniversaries(
+        val response = RetrofitClient2.apiService.getAnniversaries(
             type = type,
             lastId = lastId,
             pageable = params
@@ -37,7 +37,7 @@ object AnniversaryRepository {
     // 서버에 등록
     suspend fun addToApi(anniv: Anniversary): Boolean {
         return try {
-            val response = RetrofitClient2.annivApi.addAnniversary(anniv)
+            val response = RetrofitClient2.apiService.addAnniversary(anniv)
 
             Log.d("AnnivAdd", "응답 code: ${response.code()}")
             Log.d("AnnivAdd", "응답 success?: ${response.isSuccessful}")

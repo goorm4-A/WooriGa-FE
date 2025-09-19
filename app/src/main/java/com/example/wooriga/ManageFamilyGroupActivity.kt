@@ -9,7 +9,6 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.wooriga.databinding.ActivityManageFamilyGroupBinding
 import com.example.wooriga.databinding.BottomSheetAddFamilyGroupBinding
@@ -134,7 +133,7 @@ class ManageFamilyGroupActivity : AppCompatActivity() {
                 // 서버에 저장
                 val (nameBody, imagePart) = prepareRequest(groupName, selectedImageFile)
 
-                RetrofitClient2.familyGroupApi.createGroup(nameBody, imagePart).enqueue(object :
+                RetrofitClient2.apiService.createGroup(nameBody, imagePart).enqueue(object :
                     Callback<ApiResponse<FamilyGroupResponse>> {
                     override fun onResponse(
                         call: Call<ApiResponse<FamilyGroupResponse>>,
@@ -204,7 +203,7 @@ class ManageFamilyGroupActivity : AppCompatActivity() {
 
     // 서버에서 데이터 불러오기
     private fun fetchFamilyGroupsFromServer() {
-        RetrofitClient2.familyGroupApi.getGroups().enqueue(object : Callback<ApiResponse<List<FamilyGroupWrapper>>> {
+        RetrofitClient2.apiService.getGroups().enqueue(object : Callback<ApiResponse<List<FamilyGroupWrapper>>> {
             override fun onResponse(
                 call: Call<ApiResponse<List<FamilyGroupWrapper>>>,
                 response: Response<ApiResponse<List<FamilyGroupWrapper>>>
@@ -231,8 +230,4 @@ class ManageFamilyGroupActivity : AppCompatActivity() {
             }
         })
     }
-
-
-
-
 }

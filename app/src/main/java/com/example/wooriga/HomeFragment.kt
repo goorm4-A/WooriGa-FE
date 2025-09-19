@@ -95,7 +95,7 @@ class HomeFragment : Fragment() {
 
     // 가족 그룹 리스트를 서버에서 받아오는 함수
     fun fetchFamilyGroupsFromServer(onComplete: () -> Unit = {}) {
-        RetrofitClient2.familyGroupApi.getGroups().enqueue(object :
+        RetrofitClient2.apiService.getGroups().enqueue(object :
             Callback<ApiResponse<List<FamilyGroupWrapper>>> {
             override fun onResponse(
                 call: Call<ApiResponse<List<FamilyGroupWrapper>>>,
@@ -196,7 +196,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun fetchTodayImages() {
-        RetrofitClient2.todayImagesApi.getTodayImages().enqueue(object : Callback<TodayImagesResponse> {
+        RetrofitClient2.apiService.getTodayImages().enqueue(object : Callback<TodayImagesResponse> {
             override fun onResponse(
                 call: Call<TodayImagesResponse>,
                 response: Response<TodayImagesResponse>

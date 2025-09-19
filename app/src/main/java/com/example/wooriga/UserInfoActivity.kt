@@ -8,8 +8,6 @@ import com.example.wooriga.databinding.ActivityUserInfoBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class UserInfoActivity : AppCompatActivity() {
 
@@ -22,11 +20,11 @@ class UserInfoActivity : AppCompatActivity() {
         binding = ActivityUserInfoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        service = RetrofitClient2.userApi
+        service = RetrofitClient2.apiService
 
 
         // 버튼 클릭하면 사용자 정보 저장 및 PUT한 후 정보 동의 화면으로 이동
-        binding.submitButton.setOnClickListener() {
+        binding.submitButton.setOnClickListener {
 
             Log.d("KakaoRedirect", "submit button clicked")
 
@@ -50,15 +48,7 @@ class UserInfoActivity : AppCompatActivity() {
                 "phone" to phone,
                 "birthDate" to birth
             )
-            val accessToken = UserManager.accessToken
-            Log.d("UserInfoActivity", "accessToken: $accessToken")
-            if (accessToken == null) {
-                // 토큰 없으면 예외 처리
-                Log.d("UserInfoActivity", "login fail")
-
-                return@setOnClickListener
-            }
-            service.updateUserInfo("Bearer $accessToken", body)
+            service.updateUserInfo(body)
                 .enqueue(object : Callback<Void> {
                     override fun onResponse(call: Call<Void>, response: Response<Void>) {
                         if (response.isSuccessful) {
@@ -67,19 +57,15 @@ class UserInfoActivity : AppCompatActivity() {
                             finish()
                         } else {
                             // 실패 처리 (토스트 등)
-                            Log.d("UserInfoActivity", "PUT fail")
-
+                            Log.d("UserInfoActivity", "PUT fail: ${response.code()}")
                         }
                     }
 
                     override fun onFailure(call: Call<Void>, t: Throwable) {
                         // 실패 처리 (토스트 등)
-                        Log.d("UserInfoActivity", "network fail")
-
+                        Log.d("UserInfoActivity", "network fail: ${t.message}")
                     }
                 })
         }
-
     }
-
 }
