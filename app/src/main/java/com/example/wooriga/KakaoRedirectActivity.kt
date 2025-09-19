@@ -28,7 +28,7 @@ class KakaoRedirectActivity : AppCompatActivity() {
             return
         }
 
-        // 저장
+        // UserManager에 토큰 저장
         UserManager.accessToken = accessToken
         UserManager.refreshToken = refreshToken
         UserManager.isLoggedIn = true
@@ -36,12 +36,12 @@ class KakaoRedirectActivity : AppCompatActivity() {
         apiService = RetrofitClient.apiService
 
         // 유저 정보 요청 후 → 다음 화면으로 이동
-        getUserInfo(accessToken)
-        Log.d("KakaoRedirect", "accessToken: $accessToken")
+        getUserInfo()
+        Log.d("KakaoRedirect", "accessToken 저장 완료: $accessToken")
     }
 
-    private fun getUserInfo(token: String) {
-        apiService.getUserInfo("Bearer $token").enqueue(object : Callback<ApiResponse<UserManager.UserInfo>> {
+    private fun getUserInfo() {
+        apiService.getUserInfo().enqueue(object : Callback<ApiResponse<UserManager.UserInfo>> {
             override fun onResponse(
                 call: Call<ApiResponse<UserManager.UserInfo>>,
                 response: Response<ApiResponse<UserManager.UserInfo>>
@@ -67,4 +67,3 @@ class KakaoRedirectActivity : AppCompatActivity() {
         })
     }
 }
-

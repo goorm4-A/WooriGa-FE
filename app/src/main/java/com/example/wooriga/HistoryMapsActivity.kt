@@ -32,7 +32,7 @@ class HistoryMapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var geocoder: Geocoder
 
     private val viewModel: HistoryViewModel by viewModels {
-        HistoryViewModelFactory(HistoryRepository(RetrofitClient2.historyApi))
+        HistoryViewModelFactory(HistoryRepository(RetrofitClient2.apiService))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
